@@ -8,3 +8,5 @@ type MultiPlayHistoryType = {
     created_at: Date;
     updated_at: Date;
 }
+
+export default MultiPlayHistoryType;
