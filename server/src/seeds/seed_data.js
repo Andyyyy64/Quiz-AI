@@ -1,0 +1,99 @@
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> } 
+ */
+exports.seed = async function(knex) {
+  // Deletes ALL existing entries
+  await knex('multiplay_history').del();
+  await knex('singleplay_history').del();
+  await knex('quiz').del();
+  await knex('users').del();
+
+  await knex('users').insert([
+    {
+      user_id: 1, 
+      name: 'Alice', 
+      email: 'alice@example.com', 
+      password: 'hashed_password_1', 
+      points: 100, 
+      rank: JSON.stringify(['silver']), 
+      prof_image_url: 'https://example.com/avatar1.png', 
+      last_login: knex.fn.now(), 
+      email_verified: true, 
+      created_at: knex.fn.now(), 
+      updated_at: knex.fn.now()
+    },
+    {
+      user_id: 2, 
+      name: 'Bob', 
+      email: 'bob@example.com', 
+      password: 'hashed_password_2', 
+      points: 200, 
+      rank: JSON.stringify(['gold']), 
+      prof_image_url: 'https://example.com/avatar2.png', 
+      last_login: knex.fn.now(), 
+      email_verified: true, 
+      created_at: knex.fn.now(), 
+      updated_at: knex.fn.now()
+    }
+  ]);
+
+  await knex('quiz').insert([
+    {
+      quiz_id: 1, 
+      problem: 'What is the capital of France?', 
+      answer: 'Paris', 
+      category: JSON.stringify(['geography']), 
+      difficulty: JSON.stringify(['easy']), 
+      created_at: knex.fn.now(), 
+      updated_at: knex.fn.now()
+    },
+    {
+      quiz_id: 2, 
+      problem: 'What is the square root of 64?', 
+      answer: '8', 
+      category: JSON.stringify(['math']), 
+      difficulty: JSON.stringify(['medium']), 
+      created_at: knex.fn.now(), 
+      updated_at: knex.fn.now()
+    }
+  ]);
+
+  await knex('singleplay_history').insert([
+    {
+      id: 1, 
+      user_id: 1, 
+      quiz_id: 1, 
+      did_correct: true, 
+      timestamp: knex.fn.now()
+    },
+    {
+      id: 2, 
+      user_id: 2, 
+      quiz_id: 2, 
+      did_correct: false, 
+      timestamp: knex.fn.now()
+    }
+  ]);
+
+  await knex('multiplay_history').insert([
+    {
+      session_id: 1, 
+      user_id: 1, 
+      quiz_id: 1, 
+      opponent_user_id: 2, 
+      did_win: true, 
+      points_awarded: 10, 
+      timestamp: knex.fn.now()
+    },
+    {
+      session_id: 2, 
+      user_id: 2, 
+      quiz_id: 2, 
+      opponent_user_id: 1, 
+      did_win: false, 
+      points_awarded: 5, 
+      timestamp: knex.fn.now()
+    }
+  ]);
+};

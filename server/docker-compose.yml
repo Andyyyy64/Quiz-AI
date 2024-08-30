@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: . # Dockerfileの場所を指定
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env # 環境変数を読み込む
+    volumes:
+      - .:/app # serverディレクトリをコンテナの/appにマウント
+    depends_on:
+      - db
+    command: sh -c "npm run dev" # コンテナ起動時に実行するコマンド
+
+  db:
+    image: postgres:13
+    environment: # envファイルの内容を環境変数として設定
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
