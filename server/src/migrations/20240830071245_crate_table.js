@@ -33,7 +33,8 @@ exports.up = function(knex) {
       table.integer('quiz_id').unsigned().notNullable();
       table.foreign('quiz_id').references('quiz.quiz_id');
       table.boolean('did_correct').notNullable().defaultTo(false);
-      table.timestamp('timestamp').notNullable();
+      table.timestamp('created_at').defaultTo(knex.fn.now());
+      table.timestamp('updated_at').defaultTo(knex.fn.now());
     })
     .createTable('multiplay_history', function(table) {
       table.increments('session_id').primary();
@@ -45,7 +46,8 @@ exports.up = function(knex) {
       table.foreign('opponent_user_id').references('users.user_id');
       table.boolean('did_win').notNullable().defaultTo(false);
       table.integer('points_awarded').notNullable();
-      table.timestamp('timestamp').notNullable();
+      table.timestamp('created_at').defaultTo(knex.fn.now());
+      table.timestamp('updated_at').defaultTo(knex.fn.now());
     });
   };
   
