@@ -13,6 +13,7 @@ exports.up = function(knex) {
       table.string('rank').notNullable().defaultTo(JSON.stringify(['unrank']));
       table.string('prof_image_url').notNullable().defaultTo('https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg');
       table.boolean('email_verified').notNullable().defaultTo(false);
+      table.integer('verification_code').notNullable();
       table.timestamp('last_login').notNullable();
       table.timestamp('created_at').defaultTo(knex.fn.now());
       table.timestamp('updated_at').defaultTo(knex.fn.now());    
@@ -33,7 +34,8 @@ exports.up = function(knex) {
       table.integer('quiz_id').unsigned().notNullable();
       table.foreign('quiz_id').references('quiz.quiz_id');
       table.boolean('did_correct').notNullable().defaultTo(false);
-      table.timestamp('timestamp').notNullable();
+      table.timestamp('created_at').defaultTo(knex.fn.now());
+      table.timestamp('updated_at').defaultTo(knex.fn.now());
     })
     .createTable('multiplay_history', function(table) {
       table.increments('session_id').primary();
@@ -45,7 +47,8 @@ exports.up = function(knex) {
       table.foreign('opponent_user_id').references('users.user_id');
       table.boolean('did_win').notNullable().defaultTo(false);
       table.integer('points_awarded').notNullable();
-      table.timestamp('timestamp').notNullable();
+      table.timestamp('created_at').defaultTo(knex.fn.now());
+      table.timestamp('updated_at').defaultTo(knex.fn.now());
     });
   };
   

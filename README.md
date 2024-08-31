@@ -14,13 +14,17 @@
 
     ```
     #jwt
-    JWT_SECRET_KEY=dev_secret
+    JWT_SECRET_KEY=secret
+
+    #nodemailer
+    GMAIL_USER=
+    GMAIL_PASSWORD=
 
     #db
     DB_USER=postgres
     DB_HOST=db
-    DB_NAME=labodbdev
-    DB_PASSWORD=aaaa
+    DB_NAME=quizbattledev
+    DB_PASSWORD=riz7
     ```
 3. dockerを実行
 
