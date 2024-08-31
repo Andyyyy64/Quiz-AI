@@ -13,6 +13,7 @@ exports.up = function(knex) {
       table.string('rank').notNullable().defaultTo(JSON.stringify(['unrank']));
       table.string('prof_image_url').notNullable().defaultTo('https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg');
       table.boolean('email_verified').notNullable().defaultTo(false);
+      table.integer('verification_code').notNullable();
       table.timestamp('last_login').notNullable();
       table.timestamp('created_at').defaultTo(knex.fn.now());
       table.timestamp('updated_at').defaultTo(knex.fn.now());    

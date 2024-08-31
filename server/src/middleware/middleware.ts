@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-const secretKey = process.env.JWT_SECRET_KEY ?? "";
+const secretKey = process.env.JWT_SECRET ?? "";
 
 interface DecodedRequest extends Request {
   decoded?: string | JwtPayload | undefined;
@@ -30,6 +30,7 @@ export const authMiddleware = (
     if (err) {
       next(new Error(err.message));
     } else {
+      console.log(decoded);  // トークン内容の確認
       req.decoded = decoded;
       next();
     }

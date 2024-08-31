@@ -11,7 +11,7 @@ exports.seed = async function(knex) {
 
   await knex('users').insert([
     {
-      user_id: 1, 
+      user_id: 100, 
       name: 'Alice', 
       email: 'alice@example.com', 
       password: 'hashed_password_1', 
@@ -20,11 +20,12 @@ exports.seed = async function(knex) {
       prof_image_url: 'https://example.com/avatar1.png', 
       last_login: knex.fn.now(), 
       email_verified: true, 
+      verification_code: 123456,
       created_at: knex.fn.now(), 
       updated_at: knex.fn.now()
     },
     {
-      user_id: 2, 
+      user_id: 200, 
       name: 'Bob', 
       email: 'bob@example.com', 
       password: 'hashed_password_2', 
@@ -33,6 +34,7 @@ exports.seed = async function(knex) {
       prof_image_url: 'https://example.com/avatar2.png', 
       last_login: knex.fn.now(), 
       email_verified: true, 
+      verification_code: 123456,
       created_at: knex.fn.now(), 
       updated_at: knex.fn.now()
     }
@@ -62,38 +64,42 @@ exports.seed = async function(knex) {
   await knex('singleplay_history').insert([
     {
       id: 1, 
-      user_id: 1, 
+      user_id: 100, 
       quiz_id: 1, 
       did_correct: true, 
-      timestamp: knex.fn.now()
+      created_at: knex.fn.now(), 
+      updated_at: knex.fn.now()
     },
     {
       id: 2, 
-      user_id: 2, 
+      user_id: 200, 
       quiz_id: 2, 
       did_correct: false, 
-      timestamp: knex.fn.now()
+      created_at: knex.fn.now(), 
+      updated_at: knex.fn.now()
     }
   ]);
 
   await knex('multiplay_history').insert([
     {
       session_id: 1, 
-      user_id: 1, 
+      user_id: 100, 
       quiz_id: 1, 
-      opponent_user_id: 2, 
+      opponent_user_id: 200, 
       did_win: true, 
       points_awarded: 10, 
-      timestamp: knex.fn.now()
+      created_at: knex.fn.now(), 
+      updated_at: knex.fn.now()
     },
     {
       session_id: 2, 
-      user_id: 2, 
+      user_id: 200, 
       quiz_id: 2, 
-      opponent_user_id: 1, 
+      opponent_user_id: 100, 
       did_win: false, 
       points_awarded: 5, 
-      timestamp: knex.fn.now()
+      created_at: knex.fn.now(), 
+      updated_at: knex.fn.now()
     }
   ]);
 };

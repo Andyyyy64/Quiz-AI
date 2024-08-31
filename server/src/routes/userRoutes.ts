@@ -16,9 +16,9 @@ interface DecodedRequest extends Request {
 const userRouter: express.Router = express.Router();
 
 userRouter.post("/register", registerUser);
-userRouter.get("/:id", authMiddleware, getUserById);
-userRouter.put("/:id", authMiddleware, updateUser);
-userRouter.delete("/:id", authMiddleware, deleteUser);
+userRouter.get("/get/:id", authMiddleware, getUserById);
+userRouter.put("/put/:id", authMiddleware, updateUser);
+userRouter.delete("/delete/:id", authMiddleware, deleteUser);
 
 // ログインユーザーの情報を取得
 userRouter.get("/me", authMiddleware, (req: DecodedRequest, res: Response) => {

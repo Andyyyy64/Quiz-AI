@@ -7,6 +7,7 @@ type UserType = {
     rank: string[];
     prof_image_url: string;
     email_verified: boolean;
+    varification_code: number;
     last_login: Date;
     created_at: Date;
     updated_at: Date;
