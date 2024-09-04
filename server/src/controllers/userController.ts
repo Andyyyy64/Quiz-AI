@@ -22,7 +22,8 @@ export const registerUser = async (req: Request, res: Response) => {
     try {
         // メールアドレスのバリデーションcheck
       if (!validator.isEmail(email)) {
-        return res.status(400).json({ message: "Invalid email address" });
+        console.log("Invalid email" + " " + email);
+        return res.status(400).json({ message: "無効なメールアドレスです" });
       }
 
       // ユーザーが既に存在するかどうかの確認
@@ -33,7 +34,8 @@ export const registerUser = async (req: Request, res: Response) => {
 
       // 存在する場合はエラーを返す
       if (isUserExist) {
-        return res.status(400).json({ message: "User already exists" });
+        console.log("User already exists" + " " + email);
+        return res.status(400).json({ message: "ユーザーは既に存在しています" });
       }
 
       try {
@@ -44,7 +46,7 @@ export const registerUser = async (req: Request, res: Response) => {
         );
       } catch (err) {
         console.error("Failed to register user:", err);
-        return res.status(500).json({ message: "Failed to register user" });
+        return res.status(500).json({ message: "ユーザーの登録に失敗しました" });
       }
 
       // nodemailerを使って認証コードをユーザーに送信

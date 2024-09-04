@@ -1,9 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import http from 'http';
 
 import userRouter from './routes/userRoutes';
 import authRouter from './routes/authRoutes';
+
+import { setupWebSocketServer } from './ws/setupWebScoketServer';
 
 dotenv.config();
 
@@ -18,6 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 
-app.listen(POST, () => {
+const server = http.createServer(app);
+setupWebSocketServer(server);
+
+server.listen(POST, () => {
     console.log(`Server is running on http://localhost:${POST}`);
 })
