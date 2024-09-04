@@ -7,7 +7,8 @@ interface Player {
     opponent?: Player; // マッチング相手を保持
 }
 
-let waitingPlayer: Player | null = null;
+// 待機中のプレイヤーを格納するキュー
+const waitingPlayers: Player[] = [];
 
 export const setupWebSocketServer = (server: any) => {
     const wss = new WebSocketServer({ server });
@@ -19,11 +20,10 @@ export const setupWebSocketServer = (server: any) => {
             const data = JSON.parse(message);
             const { id, name } = data;
             currentPlayer = { id, name, ws };
-
-            if (waitingPlayer) {
-                // マッチ成功
-                const matchedPlayer = waitingPlayer;
-                waitingPlayer = null;
+            console.log(waitingPlayers);            
+            // 待機プレイヤーがいる場合はマッチング
+            if (waitingPlayers.length > 0) {
+                const matchedPlayer = waitingPlayers.shift() as Player; // 先頭のプレイヤーを取得
 
                 // 両方のプレイヤーをお互いに参照させる
                 matchedPlayer.opponent = currentPlayer;
@@ -46,9 +46,10 @@ export const setupWebSocketServer = (server: any) => {
                     })
                 );
             } else {
-                // 待機プレイヤーがいない場合、このプレイヤーを待機状態にする
-                waitingPlayer = currentPlayer;
-
+                // マッチング相手がいない場合、このプレイヤーを待機キューに追加
+                waitingPlayers.push(currentPlayer);
+                console.log('Player added to queue.');
+                console.log(waitingPlayers);
                 ws.send(
                     JSON.stringify({
                         success: true,
@@ -77,9 +78,10 @@ export const setupWebSocketServer = (server: any) => {
                 opponent.opponent = undefined;
             }
 
-            // 待機中のプレイヤーが接続を切った場合、待機状態を解除
-            if (waitingPlayer && waitingPlayer.ws === ws) {
-                waitingPlayer = null;
+            // 待機中のプレイヤーが接続を切った場合、キューから削除
+            const index = waitingPlayers.indexOf(currentPlayer as Player);
+            if (index > -1) {
+                waitingPlayers.splice(index, 1); // プレイヤーをキューから削除
             }
         });
     });
