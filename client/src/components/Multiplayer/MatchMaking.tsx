@@ -99,7 +99,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
     <div className="w-full h-full flex justify-center items-center">
       {/* マッチング中のローディング表示 */}
       {!isMatched && (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center">        
           <Typography variant="h6" className="mt-4" sx={{ marginBottom: 10 }}>
             {status}
           </Typography>

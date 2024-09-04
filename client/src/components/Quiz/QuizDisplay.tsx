@@ -13,7 +13,7 @@ export const QuizDisplay: React.FC<QuizDisplayProps> = ({
   opponent,
 }) => {
   return (
-    <div className="w-full h-screen flex flex-col items-center gap-y-40">
+    <div className="min-h-screen flex flex-col items-center gap-y-44">
       {/* クイズの問題表示部分 */}
       <div className="w-full text-center mt-8">
         <Typography variant="h4" className="font-bold">
@@ -21,7 +21,7 @@ export const QuizDisplay: React.FC<QuizDisplayProps> = ({
         </Typography>
       </div>
 
-      <div className="w-full flex mb-8 gap-10">
+      <div className="w-full flex justify-center items-center mb-8 gap-10">
         {/* 自分のUI */}
         <div className="w-80 p-8 border-4 border-gray-300 bg-blue-100 shadow-lg rounded-lg">
           <Typography
