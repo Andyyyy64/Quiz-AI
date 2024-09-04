@@ -1,10 +1,11 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import { CircularProgress, Typography } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 
 import { QuizDisplay } from "../Quiz/QuizDisplay";
 
 import { useWebSocket } from "../../hooks/useWebSocket";
+import { useCountDown } from "../../hooks/useCountDown";
 
 import { QuizType } from "../../types/quizType";
 import { wsUserType } from "../../types/userType";
@@ -21,6 +22,8 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
   onMatchReset,
 }) => {
   const [opponent, setOpponent] = useState<wsUserType | null>(null);
+  const [matchedNotification, setMatchedNotification] =
+    useState<boolean>(false);
   const [isMatched, setIsMatched] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
   const [opponentAnswering, setOpponentAnswering] = useState(false);
@@ -28,6 +31,8 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
   const [inputAnswer, setInputAnswer] = useState("");
   const [quiz, setQuiz] = useState<QuizType>(dummyQuiz);
   const [winner, setWinner] = useState<string | null>(null);
+
+  const { countdown, isCounting, startCountDown } = useCountDown(3);
 
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
@@ -39,7 +44,12 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
     // 接続が確立されたときの処理
     if (data.success && data.opponent) {
       setOpponent(data.opponent);
-      setIsMatched(true);
+      setMatchedNotification(true);
+      startCountDown();
+      setTimeout(() => {
+        setMatchedNotification(false);
+        setIsMatched(true);
+      }, 3000);
 
       // 相手が回答中の場合、回答中フラグを立てる
     } else if (data.message === "opponent_answering") {
@@ -98,16 +108,27 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
   return (
     <div className="w-full h-full flex justify-center items-center">
       {/* マッチング中のローディング表示 */}
-      {!isMatched && (
-        <div className="flex flex-col items-center justify-center">        
+      {!isMatched && !matchedNotification && (
+        <div className="flex flex-col items-center justify-center">
           <Typography variant="h6" className="mt-4" sx={{ marginBottom: 10 }}>
             {status}
           </Typography>
           <CircularProgress />
         </div>
       )}
+      {/* マッチング完了通知 */}
+      {matchedNotification && isCounting && (
+        <div className="w-full text-center">
+          <Typography variant="h4" className="font-bold">
+            マッチングしました！
+          </Typography>
+          <Typography variant="h6" className="font-bold">
+            {countdown}秒後に開始します...
+          </Typography>
+        </div>
+      )}
       {/* マッチした　かつ　勝者が決まってない場合 対戦を表示*/}
-      {isMatched && !winner && (
+      {!matchedNotification && isMatched && !winner && (
         <QuizDisplay
           quiz={quiz}
           inputAnswer={inputAnswer}
@@ -124,7 +145,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
       {winner && (
         <div className="w-full text-center">
           <Typography variant="h4" className="font-bold">
-            {winner === user?.name ? "You win!" : "Opponent wins!"}
+            {winner === user?.name ? "勝利！" : "敗北..."}
           </Typography>
         </div>
       )}
