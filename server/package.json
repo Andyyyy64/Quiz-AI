@@ -17,6 +17,7 @@
     "@types/nodemailer": "^6.4.15",
     "@types/pg": "^8.11.8",
     "@types/validator": "^13.12.1",
+    "@types/ws": "^8.5.12",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -26,7 +27,8 @@
     "nodemon": "^3.1.4",
     "pg": "^8.12.0",
     "ts-node": "^10.9.2",
-    "validator": "^13.12.0"
+    "validator": "^13.12.0",
+    "ws": "^8.18.0"
   },
   "dependencies": {
     "knex": "^3.1.0"
