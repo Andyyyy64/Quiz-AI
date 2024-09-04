@@ -36,8 +36,7 @@ export const setupWebSocketServer = (server: any) => {
                         message: 'Match found!',
                         opponent: { id: currentPlayer.id, name: currentPlayer.name },
                     })
-                );
-
+                );                
                 currentPlayer.ws.send(
                     JSON.stringify({
                         success: true,

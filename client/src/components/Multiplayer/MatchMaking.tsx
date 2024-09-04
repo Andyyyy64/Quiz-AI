@@ -25,6 +25,7 @@ export const Matchmaking: React.FC = () => {
       }
     };
 
+    // メッセージを受信したときの処理
     ws.onmessage = (message) => {
       const data = JSON.parse(message.data);
 
@@ -47,8 +48,11 @@ export const Matchmaking: React.FC = () => {
       }
     };
 
+    // イベントリスナーを追加することで、コンポーネントがアンマウントされたときにWebSocketを閉じることができる
+    // (タブを閉じたときや、リロードしたとき)
     window.addEventListener("beforeunload", handleBeforeUnload);
 
+    // コンポーネントがアンマウントされたときにWebSocketを閉じる
     return () => {
       if (ws.readyState === WebSocket.OPEN) {
         ws.close();
