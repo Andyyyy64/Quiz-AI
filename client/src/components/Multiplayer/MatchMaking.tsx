@@ -11,10 +11,10 @@ import { wsUserType } from "../../types/userType";
 
 const dummyQuiz: QuizType = {
   quiz_id: 1,
-  problem: "What is the capital of France?",
-  answer: "Paris",
-  category: ["Geography"],
-  difficulty: ["Easy"],
+  problem: "フランスの首都は？",
+  answer: "パリ",
+  category: ["地理"],
+  difficulty: ["簡単"],
 };
 
 export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
