@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, IconButton, Typography } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
-import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
 
 import { AuthContext } from "../../context/AuthContext";

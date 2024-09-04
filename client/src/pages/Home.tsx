@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, CardContent, Typography, IconButton, Icon } from "@mui/material";
+import { IconButton } from "@mui/material";
 import GroupIcon from '@mui/icons-material/Group';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
