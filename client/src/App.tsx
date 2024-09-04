@@ -5,6 +5,8 @@ import { Home } from "./pages/Home"
 import { Register } from "./pages/Register";
 import { VerifyEmail } from "./pages/Verify-Email";
 
+import { Multiplayer } from "./pages/MultiPlayer";
+
 import { PrivateRoute } from "./components/PrivateRoute";
 
 export const App: React.FC = () => {
@@ -19,6 +21,7 @@ export const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/multiplay" element={<Multiplayer />} />
         <Route path="*"
           element={
             <h2 className="text-xl ml-10">

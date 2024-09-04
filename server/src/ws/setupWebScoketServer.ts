@@ -3,6 +3,7 @@ import { WebSocketServer, WebSocket } from 'ws';
 interface Player {
     id: string;
     name: string;
+    rank: string[];
     ws: WebSocket;
     opponent?: Player; // マッチング相手を保持
 }
@@ -18,43 +19,74 @@ export const setupWebSocketServer = (server: any) => {
 
         ws.on('message', (message: string) => {
             const data = JSON.parse(message);
-            const { id, name } = data;
-            currentPlayer = { id, name, ws };
-            console.log(waitingPlayers);            
-            // 待機プレイヤーがいる場合はマッチング
-            if (waitingPlayers.length > 0) {
-                const matchedPlayer = waitingPlayers.shift() as Player; // 先頭のプレイヤーを取得
+            const { id, name, rank, action, winner } = data;
 
-                // 両方のプレイヤーをお互いに参照させる
-                matchedPlayer.opponent = currentPlayer;
-                currentPlayer.opponent = matchedPlayer;
+            // プレイヤーの接続・マッチメイキング処理
+            if (!currentPlayer) {
+                currentPlayer = { id, name, rank, ws };
+                // 待機プレイヤーがいる場合はマッチング
+                if (waitingPlayers.length > 0) {
+                    const matchedPlayer = waitingPlayers.shift() as Player; // 先頭のプレイヤーを取得
 
-                // 両方のプレイヤーにマッチ成功を通知
-                matchedPlayer.ws.send(
-                    JSON.stringify({
-                        success: true,
-                        message: 'Match found!',
-                        opponent: { id: currentPlayer.id, name: currentPlayer.name },
-                    })
-                );                
-                currentPlayer.ws.send(
-                    JSON.stringify({
-                        success: true,
-                        message: 'Match found!',
-                        opponent: { id: matchedPlayer.id, name: matchedPlayer.name },
-                    })
+                    // 両方のプレイヤーをお互いに参照させる
+                    matchedPlayer.opponent = currentPlayer;
+                    currentPlayer.opponent = matchedPlayer;
+
+                    // 両方のプレイヤーにマッチ成功を通知
+                    matchedPlayer.ws.send(
+                        JSON.stringify({
+                            success: true,
+                            message: 'Match found!',
+                            opponent: { id: currentPlayer.id, name: currentPlayer.name, rank: currentPlayer.rank },
+                        })
+                    );
+                    currentPlayer.ws.send(
+                        JSON.stringify({
+                            success: true,
+                            message: 'Match found!',
+                            opponent: { id: matchedPlayer.id, name: matchedPlayer.name, rank: matchedPlayer.rank },
+                        })
+                    );
+                } else {
+                    // マッチング相手がいない場合、このプレイヤーを待機キューに追加
+                    waitingPlayers.push(currentPlayer);
+                    console.log('Player added to queue.');
+                    console.log(waitingPlayers);
+                    ws.send(
+                        JSON.stringify({
+                            success: true,
+                            message: 'Waiting for an opponent...',
+                        })
+                    );
+                }
+            }
+
+            // アクション処理
+            if (action === 'answering' && currentPlayer.opponent) {
+                // 相手に「回答中」を通知
+                console.log('Answering...');
+                currentPlayer.opponent.ws.send(
+                    JSON.stringify({ message: 'opponent_answering' })
                 );
-            } else {
-                // マッチング相手がいない場合、このプレイヤーを待機キューに追加
-                waitingPlayers.push(currentPlayer);
-                console.log('Player added to queue.');
-                console.log(waitingPlayers);
+            } else if (action === 'done' && currentPlayer.opponent) {
+                // 相手に「回答完了」を通知
+                console.log('Answering done.');
+                currentPlayer.opponent.ws.send(
+                    JSON.stringify({ message: 'opponent_answering_done' })
+                );
+                // 相手に「不正解」を通知
+            } else if (action === 'wrong_answer' && currentPlayer.opponent) {
+                currentPlayer.opponent.ws.send(
+                    JSON.stringify({ message: 'opponent_wrong_answer' })
+                )
+                // 自分と相手に勝者を通知
+            } else if (action === 'victory' && currentPlayer.opponent) {
+                currentPlayer.opponent.ws.send(
+                    JSON.stringify({ winner })
+                )
                 ws.send(
-                    JSON.stringify({
-                        success: true,
-                        message: 'Waiting for an opponent...',
-                    })
-                );
+                    JSON.stringify({ winner })
+                )
             }
         });
 

@@ -1,4 +1,5 @@
-type UserType = {
+// DB上で取得するユーザー情報の型
+export type UserType = {
     user_id: number;
     name: string;
     email: string;
@@ -13,4 +14,10 @@ type UserType = {
     iat?: number;
 }
 
-export default UserType;
+// websocket上で取得するユーザー情報の型
+export type wsUserType = {
+    id: number;
+    name: string;
+    rank: string;
+    ws: WebSocket;
+}

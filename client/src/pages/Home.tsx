@@ -1,35 +1,21 @@
-import React, { useState, useEffect, useContext } from "react";
-import { jwtDecode } from "jwt-decode";
+import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button, Card, CardContent, Typography, IconButton, Icon } from "@mui/material";
+import GroupIcon from '@mui/icons-material/Group';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
+import { Header } from "../components/Common/Header";
+import { Footer } from "../components/Common/Footer";
 import { AuthContext } from "../context/AuthContext";
 
-import { Matchmaking } from "../components/Multiplayer/MatchMaking";
-
 export const Home: React.FC = () => {
-  const [showMatchmaking, setShowMatchmaking] = useState(false);
-
   const authContext = useContext(AuthContext);
-  if (authContext === undefined) {
-    throw new Error("useAuth must be used within a AuthProvider");
-  }
-  const { user } = authContext;
   const navi = useNavigate();
 
-  const isTokenExpired = (token: string) => {
-    const decoded: { exp: number } = jwtDecode(token);
-    return decoded.exp * 1000 < Date.now();
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token && isTokenExpired(token)) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("email");
-      alert("Your session has expired. Please log in again.");
-      navi("/login");
-    }
-  }, [navi]);
+  if (authContext === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  const { user } = authContext;
 
   useEffect(() => {
     if (!user) {
@@ -37,17 +23,38 @@ export const Home: React.FC = () => {
     }
   }, [user, navi]);
 
-  const handleMatchmakeClick = () => {
-    setShowMatchmaking(true); // ボタンがクリックされたときにマッチメイキングを表示
+  const handleSinglePlayClick = () => {
+    navi("/singleplay");
+  };
+
+  const handleMultiPlayClick = () => {
+    navi("/multiplay");
   };
 
   return (
-    <div>
-      <h1>Home</h1>
-      {!showMatchmaking && (
-        <button onClick={handleMatchmakeClick}>Start Matchmaking</button> // マッチメイクボタン
-      )}
-      {showMatchmaking && <Matchmaking />}
+    <div className="min-h-screen flex flex-col bg-gray-100">
+      <Header />
+      <main className="flex-grow mt-10">
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center">
+          <div className="flex flex-wrap justify-center gap-6 mt-6">
+            <IconButton
+              color="primary"
+              aria-label="multiplay"
+              onClick={handleSinglePlayClick}
+            >
+              <EmojiPeopleIcon color="primary" fontSize="large" />
+            </IconButton>
+            <IconButton
+              color="primary"
+              aria-label="multiplay"
+              onClick={handleMultiPlayClick}
+            >
+              <GroupIcon color="primary" fontSize="large" />
+            </IconButton>
+          </div>
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 };
