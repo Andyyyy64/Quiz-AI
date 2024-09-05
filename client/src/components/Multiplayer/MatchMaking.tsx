@@ -41,7 +41,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
   }
   const { user } = authContext;
 
-  const { status, send } = useWebSocket("ws://localhost:3000", user, (data) => {
+  const { status, send } = useWebSocket(import.meta.env.VITE_APP_WS_URL, user, (data) => {
     // 接続が確立されたときの処理
     if (data.success && data.opponent) {
       setOpponent(data.opponent);
