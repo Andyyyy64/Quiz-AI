@@ -1,3 +1,11 @@
+export enum Rank {
+    "ランクなし",
+    "ルーキー",
+    "ベテラン",
+    "職人",
+    "努力家"
+}
+
 // DB上で取得するユーザー情報の型
 export type UserType = {
     user_id: number;
@@ -5,7 +13,7 @@ export type UserType = {
     email: string;
     password: string;
     points: number;
-    rank: string[];
+    rank: Rank;
     prof_image_url: string;
     last_login: Date;
     created_at: Date;

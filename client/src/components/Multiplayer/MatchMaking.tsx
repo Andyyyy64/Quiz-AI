@@ -1,38 +1,39 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { CircularProgress, Typography } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 
-import { QuizDisplay } from "../Quiz/QuizDisplay";
+import { MultiGame } from "../Multiplayer/MultiGame";
 
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { useCountDown } from "../../hooks/useCountDown";
 
-import { QuizType } from "../../types/quizType";
+import { Category, Difficulty, QuizType } from "../../types/quizType";
 import { wsUserType } from "../../types/userType";
 
 const dummyQuiz: QuizType = {
   quiz_id: 1,
   problem: "フランスの首都は？",
   answer: "パリ",
-  category: ["地理"],
-  difficulty: ["簡単"],
+  category: Category.noCategory,
+  difficulty: Difficulty.easy,
 };
 
 export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
   onMatchReset,
 }) => {
-  const [opponent, setOpponent] = useState<wsUserType | null>(null);
+  const [opponent, setOpponent] = useState<wsUserType | null>(null); // 相手の情報
   const [matchedNotification, setMatchedNotification] =
-    useState<boolean>(false);
-  const [isMatched, setIsMatched] = useState(false);
-  const [isAnswering, setIsAnswering] = useState(false);
-  const [opponentAnswering, setOpponentAnswering] = useState(false);
-  const [canAnswer, setCanAnswer] = useState(true);
-  const [inputAnswer, setInputAnswer] = useState("");
+    useState<boolean>(false); // マッチング通知用, ToDo:useNotificationに変更したい
+  const [isMatched, setIsMatched] = useState(false); // マッチング完了フラグ
+  const [isAnswering, setIsAnswering] = useState(false); // 回答中フラグ
+  const [opponentAnswering, setOpponentAnswering] = useState(false); // 相手が回答中フラグ
+  const [canAnswer, setCanAnswer] = useState(true); // 回答可能フラグ
+  const [inputAnswer, setInputAnswer] = useState(""); // 回答入力
   const [quiz, setQuiz] = useState<QuizType>(dummyQuiz);
-  const [winner, setWinner] = useState<string | null>(null);
+  const [winner, setWinner] = useState<string | null>(null); // 勝者
 
-  const { countdown, isCounting, startCountDown } = useCountDown(3);
+  const { countdown, isCounting, startCountDown, resetCountDown } =
+    useCountDown(10);
 
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
@@ -48,6 +49,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
       startCountDown();
       setTimeout(() => {
         setMatchedNotification(false);
+        resetCountDown();
         setIsMatched(true);
       }, 3000);
 
@@ -81,15 +83,25 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
     }
   });
 
+  useEffect(() => {
+    if (isAnswering && countdown === 0) {
+      handleTimeOut();
+      setCanAnswer(false); // 一回回答したらもう回答できない
+    }
+  }, [countdown, isAnswering]);
+
   // 回答送信時の処理
   const handleAnswerClick = () => {
     setIsAnswering(true);
     send({ action: "answering" });
+    startCountDown();
   };
 
   const handleAnswerDone = () => {
     setIsAnswering(false); // 自分の回答終了
     send({ action: "done" });
+    resetCountDown(); // タイマーリセット
+    setCanAnswer(false); // 一回回答したらもう回答できない
     // 正解の場合、勝者を通知してマッチをリセット
     if (inputAnswer.trim().toLowerCase() === quiz.answer.toLowerCase()) {
       setWinner(user?.name ?? "You");
@@ -100,9 +112,15 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
       // 不正解の場合、相手に不正解を通知してアラートを表示
     } else {
       send({ action: "wrong_answer" });
-      setCanAnswer(false); // 一回回答したらもう回答できない
       alert("不正解です！");
     }
+  };
+
+  const handleTimeOut = () => {
+    setIsAnswering(false);
+    send({ action: "done" });
+    alert("時間切れです！");
+    resetCountDown(); // タイマーリセット
   };
 
   return (
@@ -123,13 +141,13 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
             マッチングしました！
           </Typography>
           <Typography variant="h6" className="font-bold">
-            {countdown}秒後に開始します...
+            {countdown - 7}秒後に開始します...
           </Typography>
         </div>
       )}
       {/* マッチした　かつ　勝者が決まってない場合 対戦を表示*/}
       {!matchedNotification && isMatched && !winner && (
-        <QuizDisplay
+        <MultiGame
           quiz={quiz}
           inputAnswer={inputAnswer}
           setInputAnswer={setInputAnswer}
@@ -139,6 +157,8 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
           isAnswering={isAnswering}
           opponentAnswering={opponentAnswering}
           opponent={opponent}
+          countdown={countdown}
+          isCounting={isCounting}
         />
       )}
       {/* 勝者が決まったら表示　*/}
