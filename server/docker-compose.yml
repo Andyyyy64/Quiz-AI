@@ -9,6 +9,9 @@ services:
       - .env # 環境変数を読み込む
     volumes:
       - .:/app # serverディレクトリをコンテナの/appにマウント
+      - ./gcpkey.json:/app/keys/gcpkey.json # gcpkey.jsonファイルをコンテナにマウント
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /app/keys/gcpkey.json # コンテナ内のサービスアカウントキーのパスを指定
     depends_on:
       - db
     command: sh -c "npm run dev" # コンテナ起動時に実行するコマンド

@@ -23,7 +23,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const fetchUser = async () => {
       try {
         const res = await getme();
-        console.log(res);
         setUser(res.user);
       } catch (err) {
         console.log(err);
