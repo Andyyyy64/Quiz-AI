@@ -36,7 +36,7 @@ export const getUserById = async (id: number) => {
     return res.data;
 }
 
-// GCPにファイルをアップロードし、そのURLを取得
+// GCPにファイルをアップロードし、URLを取得
 export const handleFileUpload = async (selectedFile: File) => {
     const formData = new FormData();
     formData.append("file", selectedFile);
