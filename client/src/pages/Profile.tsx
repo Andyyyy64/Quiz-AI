@@ -136,7 +136,7 @@ export const Profile: React.FC = () => {
         ) : (
           <div className="text-center">
             <p className="text-xl font-semibold">名前: {user?.name}</p>
-            <p className="text-lg">Email: {user?.email}</p>
+            <p className="text-lg">メールアドレス: {user?.email}</p>
             <p className="text-lg">ランク: {user?.rank}</p>
             <p className="text-lg">ポイント: {user?.points}</p>
             <button
