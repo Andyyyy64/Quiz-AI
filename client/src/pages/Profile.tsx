@@ -84,7 +84,7 @@ export const Profile: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col relative">
       <Header />
-      <div className="flex-grow flex flex-col items-center justify-center p-4">
+      <div className="flex-grow flex flex-col items-center justify-center p-4 absolute top-96 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <h1 className="text-3xl font-bold mb-10">プロフィール</h1>
         {loading ? (
           <div className="flex items-center justify-center h-32 w-32">
@@ -92,7 +92,7 @@ export const Profile: React.FC = () => {
           </div>
         ) : (
           <img
-            className="w-32 h-32 rounded-full mb-4"
+            className="w-60 h-60 rounded-full mb-4"
             src={user?.prof_image_url}
             alt={name}
           />
@@ -136,7 +136,7 @@ export const Profile: React.FC = () => {
         ) : (
           <div className="text-center">
             <p className="text-xl font-semibold">名前: {user?.name}</p>
-            <p className="text-lg">Email: {user?.email}</p>
+            <p className="text-lg">メールアドレス: {user?.email}</p>
             <p className="text-lg">ランク: {user?.rank}</p>
             <p className="text-lg">ポイント: {user?.points}</p>
             <button

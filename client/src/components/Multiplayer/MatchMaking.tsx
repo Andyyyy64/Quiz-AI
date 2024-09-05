@@ -29,7 +29,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
   const [opponentAnswering, setOpponentAnswering] = useState(false); // 相手が回答中フラグ
   const [canAnswer, setCanAnswer] = useState(true); // 回答可能フラグ
   const [inputAnswer, setInputAnswer] = useState(""); // 回答入力
-  const [quiz, setQuiz] = useState<QuizType>(dummyQuiz);
+  const [quiz, _setQuiz] = useState<QuizType>(dummyQuiz);
   const [winner, setWinner] = useState<string | null>(null); // 勝者
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
@@ -41,7 +41,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
   }
   const { user } = authContext;
 
-  const { status, send } = useWebSocket("ws://localhost:3000", user, (data) => {
+  const { status, send } = useWebSocket(import.meta.env.VITE_APP_WS_URL, user, (data) => {
     // 接続が確立されたときの処理
     if (data.success && data.opponent) {
       setOpponent(data.opponent);

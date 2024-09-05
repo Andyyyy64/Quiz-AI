@@ -62,21 +62,21 @@ export const Header: React.FC = () => {
                 aria-label="profile"
                 onClick={handleProfileClick}
               >
-                <AccountCircle />
+                <AccountCircle fontSize="large" />
               </IconButton>
               <IconButton
                 color="inherit"
                 aria-label="history"
                 onClick={handleHistoryClick}
               >
-                <HistoryIcon />
+                <HistoryIcon fontSize="medium" />
               </IconButton>
               <IconButton
                 color="inherit"
                 aria-label="logout"
                 onClick={handleLogout}
               >
-                <LogoutIcon />
+                <LogoutIcon fontSize="medium" />
               </IconButton>
             </>
           )}
