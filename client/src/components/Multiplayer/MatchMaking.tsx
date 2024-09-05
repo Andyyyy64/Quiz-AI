@@ -135,7 +135,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
           <CircularProgress />
         </div>
       )}
-      {/* マッチング完了通知 */}
+      {/* マッチング完了通知 7秒引いて3秒のカウントダウンにしてる藁*/}
       {matchedNotification && isCounting && (
         <div className="w-full text-center">
           <Typography variant="h4" className="font-bold">
