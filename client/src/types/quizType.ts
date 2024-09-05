@@ -1,23 +1,50 @@
 import { wsUserType } from "./userType";
 
+export enum Difficulty {
+    "noDiff" = "難易度なし",
+    "easy" = "簡単",
+    "normal" = "普通",
+    "difficult" = "難しい",
+    "superDifficult" = "超難しい"
+}
+
+export enum Category {
+    "noCategory" = "カテゴリなし",
+}
+
 // クイズの型
 export type QuizType = {
     quiz_id: number;
     problem: string;
     answer: string;
-    category: string[];
-    difficulty: string[];
+    category: Category | string; // カテゴリは仮なのでstringを許容
+    difficulty: Difficulty;
 }
 
-// クイズ表示コンポーネントのプロップス
-export type QuizDisplayProps = {
+export type QuizProps = {
     quiz: QuizType;
+    countdown: number;
+    isCounting: boolean;
+}
+
+export type PlayerUIProps = {
+    isAnswering: boolean;
+    opponentAnswering: boolean;
     inputAnswer: string;
-    setInputAnswer: (answer: string) => void;
+    setInputAnswer: React.Dispatch<React.SetStateAction<string>>;
     handleAnswerClick: () => void;
     handleAnswerDone: () => void;
     canAnswer: boolean;
-    isAnswering: boolean;
-    opponentAnswering: boolean;
+}
+
+export type OpponentUIProps = {
     opponent: wsUserType | null;
+    opponentAnswering: boolean;
+}
+
+export interface QuizDisplayProps extends PlayerUIProps {
+    quiz: QuizType;
+    opponent: wsUserType | null;
+    countdown: number;
+    isCounting: boolean;
 }

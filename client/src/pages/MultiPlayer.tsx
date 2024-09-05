@@ -40,7 +40,7 @@ export const Multiplayer: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                Start
+                開始
               </Button>
             </div>
           )}

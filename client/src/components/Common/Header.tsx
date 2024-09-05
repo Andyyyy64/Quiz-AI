@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Button, IconButton } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { AccountCircle } from "@mui/icons-material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HistoryIcon from "@mui/icons-material/History";
 
@@ -44,7 +44,12 @@ export const Header: React.FC = () => {
             color="inherit"
             aria-label="home"
             onClick={handleHomeClick}
-            sx={{ color: "black", fontFamily: "cursive", fontWeight: "bold", fontSize: "1.2rem"}}
+            sx={{
+              color: "black",
+              fontFamily: "cursive",
+              fontWeight: "bold",
+              fontSize: "1.2rem",
+            }}
           >
             AI Quiz Battle
           </Button>
@@ -54,10 +59,10 @@ export const Header: React.FC = () => {
             <>
               <IconButton
                 color="inherit"
-                aria-label="account"
+                aria-label="profile"
                 onClick={handleProfileClick}
               >
-                <AccountCircleIcon />
+                <AccountCircle />
               </IconButton>
               <IconButton
                 color="inherit"
