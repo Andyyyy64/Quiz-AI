@@ -102,6 +102,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
     send({ action: "done" });
     resetCountDown(); // タイマーリセット
     setCanAnswer(false); // 一回回答したらもう回答できない
+    setInputAnswer(""); // 回答入力リセット
     // 正解の場合、勝者を通知してマッチをリセット
     if (inputAnswer.trim().toLowerCase() === quiz.answer.toLowerCase()) {
       setWinner(user?.name ?? "You");
