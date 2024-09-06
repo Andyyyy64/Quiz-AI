@@ -36,7 +36,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div className="">
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center">
           <Button

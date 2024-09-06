@@ -1,11 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Typography, Grid, IconButton } from "@mui/material";
-import GroupIcon from "@mui/icons-material/Group";
-import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
-import HistoryIcon from "@mui/icons-material/History";
-import LeaderboardIcon from "@mui/icons-material/Leaderboard";
-
+import { Button, Typography, Grid } from "@mui/material";
+import { EmojiPeople, Group, Leaderboard, History } from "@mui/icons-material";
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { AuthContext } from "../context/AuthContext";
@@ -25,51 +21,50 @@ export const Home: React.FC = () => {
     }
   }, [user, navi]);
 
-  const handleSinglePlayClick = () => {
-    navi("/singleplay");
-  };
-
-  const handleMultiPlayClick = () => {
-    navi("/multiplay");
-  };
-
-  const handleHistoryClick = () => {
-    navi("/history");
-  };
-
-  const handleRankingClick = () => {
-    navi("/ranking");
-  };
+  const handleSinglePlayClick = () => navi("/singleplay");
+  const handleMultiPlayClick = () => navi("/multiplay");
+  const handleHistoryClick = () => navi("/history");
+  const handleRankingClick = () => navi("/ranking");
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 relative">
+    <div className="min-h-screen flex flex-col bg-white text-[#333333] relative overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `radial-gradient(#FF6B6B 1px, transparent 1px), radial-gradient(#4ECDC4 1px, transparent 1px)`,
+            backgroundSize: "20px 20px, 30px 30px",
+            backgroundPosition: "0 0, 15px 15px",
+            animation: "moveBackground 20s linear infinite",
+          }}
+        ></div>
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `radial-gradient(#FFD93D 1px, transparent 1px), radial-gradient(#FF6B6B 1px, transparent 1px)`,
+            backgroundSize: "20px 20px, 30px 30px",
+            backgroundPosition: "0 0, 15px 15px",
+            animation: "moveBackground 15s linear infinite reverse",
+          }}
+        ></div>
+      </div>
       <Header />
-      <main className="flex-grow flex flex-col items-center justify-center">
-        <div className=" absolute top-44">
-          <Typography variant="h4" component="h1" className="">
-            こんにちは、{user?.name}さん！
-          </Typography>
-          <Typography variant="subtitle1" component="p" className="text-center">
-            どのモードで遊びますか？
-          </Typography>
-        </div>
-
-        <Grid container spacing={0} justifyContent="center" className=" gap-5">
+      <main className="flex-grow flex flex-col items-center justify-center relative z-10">
+        <Grid
+          container
+          spacing={4}
+          direction="column"
+          alignItems="center"
+          className="mb-8"
+        >
           <Grid item>
             <Button
               variant="contained"
-              color="inherit"
-              startIcon={<EmojiPeopleIcon />}
+              startIcon={<EmojiPeople />}
               onClick={handleSinglePlayClick}
-              style={{
-                width: "180px",
-                height: "120px",
-                fontSize: "18px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              size="large"
+              sx={{ backgroundColor: "#FF6B6B"}}
+              className="w-96 h-16 text-lg flex items-center justify-center hover:bg-[#45b7a7] text-white transition-all hover:shadow-xl hover:scale-105"
             >
               シングルプレイ
             </Button>
@@ -77,69 +72,51 @@ export const Home: React.FC = () => {
           <Grid item>
             <Button
               variant="contained"
-              color="inherit"
-              startIcon={<GroupIcon />}
+              startIcon={<Group />}
               onClick={handleMultiPlayClick}
-              style={{
-                width: "180px",
-                height: "120px",
-                fontSize: "18px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              className="w-96 h-16 text-lg flex items-center justify-center bg-[#FF6B6B] hover:bg-[#ff5252] text-white rounded-full shadow-lg transition-all hover:shadow-xl hover:scale-105"
             >
               マルチプレイ
             </Button>
           </Grid>
         </Grid>
 
-        <Grid
-          container
-          spacing={4}
-          justifyContent="center"
-          sx={{ marginTop: 5 }}
-        >
+        <Grid container spacing={4} justifyContent="center">
           <Grid item>
-            <IconButton
-              color="error"
+            <Button
               onClick={handleRankingClick}
-              style={{
-                width: "80px",
-                height: "80px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              className="w-24 h-24 rounded-full transition-colors flex flex-col items-center justify-center"
             >
-              <LeaderboardIcon fontSize="large" />
-            </IconButton>
-            <Typography variant="body2" align="center" className="mt-2">
-              ランキング
-            </Typography>
+              <Leaderboard fontSize="large" className="text-[#FF6B6B]" />
+              <Typography variant="body2" className="mt-2 text-[#333333]">
+                ランキング
+              </Typography>
+            </Button>
           </Grid>
           <Grid item>
-            <IconButton
-              color="info"
+            <Button
               onClick={handleHistoryClick}
-              style={{
-                width: "80px",
-                height: "80px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              className="w-24 h-24 rounded-full transitionflex flex-col items-center justify-center"
             >
-              <HistoryIcon fontSize="large" />
-            </IconButton>
-            <Typography variant="body2" align="center" className="mt-2">
-              対戦履歴
-            </Typography>
+              <History fontSize="large" className="text-[#FF6B6B]" />
+              <Typography variant="body2" className="mt-2 text-[#333333]">
+                対戦履歴
+              </Typography>
+            </Button>
           </Grid>
         </Grid>
       </main>
       <Footer />
+      <style jsx global>{`
+        @keyframes moveBackground {
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(20px, 20px);
+          }
+        }
+      `}</style>
     </div>
   );
 };
