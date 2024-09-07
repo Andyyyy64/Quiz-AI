@@ -26,6 +26,7 @@ export const PreMatchLoading: React.FC<PreMatchLoadingProps> = ({ status }) => {
           </div>
         </div>
       </div>
+      {/* @ts-ignore */}
       <style jsx global>{`
         @keyframes moveBackground {
           0% {

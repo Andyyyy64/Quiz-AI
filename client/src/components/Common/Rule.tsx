@@ -1,5 +1,4 @@
 import React from "react";
-import { Box, Typography, List, ListItem, ListItemText } from "@mui/material";
 import { Users, Zap, Trophy } from "lucide-react";
 
 export const Rule: React.FC = () => {

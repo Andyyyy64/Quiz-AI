@@ -27,13 +27,11 @@ export type QuizProps = {
     quiz: QuizType | undefined;
     countdown: number;
     isCounting: boolean;
-    selectedAnswer: string;
     isAnswerCorrect: boolean | null;
     canAnswer: boolean;
     isTimeUp: boolean;
     currentQuizIndex?: number;
     correctCount?: number;
-    setSelectedAnswer: React.Dispatch<React.SetStateAction<string>>;
     handleAnswerSelect: (selectAnswer: string) => void;
 }
 

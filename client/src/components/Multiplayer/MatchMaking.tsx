@@ -21,26 +21,22 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const [quiz, setQuiz] = useState<QuizType>(); // 現在のクイズ
   const [nextQuiz, setNextQuiz] = useState<QuizType>(); // 次のクイズ 
   const [opponent, setOpponent] = useState<wsUserType | null>(null); // マッチした相手の情報
-  const [selectedAnswer, setSelectedAnswer] = useState(""); // 回答入力
   const [currentQuizIndex, setCurrentQuizIndex] = useState(1); // 現在のクイズのインデックス
   const [correctCount, setCorrectCount] = useState(0); // 正解数
 
   // flags
-  const [matchedNotification, setMatchedNotification] =
-    useState<boolean>(false); // マッチング通知用, ToDo:useNotificationに変更したい
+  const [matchedNotification, setMatchedNotification] = useState<boolean>(false); // マッチング通知用, ToDo:useNotificationに変更したい
   const [isMatched, setIsMatched] = useState(false); // マッチング完了フラグ
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null); // 回答の正誤
-  const [canAnswer, setCanAnswer] = useState(true); // 回答可能フラグ(1回回答したら次の問題が表示されるまでfalse)
+  const [canAnswer, setCanAnswer] = useState(true); // 回答可能フラグ
   const [isTimeUp, setIsTimeUp] = useState(false); // タイムアップフラグ
   const [winner, setWinner] = useState<string | null>(""); // 勝者
-
-
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
     useCountDown(10);
 
   const { notification, showNotification } = useNotification();
-  
+
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
@@ -93,7 +89,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       } else if (data.message === "opponent_wrong_answer") {
         showNotification("相手が誤答しました！", "info");
         setCanAnswer(true);
-      } else if(data.message === "time_up_refetch") {
+      } else if (data.message === "time_up_refetch") {
         send({ action: "fetch_next_quiz" });
       }
     }
@@ -101,7 +97,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
 
   // 回答送信時の処理
   const handleAnswerSelect = (selectAnswer: string) => {
-    setSelectedAnswer(selectAnswer);
     setCanAnswer(false);
     if (selectAnswer === quiz?.correct_answer) {
       // 正解時の処理
@@ -166,7 +161,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       setCanAnswer(false);
       resetCountDown();
       // お互いのcountdonwは同期しているので2回送信してしまう
-      // 一方のみに送信するように修正
+      // 一方のみに送信するようにidを比較
       if (((user?.user_id ?? 0) > (opponent?.id ?? 1))) {
         send({ action: "fetch_next_quiz" });
       }
@@ -192,8 +187,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
         <MultiGame
           user={user}
           quiz={quiz}
-          selectedAnswer={selectedAnswer}
-          setSelectedAnswer={setSelectedAnswer}
           handleAnswerSelect={handleAnswerSelect}
           opponent={opponent}
           countdown={countdown}

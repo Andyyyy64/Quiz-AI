@@ -1,7 +1,7 @@
 import React from "react";
 import { Clock } from "lucide-react";
 import { QuizProps } from "../../types/quizType";
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 export const QuizDisplay: React.FC<QuizProps> = ({
   quiz,
@@ -9,7 +9,6 @@ export const QuizDisplay: React.FC<QuizProps> = ({
   isCounting,
   isAnswerCorrect,
   handleAnswerSelect,
-  selectedAnswer,
   canAnswer,
   isTimeUp,
   correctCount,
@@ -66,7 +65,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
           </div>
         )
       }
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mt-10">
         <div className="flex items-center space-x-2">
           <CheckCircle className="h-6 w-6 text-[#4ECDC4]" />
           <span className="text-lg font-bold">正解数: {correctCount}</span>

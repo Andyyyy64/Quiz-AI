@@ -11,8 +11,6 @@ import { QuizDisplayProps } from "../../../types/quizType";
 export const MultiGame: React.FC<QuizDisplayProps> = ({
   user,
   quiz,
-  selectedAnswer,
-  setSelectedAnswer,
   handleAnswerSelect,
   opponent,
   countdown,
@@ -37,8 +35,6 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
         quiz={quiz}
         countdown={countdown}
         isCounting={isCounting}
-        selectedAnswer={selectedAnswer}
-        setSelectedAnswer={setSelectedAnswer}
         handleAnswerSelect={handleAnswerSelect}
         isAnswerCorrect={isAnswerCorrect}
         canAnswer={canAnswer}
