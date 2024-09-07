@@ -10,10 +10,10 @@ export const useWebSocket = (url: string, user: any, onMessage: (data: any) => v
 
         // WebSocketサーバーに接続
         ws.current.onopen = () => {
-            setStatus("マッチ待機中...");
+            setStatus("マッチ待機中");
             if (user != null) {
                 ws.current?.send(
-                    JSON.stringify({ id: user.user_id, name: user.name, rank: user.rank })
+                    JSON.stringify({ id: user.user_id, name: user.name, rank: user.rank, prof_image_url: user.prof_image_url })
                 );
             }
         };

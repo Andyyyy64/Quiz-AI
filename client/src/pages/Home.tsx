@@ -1,10 +1,10 @@
 import React, { useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Typography, Grid } from "@mui/material";
-import { EmojiPeople, Group, Leaderboard, History } from "@mui/icons-material";
+import { useNavigate, Link } from "react-router-dom";
+import { Button } from "@mui/material";
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { AuthContext } from "../context/AuthContext";
+import { Users, User, Clock, BarChart } from "lucide-react"
 
 export const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -23,100 +23,68 @@ export const Home: React.FC = () => {
 
   const handleSinglePlayClick = () => navi("/singleplay");
   const handleMultiPlayClick = () => navi("/multiplay");
-  const handleHistoryClick = () => navi("/history");
-  const handleRankingClick = () => navi("/ranking");
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#333333] relative overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `radial-gradient(#FF6B6B 1px, transparent 1px), radial-gradient(#4ECDC4 1px, transparent 1px)`,
-            backgroundSize: "20px 20px, 30px 30px",
-            backgroundPosition: "0 0, 15px 15px",
-            animation: "moveBackground 20s linear infinite",
-          }}
-        ></div>
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `radial-gradient(#FFD93D 1px, transparent 1px), radial-gradient(#FF6B6B 1px, transparent 1px)`,
-            backgroundSize: "20px 20px, 30px 30px",
-            backgroundPosition: "0 0, 15px 15px",
-            animation: "moveBackground 15s linear infinite reverse",
-          }}
-        ></div>
-      </div>
+    <div className="min-h-screen flex flex-col bg-inherit text-[#333333] relative overflow-hidden">
       <Header />
-      <main className="flex-grow flex flex-col items-center justify-center relative z-10">
-        <Grid
-          container
-          spacing={4}
-          direction="column"
-          alignItems="center"
-          className="mb-8"
-        >
-          <Grid item>
-            <Button
-              variant="contained"
-              startIcon={<EmojiPeople />}
-              onClick={handleSinglePlayClick}
-              size="large"
-              sx={{ backgroundColor: "#FF6B6B"}}
-              className="w-96 h-16 text-lg flex items-center justify-center hover:bg-[#45b7a7] text-white transition-all hover:shadow-xl hover:scale-105"
-            >
-              シングルプレイ
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              startIcon={<Group />}
-              onClick={handleMultiPlayClick}
-              className="w-96 h-16 text-lg flex items-center justify-center bg-[#FF6B6B] hover:bg-[#ff5252] text-white rounded-full shadow-lg transition-all hover:shadow-xl hover:scale-105"
-            >
-              マルチプレイ
-            </Button>
-          </Grid>
-        </Grid>
+      <main className="container mx-auto mt-20 px-4 flex flex-col items-center absolute sm:top-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="text-center space-y-8 mb-16 w-full max-w-md">
+          <Button
+            className="w-full h-16 text-black shadow-lg hover:shadow-xl hover:scale-105 hover:cursor-pointer hover:bg-[#FF8787]"
+            sx={{
+              backgroundColor: "#FF6B6B",
+              color: "white",
+              borderRadius: "9999px",
+              fontWeight: "bold",
+              fontSize: "1.2rem",
+            }}
+            onClick={handleMultiPlayClick}
+          >
+            <Users className="mr-4 h-8 w-8" />
+            マルチプレイ
+          </Button>
+          <Button
+            className="w-60 h-12 text-xl py-6 px-12 hover:bg-[#4ECDC4] hover:text-white rounded-full transition-all"
+            variant="outlined"
+            sx={{
+              borderColor: "#4ECDC4",
+              color: "#4ECDC4",
+              borderRadius: "9999px",
+              fontWeight: "bold",
+            }}
+            onClick={handleSinglePlayClick}
+          >
+            <User className="mr-4 h-6 w-6" />
+            シングルプレイ
+          </Button>
+        </div>
 
-        <Grid container spacing={4} justifyContent="center">
-          <Grid item>
-            <Button
-              onClick={handleRankingClick}
-              className="w-24 h-24 rounded-full transition-colors flex flex-col items-center justify-center"
-            >
-              <Leaderboard fontSize="large" className="text-[#FF6B6B]" />
-              <Typography variant="body2" className="mt-2 text-[#333333]">
-                ランキング
-              </Typography>
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              onClick={handleHistoryClick}
-              className="w-24 h-24 rounded-full transitionflex flex-col items-center justify-center"
-            >
-              <History fontSize="large" className="text-[#FF6B6B]" />
-              <Typography variant="body2" className="mt-2 text-[#333333]">
-                対戦履歴
-              </Typography>
-            </Button>
-          </Grid>
-        </Grid>
+        <div className="flex justify-center space-x-12 mt-8">
+          <Link
+            to="/history"
+            className="group flex flex-col items-center transition-transform transform hover:scale-110"
+          >
+            <div className="bg-[#F0F0F0] p-4 rounded-full group-hover:bg-[#FFD93D] transition-colors">
+              <Clock className="h-10 w-10 text-[#FF6B6B]" />
+            </div>
+            <span className="mt-2 text-sm font-medium text-[#333333] group-hover:text-[#FF6B6B] transition-colors">
+              履歴
+            </span>
+          </Link>
+          <Link
+            to="/rankings"
+            className="group flex flex-col items-center transition-transform transform hover:scale-110"
+          >
+            <div className="bg-[#F0F0F0] p-4 rounded-full group-hover:bg-[#FFD93D] transition-colors">
+              <BarChart className="h-10 w-10 text-[#FF6B6B]" />
+            </div>
+            <span className="mt-2 text-sm font-medium text-[#333333] group-hover:text-[#FF6B6B] transition-colors">
+              ランキング
+            </span>
+          </Link>
+        </div>
       </main>
       <Footer />
-      <style jsx global>{`
-        @keyframes moveBackground {
-          0% {
-            transform: translate(0, 0);
-          }
-          100% {
-            transform: translate(20px, 20px);
-          }
-        }
-      `}</style>
     </div>
   );
 };

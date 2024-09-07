@@ -3,7 +3,8 @@ import { WebSocketServer, WebSocket } from 'ws';
 interface Player {
     id: string;
     name: string;
-    rank: string[];
+    rank: string;
+    prof_image_url?: string;
     ws: WebSocket;
     opponent?: Player; // マッチング相手を保持
 }
@@ -19,11 +20,11 @@ export const setupWebSocketServer = (server: any) => {
 
         ws.on('message', (message: string) => {
             const data = JSON.parse(message);
-            const { id, name, rank, action, winner } = data;
+            const { id, name, rank, prof_image_url, action, winner } = data;
 
             // プレイヤーの接続・マッチメイキング処理
             if (!currentPlayer) {
-                currentPlayer = { id, name, rank, ws };
+                currentPlayer = { id, name, rank, prof_image_url, ws };
                 // 待機プレイヤーがいる場合はマッチング
                 if (waitingPlayers.length > 0) {
                     const matchedPlayer = waitingPlayers.shift() as Player; // 先頭のプレイヤーを取得
@@ -37,14 +38,24 @@ export const setupWebSocketServer = (server: any) => {
                         JSON.stringify({
                             success: true,
                             message: 'matched',
-                            opponent: { id: currentPlayer.id, name: currentPlayer.name, rank: currentPlayer.rank },
+                            opponent: {
+                                id: currentPlayer.id,
+                                name: currentPlayer.name,
+                                rank: currentPlayer.rank,
+                                prof_image_url: currentPlayer.prof_image_url
+                            },
                         })
                     );
                     currentPlayer.ws.send(
                         JSON.stringify({
                             success: true,
                             message: 'matched',
-                            opponent: { id: matchedPlayer.id, name: matchedPlayer.name, rank: matchedPlayer.rank },
+                            opponent: {
+                                id: matchedPlayer.id,
+                                name: matchedPlayer.name,
+                                rank: matchedPlayer.rank,
+                                prof_image_url: matchedPlayer.prof_image_url
+                            },
                         })
                     );
                 } else {

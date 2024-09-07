@@ -1,3 +1,59 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 背景全体に適用するためのスタイル */
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background-color: white;
+}
+
+.background-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(#FF6B6B 1px, transparent 1px), radial-gradient(#4ECDC4 1px, transparent 1px);
+    background-size: 20px 20px, 30px 30px;
+    background-position: 0 0, 15px 15px;
+    opacity: 0.25;
+    animation: moveBackground 15s linear infinite;
+}
+
+.background-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: radial-gradient(#FFD93D 1px, transparent 1px), radial-gradient(#FF6B6B 1px, transparent 1px);
+    background-size: 20px 20px, 30px 30px;
+    background-position: 0 0, 15px 15px;
+    opacity: 0.25;
+    animation: moveBackgroundReverse 10s linear infinite reverse;
+}
+
+@keyframes moveBackground {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(20px, 20px);
+    }
+}
+
+@keyframes moveBackgroundReverse {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(-20px, -20px);
+    }
+}

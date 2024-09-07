@@ -1,4 +1,4 @@
-import { wsUserType } from "./userType";
+import { UserType, wsUserType } from "./userType";
 
 export enum Difficulty {
     "noDiff" = "難易度なし",
@@ -25,9 +25,6 @@ export type QuizProps = {
     quiz: QuizType;
     countdown: number;
     isCounting: boolean;
-}
-
-export type PlayerUIProps = {
     isAnswering: boolean;
     opponentAnswering: boolean;
     inputAnswer: string;
@@ -37,13 +34,17 @@ export type PlayerUIProps = {
     canAnswer: boolean;
 }
 
-export type OpponentUIProps = {
-    opponent: wsUserType | null;
-    opponentAnswering: boolean;
+export type PlayerUIProps = {
+    user: UserType | null;
 }
 
-export interface QuizDisplayProps extends PlayerUIProps {
+export type OpponentUIProps = {
+    opponent: wsUserType | null;
+}
+
+export interface QuizDisplayProps extends QuizProps {
     quiz: QuizType;
+    user: UserType | null;
     opponent: wsUserType | null;
     countdown: number;
     isCounting: boolean;

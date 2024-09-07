@@ -1,12 +1,11 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, IconButton } from "@mui/material";
-import { AccountCircle } from "@mui/icons-material";
-import LogoutIcon from "@mui/icons-material/Logout";
-import HistoryIcon from "@mui/icons-material/History";
-
+import { Button } from "@mui/material";
+import { User, LogOut, Clock } from "lucide-react";
 import { AuthContext } from "../../context/AuthContext";
+
+import { Brain } from "lucide-react";
 
 export const Header: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -46,39 +45,44 @@ export const Header: React.FC = () => {
             onClick={handleHomeClick}
             sx={{
               color: "black",
-              fontFamily: "cursive",
               fontWeight: "bold",
               fontSize: "1.2rem",
+              backgroundColor: "inherit",
             }}
           >
-            AI Quiz Battle
+            <Brain className="h-8 w-8 text-[#FF6B6B]" />
           </Button>
         </div>
         <div className="flex items-center gap-2">
           {user && (
-            <>
-              <IconButton
-                color="inherit"
-                aria-label="profile"
-                onClick={handleProfileClick}
-              >
-                <AccountCircle fontSize="large" />
-              </IconButton>
-              <IconButton
-                color="inherit"
-                aria-label="history"
-                onClick={handleHistoryClick}
-              >
-                <HistoryIcon fontSize="medium" />
-              </IconButton>
-              <IconButton
-                color="inherit"
-                aria-label="logout"
-                onClick={handleLogout}
-              >
-                <LogoutIcon fontSize="medium" />
-              </IconButton>
-            </>
+            <div className="container mx-auto flex justify-between items-center p-4">
+              <div className="flex items-center">
+                <Button
+                  className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"
+                  sx={{ color: "black" }}
+                  variant="text"
+                  onClick={handleProfileClick}
+                >
+                  <User className="h-6 w-6" />
+                </Button>
+                <Button
+                  className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"
+                  sx={{ color: "black" }}
+                  variant="text"
+                  onClick={handleHistoryClick}
+                >
+                  <Clock className="h-6 w-6" />
+                </Button>
+                <Button
+                  className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"
+                  sx={{ color: "black" }}
+                  variant="text"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-6 w-6" />
+                </Button>
+              </div>
+            </div>
           )}
         </div>
       </div>
