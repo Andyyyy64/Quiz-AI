@@ -1,12 +1,11 @@
-type MultiPlayHistoryType = {
+export type MultiPlayHistoryType = {
     session_id: number;
     user_id: number;
-    quiz_id: number;
+    quiz_id: number[];
     opponent_user_id: number;
-    did_win: boolean;
+    who_win: number;
     points_awarded: number;
+    match_duration: number;
     created_at: Date;
     updated_at: Date;
 }
-
-export default MultiPlayHistoryType;

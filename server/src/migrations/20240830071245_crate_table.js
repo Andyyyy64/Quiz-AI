@@ -25,8 +25,9 @@ exports.up = function (knex) {
     })
     .createTable("quiz", function (table) {
       table.increments("quiz_id").primary();
-      table.string("problem").notNullable();
-      table.string("answer").notNullable();
+      table.string("question").notNullable();
+      table.string("correct_answer").notNullable();
+      table.json("choices").notNullable(); // ほんとはstring[]
       table.string("category").notNullable().defaultTo("カテゴリなし");
       table.string("difficulty").notNullable().defaultTo("簡単");
       table.timestamp("created_at").defaultTo(knex.fn.now());
@@ -36,9 +37,10 @@ exports.up = function (knex) {
       table.increments("id").primary();
       table.integer("user_id").unsigned().notNullable();
       table.foreign("user_id").references("users.user_id");
-      table.integer("quiz_id").unsigned().notNullable();
+      table.json("quiz_id").unsigned().notNullable(); // ほんとはnumber[]
       table.foreign("quiz_id").references("quiz.quiz_id");
-      table.boolean("did_correct").notNullable().defaultTo(false);
+      table.integer("correct_num").notNullable().defaultTo(0);
+      table.integer("duration").notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
       table.timestamp("updated_at").defaultTo(knex.fn.now());
     })
@@ -46,12 +48,14 @@ exports.up = function (knex) {
       table.increments("session_id").primary();
       table.integer("user_id").unsigned().notNullable();
       table.foreign("user_id").references("users.user_id");
-      table.integer("quiz_id").unsigned().notNullable();
+      table.json("quiz_id").unsigned().notNullable(); // ほんとはnumber[]
       table.foreign("quiz_id").references("quiz.quiz_id");
       table.integer("opponent_user_id").unsigned().notNullable();
       table.foreign("opponent_user_id").references("users.user_id");
-      table.boolean("did_win").notNullable().defaultTo(false);
+      table.integer("who_win").unsigned().notNullable();
+      table.foreign("who_win").references("users.user_id");
       table.integer("points_awarded").notNullable();
+      table.integer("match_duration").notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
       table.timestamp("updated_at").defaultTo(knex.fn.now());
     });
