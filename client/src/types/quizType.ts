@@ -17,10 +17,10 @@ export type QuizType = {
     quiz_id?: number;
     question: string;
     category: Category | string; // カテゴリは仮なのでstringを許容
+    difficulty: Difficulty;
     choices: string[];
     explanation: string;
     correct_answer: string;
-    difficulty: Difficulty;
 }
 
 export type QuizProps = {
