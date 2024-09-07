@@ -30,6 +30,9 @@ export type QuizProps = {
     selectedAnswer: string;
     isAnswerCorrect: boolean | null;
     canAnswer: boolean;
+    isTimeUp: boolean;
+    currentQuizIndex?: number;
+    correctCount?: number;
     setSelectedAnswer: React.Dispatch<React.SetStateAction<string>>;
     handleAnswerSelect: (selectAnswer: string) => void;
 }
@@ -50,6 +53,10 @@ export type MatchedUIProps = {
     opponent: wsUserType | null;
     user: UserType | null;
     countdown: number;
+}
+
+export type QuizProgressUIProps = {
+    currentQuizIndex: number;
 }
 
 export interface QuizDisplayProps extends QuizProps {

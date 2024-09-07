@@ -15,7 +15,7 @@ export const MatchedUI: React.FC<MatchedUIProps> = ({
         <div className="flex justify-around mb-8">
           <div className="text-center">
             <img
-              className="w-32 h-32 rounded-full object-cover border-2 border-[#FF6B6B]"
+              className="w-32 h-32 rounded-full object-cover border-2 border-[#4ECDC4]"
               src={user?.prof_image_url}
               alt={user?.name}
             />
@@ -38,7 +38,7 @@ export const MatchedUI: React.FC<MatchedUIProps> = ({
         </div>
         <p className="text-xl mb-6">壮大な知識のバトルに備えよ！</p>
         <div className="bg-[#F0F0F0] rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
-          <span className="text-4xl font-bold">{countdown - 7}</span>
+          <span className="text-4xl font-bold">{countdown - 27}</span>
         </div>
       </div>
     </div>

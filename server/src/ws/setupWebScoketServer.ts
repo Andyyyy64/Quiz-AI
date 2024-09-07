@@ -111,12 +111,19 @@ export const setupWebSocketServer = (server: any) => {
 
                 // 次のクイズを生成して送信
             } else if (action === 'fetch_next_quiz' && currentPlayer.opponent) {
+                console.log('Fetching next quiz...');
                 quiz = await generateQuiz();
                 ws.send(JSON.stringify({ quiz, message: 'next_quiz' }));
-                currentPlayer.opponent.ws.send(JSON.stringify({ quiz, message: 'next_quiz' }));
+                if(currentPlayer.opponent.ws.readyState === WebSocket.OPEN) {
+                    currentPlayer.opponent.ws.send(JSON.stringify({ quiz, message: 'next_quiz' }));
+                } else {
+                    throw new Error('Opponent WebSocket is not open.');
+                }
 
-
-                // 勝者が決まった場合, 勝者を相手に通知
+            } else if (action === 'time_up' && currentPlayer.opponent) {
+                currentPlayer.ws.send(
+                    JSON.stringify({ message: 'time_up_refetch' })
+                )
             } else if (action === 'victory' && currentPlayer.opponent) {
                 currentPlayer.opponent.ws.send(
                     JSON.stringify({ winner })

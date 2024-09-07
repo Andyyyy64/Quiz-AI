@@ -56,31 +56,25 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-2">
           {user && (
             <div className="container mx-auto flex justify-between items-center p-4">
-              <div className="flex items-center">
-                <Button
+              <div className="flex items-center space-x-10">
+                <button
                   className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"
-                  sx={{ color: "black" }}
-                  variant="text"
                   onClick={handleProfileClick}
                 >
                   <User className="h-6 w-6" />
-                </Button>
-                <Button
+                </button>
+                <button
                   className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"
-                  sx={{ color: "black" }}
-                  variant="text"
                   onClick={handleHistoryClick}
                 >
                   <Clock className="h-6 w-6" />
-                </Button>
-                <Button
+                </button>
+                <button
                   className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"
-                  sx={{ color: "black" }}
-                  variant="text"
                   onClick={handleLogout}
                 >
                   <LogOut className="h-6 w-6" />
-                </Button>
+                </button>
               </div>
             </div>
           )}

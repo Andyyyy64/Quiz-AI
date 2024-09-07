@@ -27,10 +27,13 @@ export const Home: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-inherit text-[#333333] relative overflow-hidden">
       <Header />
-      <main className="container mx-auto mt-20 px-4 flex flex-col items-center absolute sm:top-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <main className="container mx-auto mt-20 px-4 flex flex-col items-center 
+      absolute sm:top-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      >
         <div className="text-center space-y-8 mb-16 w-full max-w-md">
           <Button
-            className="w-full h-16 text-black shadow-lg hover:shadow-xl hover:scale-105 hover:cursor-pointer hover:bg-[#FF8787]"
+            className="w-full h-16 text-black shadow-lg hover:shadow-xl 
+            hover:scale-105 hover:cursor-pointer hover:bg-[#FF8787] transition-all"
             sx={{
               backgroundColor: "#FF6B6B",
               color: "white",
@@ -44,11 +47,11 @@ export const Home: React.FC = () => {
             マルチプレイ
           </Button>
           <Button
-            className="w-60 h-12 text-xl py-6 px-12 hover:bg-[#4ECDC4] hover:text-white rounded-full transition-all"
-            variant="outlined"
+            className="w-60 h-12 text-xl py-6 px-12 hover:bg-[#66e4db]
+            hover:scale-105 rounded-full transition-all"
             sx={{
-              borderColor: "#4ECDC4",
-              color: "#4ECDC4",
+              backgroundColor: "#4ECDC4",
+              color: "white",
               borderRadius: "9999px",
               fontWeight: "bold",
             }}
@@ -62,23 +65,34 @@ export const Home: React.FC = () => {
         <div className="flex justify-center space-x-12 mt-8">
           <Link
             to="/history"
-            className="group flex flex-col items-center transition-transform transform hover:scale-110"
+            className="group flex flex-col items-center transition-transform 
+            transform hover:scale-110"
           >
-            <div className="bg-[#F0F0F0] p-4 rounded-full group-hover:bg-[#FFD93D] transition-colors">
-              <Clock className="h-10 w-10 text-[#FF6B6B]" />
+            <div className="bg-inherit p-4 rounded-full 
+            group-hover:bg-[#FFD93D] transition-colors"
+            >
+              <Clock className="h-10 w-10 text-[#FF6B6B]"
+              />
             </div>
-            <span className="mt-2 text-sm font-medium text-[#333333] group-hover:text-[#FF6B6B] transition-colors">
+            <span className="mt-2 text-sm font-medium text-[#333333] 
+            group-hover:text-[#FF6B6B] transition-colors"
+            >
               履歴
             </span>
           </Link>
           <Link
             to="/rankings"
-            className="group flex flex-col items-center transition-transform transform hover:scale-110"
+            className="group flex flex-col items-center transition-transform 
+            transform hover:scale-110"
           >
-            <div className="bg-[#F0F0F0] p-4 rounded-full group-hover:bg-[#FFD93D] transition-colors">
+            <div className="bg-inherit p-4 rounded-full 
+            group-hover:bg-[#FFD93D] transition-colors"
+            >
               <BarChart className="h-10 w-10 text-[#FF6B6B]" />
             </div>
-            <span className="mt-2 text-sm font-medium text-[#333333] group-hover:text-[#FF6B6B] transition-colors">
+            <span className="mt-2 text-sm font-medium text-[#333333] 
+            group-hover:text-[#FF6B6B] transition-colors"
+            >
               ランキング
             </span>
           </Link>

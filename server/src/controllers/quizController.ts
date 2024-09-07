@@ -8,8 +8,8 @@ const client: any = new OpenAI({
 });
 
 export const generateQuiz = async () => {
-    const category = "ランダム";
-    const difficulty = "ランダム";
+    const category = "コンピュータサイエンス";
+    const difficulty = "簡単";
 
     try {
         const response = await client.chat.completions.create({
@@ -35,8 +35,7 @@ export const generateQuiz = async () => {
                     ],
                     "correct_answer": "<正解>"
                     "explanation": "<解説>"
-                }
-            `
+                }`
                 },
                 {
                     role: "user",
