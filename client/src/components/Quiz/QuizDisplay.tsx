@@ -1,24 +1,78 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import { Clock } from "lucide-react";
 import { QuizProps } from "../../types/quizType";
+import { CheckCircle } from "lucide-react";
 
-export const QuizDisplay: React.FC<QuizProps> = ({ quiz, countdown, isCounting }) => {
+export const QuizDisplay: React.FC<QuizProps> = ({
+  quiz,
+  countdown,
+  isCounting,
+  isAnswerCorrect,
+  handleAnswerSelect,
+  canAnswer,
+  isTimeUp,
+  correctCount,
+}) => {
   return (
-    <div className="w-full text-center mt-8">
-      <Typography variant="h4" className="font-bold">
-        問題: {quiz.problem}
-      </Typography>
-      <Typography variant="h6" className="mt-4">
-        カテゴリ: {quiz.category}
-      </Typography>
-      <Typography variant="h6" className="mt-4">
-        難易度: {quiz.difficulty}
-      </Typography>
+    <div className="w-full text-center mt-8 relative">
       {isCounting && (
-        <Typography variant="h6" className="mt-4">
-          {countdown}秒
-        </Typography>
+        <div className="flex items-center space-x-2 text-center mt-5
+                absolute -top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        >
+          <Clock className="h-10 w-10 text-[#4ECDC4]" />
+          <span className="text-2xl font-bold">{countdown}s</span>
+        </div>
       )}
+      {
+        // 未回答 && 時間切れでない場合
+        isAnswerCorrect == null && !isTimeUp ? (
+          <div className="p-8 mb-8">
+            <h2 className="text-2xl font-bold mb-16 text-center">
+              {quiz?.question}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {quiz?.choices.map((item, index) => (
+                <button
+                  key={index}
+                  disabled={!canAnswer}
+                  className={`text-lg py-4 bg-white border-2 border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4]
+                 hover:cursor-pointer rounded-lg transition-all
+                 ${!canAnswer ? "hover:bg-inherit hover:text-[#4ECDC4] hover:cursor-default"
+                      : "hover:bg-[#4ECDC4] hover:text-white"
+                    }`}
+                  onClick={() => handleAnswerSelect(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          // 回答済み || 時間切れ
+          <div className="text-2xl">
+            {
+              isTimeUp ? (
+                <h1 className="mb-10 font-bold text-2xl">時間切れ！</h1>
+              ) : (
+                isAnswerCorrect ? (
+                  <h1 className="mb-10 font-bold text-2xl">正解！</h1>
+                ) : (
+                  <h1 className="mb-10 font-bold text-2xl">相手が正解しました...</h1>
+                )
+              )
+            }
+            {quiz?.explanation}
+          </div>
+        )
+      }
+      <div className="flex justify-between items-center mt-10">
+        <div className="flex items-center space-x-2">
+          <CheckCircle className="h-6 w-6 text-[#4ECDC4]" />
+          <span className="text-lg font-bold">正解数: {correctCount}</span>
+        </div>
+        <div className="flex items-center space-x-2">
+        </div>
+      </div>
     </div>
   );
 };

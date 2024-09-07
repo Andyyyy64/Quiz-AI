@@ -1,39 +1,41 @@
 import React, { useState, useContext, useEffect } from "react";
-import { CircularProgress, Typography } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 
-import { MultiGame } from "../Multiplayer/MultiGame";
+import { MultiGame } from "./UI/MultiGame";
+import { PreMatchLoading } from "./UI/PreMatchLoading";
+import { MatchedUI } from "./UI/MatchedUI";
 
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { useCountDown } from "../../hooks/useCountDown";
+import { useNotification } from "../../hooks/useNotification";
 
-import { Category, Difficulty, QuizType } from "../../types/quizType";
+import { QuizType } from "../../types/quizType";
 import { wsUserType } from "../../types/userType";
+import { WinUI } from "./UI/WinUI";
+import { LoseUI } from "./UI/LoseUI";
+import { Notification } from "../Common/Notification";
 
-const dummyQuiz: QuizType = {
-  quiz_id: 1,
-  problem: "フランスの首都は？",
-  answer: "パリ",
-  category: Category.noCategory,
-  difficulty: Difficulty.easy,
-};
 
-export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
-  onMatchReset,
-}) => {
-  const [opponent, setOpponent] = useState<wsUserType | null>(null); // 相手の情報
-  const [matchedNotification, setMatchedNotification] =
-    useState<boolean>(false); // マッチング通知用, ToDo:useNotificationに変更したい
+export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchReset }) => {
+  // datas
+  const [quiz, setQuiz] = useState<QuizType>(); // 現在のクイズ
+  const [nextQuiz, setNextQuiz] = useState<QuizType>(); // 次のクイズ 
+  const [opponent, setOpponent] = useState<wsUserType | null>(null); // マッチした相手の情報
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(1); // 現在のクイズのインデックス
+  const [correctCount, setCorrectCount] = useState(0); // 正解数
+
+  // flags
+  const [matchedNotification, setMatchedNotification] = useState<boolean>(false); // マッチング通知用, ToDo:useNotificationに変更したい
   const [isMatched, setIsMatched] = useState(false); // マッチング完了フラグ
-  const [isAnswering, setIsAnswering] = useState(false); // 回答中フラグ
-  const [opponentAnswering, setOpponentAnswering] = useState(false); // 相手が回答中フラグ
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null); // 回答の正誤
   const [canAnswer, setCanAnswer] = useState(true); // 回答可能フラグ
-  const [inputAnswer, setInputAnswer] = useState(""); // 回答入力
-  const [quiz, _setQuiz] = useState<QuizType>(dummyQuiz);
-  const [winner, setWinner] = useState<string | null>(null); // 勝者
+  const [isTimeUp, setIsTimeUp] = useState(false); // タイムアップフラグ
+  const [winner, setWinner] = useState<string | null>(""); // 勝者
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
     useCountDown(10);
+
+  const { notification, showNotification } = useNotification();
 
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
@@ -41,133 +43,171 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
   }
   const { user } = authContext;
 
-  const { status, send } = useWebSocket(import.meta.env.VITE_APP_WS_URL, user, (data) => {
-    // 接続が確立されたときの処理
-    if (data.success && data.opponent) {
-      setOpponent(data.opponent);
-      setMatchedNotification(true);
-      startCountDown();
-      setTimeout(() => {
-        setMatchedNotification(false);
+  const { status, send } = useWebSocket(
+    import.meta.env.VITE_APP_WS_URL,
+    user,
+    (data) => {
+      // 接続が確立されたときの処理
+      if (data.success && data.opponent && data.quiz) {
+        setOpponent(data.opponent);
+        setQuiz(data.quiz);
+        setMatchedNotification(true);
+        startCountDown();
+        setTimeout(() => {
+          setMatchedNotification(false);
+          resetCountDown();
+          setIsMatched(true);
+          startCountDown();
+        }, 3000); // 3秒後に開始
+
+        // 相手が正答した場合、
+      } else if (data.message === "opponent_answerd" && data.is_correct === true) {
         resetCountDown();
-        setIsMatched(true);
-      }, 3000);
+        setIsAnswerCorrect(false);
 
-      // 相手が回答中の場合、回答中フラグを立てる
-    } else if (data.message === "opponent_answering") {
-      setOpponentAnswering(true);
-      setIsAnswering(false);
-      setCanAnswer(false);
+        // 相手が誤答した場合、
+      } else if (data.message === "opponent_answerd" && data.is_correct === false) {
+        showNotification("相手が誤答しました！", "info");
+        setCanAnswer(true);
 
-      // 相手が回答完了の場合、回答可能フラグを立てる
-    } else if (data.message === "opponent_answering_done") {
-      setOpponentAnswering(false);
-      setCanAnswer(true);
+        // 相手の接続が切れた場合、マッチをリセット
+      } else if (data.message === "Opponent has disconnected.") {
+        showNotification("相手の接続が切れました。topに戻ります", "error");
+        setTimeout(() => {
+          console.log("reset");
+          setIsMatched(false);
+          onMatchReset();
+        }, 3000);
 
-      // 相手の接続が切れた場合、マッチをリセット
-    } else if (data.message === "Opponent has disconnected.") {
-      alert("相手の接続が切れました。");
-      setIsMatched(false);
-      onMatchReset();
+        // 次のクイズを受信した場合、
+      } else if (data.message === "next_quiz") {
+        setNextQuiz(data.quiz);
 
-      // 相手の回答が不正解の場合、アラートを表示
-    } else if (data.message === "opponent_wrong_answer") {
-      alert("相手の回答は不正解でした！");
-
-      // 勝者が決まった場合、勝者を表示してマッチをリセット
-    } else if (data.winner) {
-      setWinner(data.winner);
-      setTimeout(() => {
-        onMatchReset();
-      }, 3000);
+        // 勝者が決まった場合、勝者を表示してマッチをリセット
+      } else if (data.winner) {
+        setWinner(data.winner);
+      } else if (data.message === "opponent_wrong_answer") {
+        showNotification("相手が誤答しました！", "info");
+        setCanAnswer(true);
+      } else if (data.message === "time_up_refetch") {
+        send({ action: "fetch_next_quiz" });
+      }
     }
-  });
-
-  useEffect(() => {
-    if (isAnswering && countdown === 0) {
-      handleTimeOut();
-      setCanAnswer(false); // 一回回答したらもう回答できない
-    }
-  }, [countdown, isAnswering]);
+  );
 
   // 回答送信時の処理
-  const handleAnswerClick = () => {
-    setIsAnswering(true);
-    send({ action: "answering" });
-    startCountDown();
-  };
+  const handleAnswerSelect = (selectAnswer: string) => {
+    setCanAnswer(false);
+    if (selectAnswer === quiz?.correct_answer) {
+      // 正解時の処理
+      setIsAnswerCorrect(true);
+      resetCountDown();
+      setCorrectCount((prev) => prev + 1);
+      if (correctCount + 1 === 5) {
+        // 5点先取で勝利
+        send({ action: "victory", winner: user?.name });
+        setWinner(user?.name ?? "You");
+        return;
+      }
 
-  const handleAnswerDone = () => {
-    setIsAnswering(false); // 自分の回答終了
-    send({ action: "done" });
-    resetCountDown(); // タイマーリセット
-    setCanAnswer(false); // 一回回答したらもう回答できない
-    setInputAnswer(""); // 回答入力リセット
-    // 正解の場合、勝者を通知してマッチをリセット
-    if (inputAnswer.trim().toLowerCase() === quiz.answer.toLowerCase()) {
-      setWinner(user?.name ?? "You");
-      send({ action: "victory", winner: user?.name ?? "You" });
-      setTimeout(() => {
-        onMatchReset();
-      }, 3000);
-      // 不正解の場合、相手に不正解を通知してアラートを表示
+      send({ action: "answerd", selectedAnswer: selectAnswer });
     } else {
+      // 不正解時の処理
       send({ action: "wrong_answer" });
-      alert("不正解です！");
+      showNotification("不正解です！", "error");
     }
   };
 
-  const handleTimeOut = () => {
-    setIsAnswering(false);
-    send({ action: "done" });
-    alert("時間切れです！");
-    resetCountDown(); // タイマーリセット
+  const handleNextQuestion = () => {
+    if (currentQuizIndex >= 10) {
+      showNotification("マッチが終了しました。", "info");
+      onMatchReset();
+    } else {
+      // 問題数とstateを更新
+      setIsAnswerCorrect(null);
+      setCurrentQuizIndex((prev) => prev + 1);
+      setIsTimeUp(false);
+      // 次の問題をfetch
+      setQuiz(nextQuiz);
+      setCanAnswer(true);
+      startCountDown();
+    }
   };
 
+  // どちらかが現在の問題に正解した時点で次の問題をfetchする
+  useEffect(() => {
+    const fetchNextQuiz = async () => {
+      if (isAnswerCorrect) {
+        send({ action: "fetch_next_quiz" });
+      }
+    };
+    fetchNextQuiz();
+  }, [isAnswerCorrect]);
+
+  // 次の問題がfetchされたら、5秒後に次の問題を表示
+  useEffect(() => {
+    if (nextQuiz != undefined) {
+      console.log(nextQuiz);
+      setTimeout(() => {
+        handleNextQuestion();
+      }, 5000);
+    }
+  }, [nextQuiz]);
+
+  useEffect(() => {
+    console.log(countdown);
+    if (isCounting && countdown === 0) {
+      setIsTimeUp(true);
+      setCanAnswer(false);
+      resetCountDown();
+      // お互いのcountdonwは同期しているので2回送信してしまう
+      // 一方のみに送信するようにidを比較
+      if (((user?.user_id ?? 0) > (opponent?.id ?? 1))) {
+        send({ action: "fetch_next_quiz" });
+      }
+    }
+  }, [countdown]);
+
   return (
-    <div className="w-full h-full flex justify-center items-center">
+    <div className="w-full h-full flex justify-center items-center relative">
+      {/* 通知 */}
+      {notification && (
+        <Notification message={notification.message} type={notification.type} />
+      )}
       {/* マッチング中のローディング表示 */}
       {!isMatched && !matchedNotification && (
-        <div className="flex flex-col items-center justify-center">
-          <Typography variant="h6" className="mt-4" sx={{ marginBottom: 10 }}>
-            {status}
-          </Typography>
-          <CircularProgress />
-        </div>
+        <PreMatchLoading status={status} />
       )}
       {/* マッチング完了通知 7秒引いて3秒のカウントダウンにしてる藁*/}
       {matchedNotification && isCounting && (
-        <div className="w-full text-center">
-          <Typography variant="h4" className="font-bold">
-            マッチングしました！
-          </Typography>
-          <Typography variant="h6" className="font-bold">
-            {countdown - 7}秒後に開始します...
-          </Typography>
-        </div>
+        <MatchedUI opponent={opponent} user={user} countdown={countdown} />
       )}
       {/* マッチした　かつ　勝者が決まってない場合 対戦を表示*/}
       {!matchedNotification && isMatched && !winner && (
         <MultiGame
+          user={user}
           quiz={quiz}
-          inputAnswer={inputAnswer}
-          setInputAnswer={setInputAnswer}
-          handleAnswerClick={handleAnswerClick}
-          handleAnswerDone={handleAnswerDone}
-          canAnswer={canAnswer}
-          isAnswering={isAnswering}
-          opponentAnswering={opponentAnswering}
+          handleAnswerSelect={handleAnswerSelect}
           opponent={opponent}
           countdown={countdown}
           isCounting={isCounting}
+          isAnswerCorrect={isAnswerCorrect}
+          canAnswer={canAnswer}
+          isTimeUp={isTimeUp}
+          currentQuizIndex={currentQuizIndex}
+          correctCount={correctCount}
         />
       )}
       {/* 勝者が決まったら表示　*/}
       {winner && (
         <div className="w-full text-center">
-          <Typography variant="h4" className="font-bold">
-            {winner === user?.name ? "勝利！" : "敗北..."}
-          </Typography>
+          {
+            winner === user?.name ? (
+              <WinUI />
+            ) : (
+              <LoseUI />
+            )
+          }
         </div>
       )}
     </div>

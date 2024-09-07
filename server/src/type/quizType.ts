@@ -10,14 +10,15 @@ export enum Category {
     "カテゴリなし",
 }
 
-type QuizType = {
-    quiz_id: number;
-    problem: string;
-    answer: string;
+export type QuizType = {
+    quiz_id?: number;
+    question: string;
     category: Category | string; // カテゴリは仮なのでstringを許容
+    choices: string[];
+    explanation: string;
+    correct_answer: string;
     difficulty: Difficulty;
-    created_at: Date;
-    updated_at: Date;
 }
+
 
 export default QuizType;

@@ -19,7 +19,7 @@ export const Multiplayer: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="min-h-screen flex flex-col bg-inherit">
       <Header />
       <main className="flex-grow flex flex-col justify-center items-center">
         <div className="w-full flex flex-col items-center">
@@ -27,20 +27,25 @@ export const Multiplayer: React.FC = () => {
             <div>
               <Rule />
               <Button
-                variant="outlined"
-                color="primary"
+                variant="text"
                 onClick={handleMatchmakeClick}
                 size="large"
+                className="hover:bg-[#FF8787] hover:shadow-xl hover:scale-105 hover:text-white"
                 sx={{
                   width: "100%",
-                  maxWidth: 600,
+                  maxWidth: 900,
                   textAlign: "center",
                   mb: 6,
                   display: "flex",
                   alignItems: "center",
+                  color: "white",
+                  backgroundColor: "#FF6B6B",
+                  borderRadius: 9999,
+                  fontWeight: "bold",
+                  fontSize: "1.2rem",
                 }}
               >
-                開始
+                マッチメイキング開始
               </Button>
             </div>
           )}

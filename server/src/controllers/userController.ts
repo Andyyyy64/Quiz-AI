@@ -24,6 +24,7 @@ const bucket = storage.bucket(String(process.env.GCP_BUCKET_NAME));
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
 }
+
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 

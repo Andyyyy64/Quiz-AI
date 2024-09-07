@@ -1,4 +1,4 @@
-import { wsUserType } from "./userType";
+import { UserType, wsUserType } from "./userType";
 
 export enum Difficulty {
     "noDiff" = "難易度なし",
@@ -14,36 +14,52 @@ export enum Category {
 
 // クイズの型
 export type QuizType = {
-    quiz_id: number;
-    problem: string;
-    answer: string;
+    quiz_id?: number;
+    question: string;
     category: Category | string; // カテゴリは仮なのでstringを許容
+    choices: string[];
+    explanation: string;
+    correct_answer: string;
     difficulty: Difficulty;
 }
 
 export type QuizProps = {
-    quiz: QuizType;
+    quiz: QuizType | undefined;
     countdown: number;
     isCounting: boolean;
+    isAnswerCorrect: boolean | null;
+    canAnswer: boolean;
+    isTimeUp: boolean;
+    currentQuizIndex?: number;
+    correctCount?: number;
+    handleAnswerSelect: (selectAnswer: string) => void;
 }
 
 export type PlayerUIProps = {
-    isAnswering: boolean;
-    opponentAnswering: boolean;
-    inputAnswer: string;
-    setInputAnswer: React.Dispatch<React.SetStateAction<string>>;
-    handleAnswerClick: () => void;
-    handleAnswerDone: () => void;
-    canAnswer: boolean;
+    user: UserType | null;
 }
 
 export type OpponentUIProps = {
     opponent: wsUserType | null;
-    opponentAnswering: boolean;
 }
 
-export interface QuizDisplayProps extends PlayerUIProps {
-    quiz: QuizType;
+export type PreMatchLoadingProps = {
+    status: string;
+}
+
+export type MatchedUIProps = {
+    opponent: wsUserType | null;
+    user: UserType | null;
+    countdown: number;
+}
+
+export type QuizProgressUIProps = {
+    currentQuizIndex: number;
+}
+
+export interface QuizDisplayProps extends QuizProps {
+    quiz: QuizType | undefined;
+    user: UserType | null;
     opponent: wsUserType | null;
     countdown: number;
     isCounting: boolean;

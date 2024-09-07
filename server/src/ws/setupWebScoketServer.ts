@@ -1,15 +1,22 @@
 import { WebSocketServer, WebSocket } from 'ws';
+import axios from 'axios';
+import { QuizType } from '../type/quizType';
+import { generateQuiz } from '../controllers/quizController';
 
 interface Player {
     id: string;
     name: string;
-    rank: string[];
+    rank: string;
+    prof_image_url?: string;
     ws: WebSocket;
     opponent?: Player; // マッチング相手を保持
+    correctCount: number;
 }
 
 // 待機中のプレイヤーを格納するキュー
 const waitingPlayers: Player[] = [];
+
+let quiz: QuizType;
 
 export const setupWebSocketServer = (server: any) => {
     const wss = new WebSocketServer({ server });
@@ -17,13 +24,13 @@ export const setupWebSocketServer = (server: any) => {
     wss.on('connection', (ws: WebSocket) => {
         let currentPlayer: Player | null = null;
 
-        ws.on('message', (message: string) => {
+        ws.on('message', async (message: string) => {
             const data = JSON.parse(message);
-            const { id, name, rank, action, winner } = data;
+            const { id, name, rank, prof_image_url, action, winner, selectedAnswer } = data;
 
             // プレイヤーの接続・マッチメイキング処理
             if (!currentPlayer) {
-                currentPlayer = { id, name, rank, ws };
+                currentPlayer = { id, name, rank, prof_image_url, ws, correctCount: 0 };
                 // 待機プレイヤーがいる場合はマッチング
                 if (waitingPlayers.length > 0) {
                     const matchedPlayer = waitingPlayers.shift() as Player; // 先頭のプレイヤーを取得
@@ -32,19 +39,38 @@ export const setupWebSocketServer = (server: any) => {
                     matchedPlayer.opponent = currentPlayer;
                     currentPlayer.opponent = matchedPlayer;
 
+                    // クイズを生成してプレイヤーに送信
+                    try {
+                        quiz = await generateQuiz();
+                    } catch (error) {
+                        console.error('クイズの取得に失敗しました:', error);
+                        throw error;
+                    }
                     // 両方のプレイヤーにマッチ成功を通知
                     matchedPlayer.ws.send(
                         JSON.stringify({
                             success: true,
                             message: 'matched',
-                            opponent: { id: currentPlayer.id, name: currentPlayer.name, rank: currentPlayer.rank },
+                            quiz: quiz,
+                            opponent: {
+                                id: currentPlayer.id,
+                                name: currentPlayer.name,
+                                rank: currentPlayer.rank,
+                                prof_image_url: currentPlayer.prof_image_url
+                            },
                         })
                     );
                     currentPlayer.ws.send(
                         JSON.stringify({
                             success: true,
                             message: 'matched',
-                            opponent: { id: matchedPlayer.id, name: matchedPlayer.name, rank: matchedPlayer.rank },
+                            quiz: quiz,
+                            opponent: {
+                                id: matchedPlayer.id,
+                                name: matchedPlayer.name,
+                                rank: matchedPlayer.rank,
+                                prof_image_url: matchedPlayer.prof_image_url
+                            },
                         })
                     );
                 } else {
@@ -62,24 +88,42 @@ export const setupWebSocketServer = (server: any) => {
             }
 
             // アクション処理
-            if (action === 'answering' && currentPlayer.opponent) {
-                // 相手に「回答中」を通知
-                console.log('Answering...');
-                currentPlayer.opponent.ws.send(
-                    JSON.stringify({ message: 'opponent_answering' })
-                );
-            } else if (action === 'done' && currentPlayer.opponent) {
-                // 相手に「回答完了」を通知
-                console.log('Answering done.');
-                currentPlayer.opponent.ws.send(
-                    JSON.stringify({ message: 'opponent_answering_done' })
-                );
-                // 相手に「不正解」を通知
+            if (action === 'answerd' && currentPlayer.opponent) {
+                // 正解の場合
+                if (selectedAnswer === quiz.correct_answer) {
+                    currentPlayer.correctCount += 1;
+                    currentPlayer.opponent.ws.send(JSON.stringify({ message: 'opponent_answerd', is_correct: true }));
+                    console.log('Correct answer:', currentPlayer.correctCount);
+                    // 5点先取で勝利
+                    if (currentPlayer.correctCount >= 5) {
+                        console.log('Winner:', currentPlayer.name);
+                        ws.send(JSON.stringify({ winner: currentPlayer.name }));
+                        currentPlayer.opponent.ws.send(JSON.stringify({ winner: currentPlayer.name }));
+                    }
+                } else {
+                    console.log('Wrong answer');
+                    currentPlayer.opponent.ws.send(JSON.stringify({ message: 'opponent_answerd', is_correct: false }));
+                }
             } else if (action === 'wrong_answer' && currentPlayer.opponent) {
                 currentPlayer.opponent.ws.send(
                     JSON.stringify({ message: 'opponent_wrong_answer' })
                 )
-                // 自分と相手に勝者を通知
+
+                // 次のクイズを生成して送信
+            } else if (action === 'fetch_next_quiz' && currentPlayer.opponent) {
+                console.log('Fetching next quiz...');
+                quiz = await generateQuiz();
+                ws.send(JSON.stringify({ quiz, message: 'next_quiz' }));
+                if(currentPlayer.opponent.ws.readyState === WebSocket.OPEN) {
+                    currentPlayer.opponent.ws.send(JSON.stringify({ quiz, message: 'next_quiz' }));
+                } else {
+                    throw new Error('Opponent WebSocket is not open.');
+                }
+
+            } else if (action === 'time_up' && currentPlayer.opponent) {
+                currentPlayer.ws.send(
+                    JSON.stringify({ message: 'time_up_refetch' })
+                )
             } else if (action === 'victory' && currentPlayer.opponent) {
                 currentPlayer.opponent.ws.send(
                     JSON.stringify({ winner })

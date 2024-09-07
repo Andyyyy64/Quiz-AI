@@ -27,5 +27,6 @@ export type wsUserType = {
     id: number;
     name: string;
     rank: string;
+    prof_image_url: string;
     ws: WebSocket;
 }
