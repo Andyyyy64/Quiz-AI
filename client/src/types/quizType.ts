@@ -42,6 +42,16 @@ export type OpponentUIProps = {
     opponent: wsUserType | null;
 }
 
+export type PreMatchLoadingProps = {
+    status: string;
+}
+
+export type MatchedUIProps = {
+    opponent: wsUserType | null;
+    user: UserType | null;
+    countdown: number;
+}
+
 export interface QuizDisplayProps extends QuizProps {
     quiz: QuizType;
     user: UserType | null;

@@ -1,8 +1,8 @@
 import React from "react";
-import { QuizDisplay } from "../Quiz/QuizDisplay";
-import { PlayerUI } from "./UI/PlayerUI";
-import { OpponentUI } from "./UI/OpponentUI";
-import { QuizDisplayProps } from "../../types/quizType";
+import { QuizDisplay } from "../../Quiz/QuizDisplay";
+import { PlayerUI } from "./PlayerUI";
+import { OpponentUI } from "./OpponentUI";
+import { QuizDisplayProps } from "../../../types/quizType";
 
 export const MultiGame: React.FC<QuizDisplayProps> = ({
   user,

@@ -2,15 +2,15 @@ import React, { useState, useContext, useEffect } from "react";
 import { Typography } from "@mui/material";
 import { AuthContext } from "../../context/AuthContext";
 
-import { MultiGame } from "../Multiplayer/MultiGame";
+import { MultiGame } from "./UI/MultiGame";
 
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { useCountDown } from "../../hooks/useCountDown";
-import { useDots } from "../../hooks/useDots";
 
 import { Category, Difficulty, QuizType } from "../../types/quizType";
 import { wsUserType } from "../../types/userType";
-import { Users, User, Zap } from "lucide-react";
+import { PreMatchLoading } from "./UI/PreMatchLoading";
+import { MatchedUI } from "./UI/MatchedUI";
 
 const dummyQuiz: QuizType = {
   quiz_id: 1,
@@ -36,8 +36,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
     useCountDown(10);
-
-  const dots = useDots();
 
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
@@ -136,82 +134,11 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
     <div className="w-full h-full flex justify-center items-center relative">
       {/* マッチング中のローディング表示 */}
       {!isMatched && !matchedNotification && (
-        <div
-          className="p-5 bg-white text-[#333333] overflow-hidden 
-        flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        >
-          <div className="z-10 text-center">
-            <div className="bg-white rounded-xl shadow-md p-8 max-w-md mx-auto">
-              <Users className="h-20 w-20 text-[#4ECDC4] mx-auto mb-6 animate-pulse" />
-              <h2 className="text-2xl font-bold mb-4">
-                {status}
-                {dots}
-              </h2>
-              <p className="text-[#666666] mb-6">
-                壮大な頭脳バトルの準備を整えています。
-                あなたの知識を披露する準備はできていますか？
-              </p>
-              <div className="w-full h-2 bg-[#F0F0F0] rounded-full overflow-hidden">
-                <div className="h-full bg-[#4ECDC4] animate-[loading_2s_ease-in-out_infinite]"></div>
-              </div>
-            </div>
-          </div>
-          <style jsx global>{`
-            @keyframes moveBackground {
-              0% {
-                transform: translate(0, 0);
-              }
-              100% {
-                transform: translate(20px, 20px);
-              }
-            }
-            @keyframes loading {
-              0% {
-                width: 0%;
-              }
-              50% {
-                width: 100%;
-              }
-              100% {
-                width: 0%;
-              }
-            }
-          `}</style>
-        </div>
+        <PreMatchLoading status={status} />
       )}
       {/* マッチング完了通知 7秒引いて3秒のカウントダウンにしてる藁*/}
       {matchedNotification && isCounting && (
-        <div className="w-full z-10 text-center">
-          <div className="bg-white rounded-xl shadow-xl p-8 max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 text-[#FF6B6B]">
-              マッチしました！
-            </h2>
-            <div className="flex justify-around mb-8">
-              <div className="text-center">
-                <User className="h-32 w-32 text-[#4ECDC4] mx-auto mb-2" />
-                <p className="font-bold">あなた</p>
-              </div>
-              <div className="text-4xl font-bold text-[#FFD93D] flex items-center">
-                <Zap className="h-8 w-8 mr-2" />
-                VS
-                <Zap className="h-8 w-8 ml-2" />
-              </div>
-              <div className="text-center">
-                <img
-                  className="w-32 h-32 rounded-full object-cover border-2 border-[#4ECDC4]"
-                  src={opponent?.prof_image_url}
-                  alt={user?.name}
-                />
-                <p className="font-bold">{opponent?.name}</p>
-                <p className="text-[#666666]">ランク: {opponent?.rank}</p>
-              </div>
-            </div>
-            <p className="text-xl mb-6">壮大な知識のバトルに備えよ！</p>
-            <div className="bg-[#F0F0F0] rounded-full w-32 h-32 flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl font-bold">{countdown - 7}</span>
-            </div>
-          </div>
-        </div>
+        <MatchedUI opponent={opponent} user={user} countdown={countdown} />
       )}
       {/* マッチした　かつ　勝者が決まってない場合 対戦を表示*/}
       {!matchedNotification && isMatched && !winner && (
