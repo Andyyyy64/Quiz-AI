@@ -14,24 +14,24 @@ export enum Category {
 
 // クイズの型
 export type QuizType = {
-    quiz_id: number;
-    problem: string;
-    answer: string;
+    quiz_id?: number;
+    question: string;
     category: Category | string; // カテゴリは仮なのでstringを許容
+    choices: string[];
+    explanation: string;
+    correct_answer: string;
     difficulty: Difficulty;
 }
 
 export type QuizProps = {
-    quiz: QuizType;
+    quiz: QuizType | undefined;
     countdown: number;
     isCounting: boolean;
-    isAnswering: boolean;
-    opponentAnswering: boolean;
-    inputAnswer: string;
-    setInputAnswer: React.Dispatch<React.SetStateAction<string>>;
-    handleAnswerClick: () => void;
-    handleAnswerDone: () => void;
+    selectedAnswer: string;
+    isAnswerCorrect: boolean | null;
     canAnswer: boolean;
+    setSelectedAnswer: React.Dispatch<React.SetStateAction<string>>;
+    handleAnswerSelect: (selectAnswer: string) => void;
 }
 
 export type PlayerUIProps = {
@@ -53,7 +53,7 @@ export type MatchedUIProps = {
 }
 
 export interface QuizDisplayProps extends QuizProps {
-    quiz: QuizType;
+    quiz: QuizType | undefined;
     user: UserType | null;
     opponent: wsUserType | null;
     countdown: number;

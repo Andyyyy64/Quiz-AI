@@ -1,9 +1,7 @@
 import React from "react";
 import { OpponentUIProps } from "../../../types/quizType";
 
-export const OpponentUI: React.FC<OpponentUIProps> = ({
-  opponent,
-}) => {
+export const OpponentUI: React.FC<OpponentUIProps> = ({ opponent }) => {
   return (
     <div>
       <div className="text-center">

@@ -5,6 +5,7 @@ import http from 'http';
 
 import userRouter from './routes/userRoutes';
 import authRouter from './routes/authRoutes';
+import quizRouter from './routes/quizRoutes';
 
 import { setupWebSocketServer } from './ws/setupWebScoketServer';
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
+app.use('/quiz', quizRouter);
 
 const server = http.createServer(app);
 setupWebSocketServer(server);

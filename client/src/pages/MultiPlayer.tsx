@@ -30,9 +30,10 @@ export const Multiplayer: React.FC = () => {
                 variant="text"
                 onClick={handleMatchmakeClick}
                 size="large"
+                className="hover:bg-[#FF8787] hover:shadow-xl hover:scale-105 hover:text-white"
                 sx={{
                   width: "100%",
-                  maxWidth: 800,
+                  maxWidth: 900,
                   textAlign: "center",
                   mb: 6,
                   display: "flex",
