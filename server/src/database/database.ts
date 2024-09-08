@@ -13,7 +13,6 @@ const pool: Pool = new Pool({
     ? { rejectUnauthorized: false }
     : false,
 });
-console.log(process.env.NODE_ENV);
 export default {
   get: async (query: string, params?: Array<string | number | boolean | null>) => {
     let db: PoolClient | null = null;

@@ -55,3 +55,12 @@ export const handleFileUpload = async (selectedFile: File) => {
         throw new Error("ファイルアップロードに失敗しました");
     }
 };
+
+export const saveAnsweredQuiz = async (quiz_id: number | undefined, user_id: number | undefined, is_correct: boolean | null) => {
+    const res = await axios.post(`${API_URL}/user/saveAnsweredQuiz`, { quiz_id, user_id, is_correct }, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+    });
+    return res.data;
+}

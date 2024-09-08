@@ -4,7 +4,8 @@ import {
     getUserById,
     updateUser,
     deleteUser,
-    uploadImage
+    uploadImage,
+    saveAnsweredQuiz
 } from "../controllers/userController";
 import { authMiddleware } from "../middleware/middleware";
 import { JwtPayload } from "jsonwebtoken";
@@ -27,6 +28,7 @@ userRouter.get("/get/:id", authMiddleware, getUserById);
 userRouter.put("/put/:id", authMiddleware, updateUser);
 userRouter.delete("/delete/:id", authMiddleware, deleteUser);
 userRouter.post("/upload", authMiddleware, upload.single('file'), uploadImage);
+userRouter.post("/saveAnsweredQuiz", authMiddleware, saveAnsweredQuiz);
 
 // ログインユーザーの情報を取得
 userRouter.get("/me", authMiddleware, (req: DecodedRequest, res: Response) => {

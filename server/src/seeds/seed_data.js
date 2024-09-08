@@ -4,102 +4,148 @@
  */
 exports.seed = async function (knex) {
   // Deletes ALL existing entries
+  await knex("user_quiz_history").del();
+  await knex("multiplay_quiz_history").del();
+  await knex("singleplay_quiz_history").del();
   await knex("multiplay_history").del();
   await knex("singleplay_history").del();
   await knex("quiz").del();
   await knex("users").del();
 
-  await knex("users").insert([
-    {
-      user_id: 100,
-      name: "Alice",
-      email: "alice@example.com",
-      password: "hashed_password_1",
-      points: 100,
-      rank: "ルーキー",
-      prof_image_url: "https://example.com/avatar1.png",
-      last_login: knex.fn.now(),
-      email_verified: true,
-      verification_code: 123456,
+  // Insert users
+  const users = await knex("users")
+    .insert([
+      {
+        name: "Alice",
+        email: "alice@example.com",
+        password:
+          "$2b$10$MjeganBCwmwKWBsFGg77DOnzFjL58paZA9PpLTwuXo1qi46zknWxe",
+        points: 100,
+        rank: "Bronze",
+        email_verified: true,
+        verification_code: 123456,
+        created_at: knex.fn.now(),
+        updated_at: knex.fn.now(),
+        last_login: knex.fn.now(),
+      },
+      {
+        name: "Bob",
+        email: "bob@example.com",
+        password:
+          "$2b$10$667/L.3Ldtz/55CCNsL0vuGpHBsAxUhO0.6zZgvpyFMFyun9jpCMG",
+        points: 150,
+        rank: "Silver",
+        email_verified: true,
+        verification_code: 654321,
+        created_at: knex.fn.now(),
+        updated_at: knex.fn.now(),
+        last_login: knex.fn.now(),
+      },
+    ])
+    .returning("user_id");
+
+  const userId1 = users[0].user_id; // Alice's user_id
+  const userId2 = users[1].user_id; // Bob's user_id
+
+  // Insert quizzes
+  const quizzes = await knex("quiz")
+    .insert([
+      {
+        question: "2+2は何ですか?",
+        correct_answer: "4",
+        choices: JSON.stringify(["1", "2", "3", "4"]),
+        category: "数学",
+        difficulty: "簡単",
+        explanation: "2+2=4です",
+        created_at: knex.fn.now(),
+        updated_at: knex.fn.now(),
+      },
+      {
+        question: "フランスの首都はどこですか？",
+        correct_answer: "パリ",
+        choices: JSON.stringify(["London", "Berlin", "Paris", "Rome"]),
+        category: "地理",
+        difficulty: "簡単",
+        explanation: "フランスの首都はパリです",
+        created_at: knex.fn.now(),
+        updated_at: knex.fn.now(),
+      },
+      {
+        question: "水の沸点は何度ですか？",
+        correct_answer: "100°C",
+        choices: JSON.stringify(["0°C", "50°C", "100°C", "200°C"]),
+        category: "科学",
+        difficulty: "簡単",
+        explanation: "水の沸点は100°Cです",
+        created_at: knex.fn.now(),
+        updated_at: knex.fn.now(),
+      },
+    ])
+    .returning("quiz_id");
+
+  const quizId1 = quizzes[0].quiz_id;
+  const quizId2 = quizzes[1].quiz_id;
+  const quizId3 = quizzes[2].quiz_id;
+
+  // Insert singleplay history
+  const singleplayHistory = await knex("singleplay_history")
+    .insert({
+      user_id: userId1,
+      correct_num: 2,
+      duration: 120,
       created_at: knex.fn.now(),
       updated_at: knex.fn.now(),
-    },
-    {
-      user_id: 200,
-      name: "Bob",
-      email: "bob@example.com",
-      password: "hashed_password_2",
-      points: 200,
-      rank: "ランクなし",
-      prof_image_url: "https://example.com/avatar2.png",
-      last_login: knex.fn.now(),
-      email_verified: true,
-      verification_code: 123456,
-      created_at: knex.fn.now(),
-      updated_at: knex.fn.now(),
-    },
+    })
+    .returning("id");
+
+  const singleplayId1 = singleplayHistory[0].id;
+
+  // Insert into singleplay_quiz_history (link quizzes to singleplay history)
+  await knex("singleplay_quiz_history").insert([
+    { singleplay_id: singleplayId1, quiz_id: quizId1 },
+    { singleplay_id: singleplayId1, quiz_id: quizId2 },
   ]);
 
-  await knex("quiz").insert([
-    {
-      quiz_id: 1,
-      problem: "What is the capital of France?",
-      answer: "Paris",
-      category: "地理",
-      difficulty: "簡単",
+  // Insert multiplay history
+  const multiplayHistory = await knex("multiplay_history")
+    .insert({
+      user_id: userId1,
+      opponent_user_id: userId2,
+      who_win: userId1, // User 1 won
+      points_awarded: 50,
+      match_duration: 300,
       created_at: knex.fn.now(),
       updated_at: knex.fn.now(),
-    },
-    {
-      quiz_id: 2,
-      problem: "What is the square root of 64?",
-      answer: "8",
-      category: "数学",
-      difficulty: "簡単",
-      created_at: knex.fn.now(),
-      updated_at: knex.fn.now(),
-    },
+    })
+    .returning("session_id");
+
+  const multiplaySessionId1 = multiplayHistory[0].session_id;
+
+  // Insert into multiplay_quiz_history (link quizzes to multiplay history)
+  await knex("multiplay_quiz_history").insert([
+    { session_id: multiplaySessionId1, quiz_id: quizId2 },
+    { session_id: multiplaySessionId1, quiz_id: quizId3 },
   ]);
 
-  await knex("singleplay_history").insert([
+  // Insert user quiz history
+  await knex("user_quiz_history").insert([
     {
-      id: 1,
-      user_id: 100,
-      quiz_id: 1,
-      did_correct: true,
-      created_at: knex.fn.now(),
-      updated_at: knex.fn.now(),
+      user_id: userId1,
+      quiz_id: quizId1,
+      is_correct: true,
+      answered_at: knex.fn.now(),
     },
     {
-      id: 2,
-      user_id: 200,
-      quiz_id: 2,
-      did_correct: false,
-      created_at: knex.fn.now(),
-      updated_at: knex.fn.now(),
-    },
-  ]);
-
-  await knex("multiplay_history").insert([
-    {
-      session_id: 1,
-      user_id: 100,
-      quiz_id: 1,
-      opponent_user_id: 200,
-      did_win: true,
-      points_awarded: 10,
-      created_at: knex.fn.now(),
-      updated_at: knex.fn.now(),
+      user_id: userId1,
+      quiz_id: quizId2,
+      is_correct: false,
+      answered_at: knex.fn.now(),
     },
     {
-      session_id: 2,
-      user_id: 200,
-      quiz_id: 2,
-      opponent_user_id: 100,
-      did_win: false,
-      points_awarded: 5,
-      created_at: knex.fn.now(),
-      updated_at: knex.fn.now(),
+      user_id: userId2,
+      quiz_id: quizId3,
+      is_correct: true,
+      answered_at: knex.fn.now(),
     },
   ]);
 };

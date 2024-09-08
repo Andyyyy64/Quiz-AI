@@ -17,10 +17,10 @@ export type QuizType = {
     quiz_id?: number;
     question: string;
     category: Category | string; // カテゴリは仮なのでstringを許容
+    difficulty: Difficulty;
     choices: string[];
     explanation: string;
     correct_answer: string;
-    difficulty: Difficulty;
 }
 
 export type QuizProps = {
@@ -29,9 +29,11 @@ export type QuizProps = {
     isCounting: boolean;
     isAnswerCorrect: boolean | null;
     canAnswer: boolean;
-    isTimeUp: boolean;
+    isTimeUp?: boolean;
     currentQuizIndex?: number;
-    correctCount?: number;
+    correctCount: number;
+    questionCount?: number;
+    isMultiplayer?: boolean;
     handleAnswerSelect: (selectAnswer: string) => void;
 }
 
@@ -55,6 +57,7 @@ export type MatchedUIProps = {
 
 export type QuizProgressUIProps = {
     currentQuizIndex: number;
+    questionCount?: number;
 }
 
 export interface QuizDisplayProps extends QuizProps {

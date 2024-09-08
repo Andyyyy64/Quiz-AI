@@ -74,7 +74,7 @@ export const Home: React.FC = () => {
               <Clock className="h-10 w-10 text-[#FF6B6B]"
               />
             </div>
-            <span className="mt-2 text-sm font-medium text-[#333333] 
+            <span className="mt-1 text-sm font-bold text-[#333333] 
             group-hover:text-[#FF6B6B] transition-colors"
             >
               履歴
@@ -90,7 +90,7 @@ export const Home: React.FC = () => {
             >
               <BarChart className="h-10 w-10 text-[#FF6B6B]" />
             </div>
-            <span className="mt-2 text-sm font-medium text-[#333333] 
+            <span className="mt-1 text-sm font-bold text-[#333333] 
             group-hover:text-[#FF6B6B] transition-colors"
             >
               ランキング

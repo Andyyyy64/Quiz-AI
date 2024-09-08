@@ -30,7 +30,6 @@ export const authMiddleware = (
     if (err) {
       next(new Error(err.message));
     } else {
-      console.log(decoded);  // トークン内容の確認
       req.decoded = decoded;
       next();
     }

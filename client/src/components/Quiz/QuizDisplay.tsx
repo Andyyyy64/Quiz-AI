@@ -12,6 +12,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
   canAnswer,
   isTimeUp,
   correctCount,
+  isMultiplayer,
 }) => {
   return (
     <div className="w-full text-center mt-8 relative">
@@ -57,7 +58,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
                 isAnswerCorrect ? (
                   <h1 className="mb-10 font-bold text-2xl">正解！</h1>
                 ) : (
-                  <h1 className="mb-10 font-bold text-2xl">相手が正解しました...</h1>
+                  <h1 className="mb-10 font-bold text-2xl">{isMultiplayer ? "相手が正解しました..." : "不正解"}</h1>
                 )
               )
             }
