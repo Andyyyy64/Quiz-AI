@@ -6,6 +6,7 @@ import { Register } from "./pages/Register";
 import { VerifyEmail } from "./pages/Verify-Email";
 
 import { Multiplayer } from "./pages/MultiPlayer";
+import { SinglePlayer } from "./pages/SinglePlayer";
 import { Profile } from "./pages/Profile";
 
 import { PrivateRoute } from "./components/PrivateRoute";
@@ -30,6 +31,7 @@ export const App: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/multiplay" element={<Multiplayer />} />
+          <Route path="/singleplay" element={<SinglePlayer />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>

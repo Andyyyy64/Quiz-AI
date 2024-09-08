@@ -29,9 +29,11 @@ export type QuizProps = {
     isCounting: boolean;
     isAnswerCorrect: boolean | null;
     canAnswer: boolean;
-    isTimeUp: boolean;
+    isTimeUp?: boolean;
     currentQuizIndex?: number;
-    correctCount?: number;
+    correctCount: number;
+    questionCount?: number;
+    isMultiplayer?: boolean;
     handleAnswerSelect: (selectAnswer: string) => void;
 }
 
@@ -55,6 +57,7 @@ export type MatchedUIProps = {
 
 export type QuizProgressUIProps = {
     currentQuizIndex: number;
+    questionCount?: number;
 }
 
 export interface QuizDisplayProps extends QuizProps {

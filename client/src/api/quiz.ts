@@ -12,7 +12,7 @@ export const generateQuiz = async (category: string, difficulty: string) => {
         });
         return res.data;
     } catch (err) {
-        console.error("クイズの取得に失敗しました:", err);
+        console.log("クイズの取得に失敗しました:", err);
         throw err;
     }
 };
@@ -36,7 +36,7 @@ export const saveQuiz = async (quiz: QuizType) => {
             });
         return res.data;
     } catch (err) {
-        console.error("クイズの保存に失敗しました:", err);
+        console.log("クイズの保存に失敗しました:", err);
         throw err;
     }
 }
@@ -50,7 +50,7 @@ export const getQuiz = async (id: number) => {
         });
         return res.data;
     } catch (err) {
-        console.error("クイズの取得に失敗しました:", err);
+        console.log("クイズの取得に失敗しました:", err);
         throw err;
     }
 }
@@ -64,7 +64,7 @@ export const getQuizzes = async () => {
         });
         return res.data;
     } catch (err) {
-        console.error("クイズの取得に失敗しました:", err);
+        console.log("クイズの取得に失敗しました:", err);
         throw err;
     }
 }
