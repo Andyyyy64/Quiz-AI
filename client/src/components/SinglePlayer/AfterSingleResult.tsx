@@ -14,17 +14,14 @@ export const AfterSingleResult: React.FC<AfterSingleResultProps> = ({
     handleRestart,
     handleRestartWithSettings
 }) => {
-    const percentageCorrect = (correctCount / questionCount) * 100
-
     return (
         <main className="container mx-auto mt-10 px-4">
             <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-xl p-8">
                 <h1 className="text-3xl font-bold mb-6 text-center">クイズの結果！</h1>
-
                 <div className="mb-8">
                     <div className="text-center">
                         <div className="w-full h-3 bg-[#F0F0F0] rounded-full mx-auto">
-                            <div className="h-full bg-[#FF6B6B] rounded-full" style={{ width: `${(correctCount / 10) * 100}%` }}></div>
+                            <div className="h-full bg-[#FF6B6B] rounded-full" style={{ width: `${(correctCount / questionCount) * 100}%` }}></div>
                         </div>
                     </div>
                     <div className="flex justify-between items-center mt-2">
@@ -39,7 +36,7 @@ export const AfterSingleResult: React.FC<AfterSingleResultProps> = ({
                             <Clock className="h-5 w-5 text-[#FF6B6B] mr-2" />
                             <span className="font-semibold">かかった時間</span>
                         </div>
-                        <p className="text-xl font-bold">{duration}</p>
+                        <p className="text-xl font-bold">{duration}秒</p>
                     </div>
                     <div className="bg-gray-100 p-4 rounded-lg">
                         <div className="flex items-center mb-2">

@@ -3,9 +3,9 @@ import { QuizType } from "../types/quizType";
 
 const API_URL = import.meta.env.VITE_APP_SERVER_URL;
 
-export const generateQuiz = async (category: string, difficulty: string) => {
+export const generateQuiz = async (category: string, difficulty: string, user_id: number | undefined) => {
     try {
-        const res = await axios.post(`${API_URL}/quiz/generate`, { category, difficulty, }, {
+        const res = await axios.post(`${API_URL}/quiz/generate`, { category, difficulty, user_id }, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             }

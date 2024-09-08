@@ -92,7 +92,6 @@ export const registerUser = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: "User registered successfully", user: user });
 
-    console.log(user);
   } catch (err) {
     console.error('Failed to register user:', err);
     return res.status(500).json({ message: "Failed to register user" });
@@ -213,3 +212,19 @@ export const uploadImage = async (req: MulterRequest, res: Response) => {
 
   blobStream.end(file.buffer);
 };
+
+export const saveAnsweredQuiz = async (req: Request, res: Response) => {
+  const { user_id, quiz_id, is_correct } = req.body;
+  console.log(user_id + " " + "from saveAnsweredQuiz");
+  try {
+    await db.run(
+      "INSERT INTO user_quiz_history (user_id, quiz_id, is_correct, answered_at) VALUES ($1, $2, $3, $4)",
+      [user_id, quiz_id, is_correct, new Date()]
+    );
+    console.log(user_id + " Answer saved");
+    res.status(200).json({ message: "Answer saved" });
+  } catch (err) {
+    console.error("Failed to save answer:", err);
+    return res.status(500).json({ message: "Failed to save answer" });
+  }
+}

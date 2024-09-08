@@ -65,6 +65,15 @@ exports.up = function (knex) {
       table.integer("quiz_id").unsigned().notNullable();
       table.foreign("quiz_id").references("quiz.quiz_id");
       table.primary(["session_id", "quiz_id"]);
+    })
+    .createTable("user_quiz_history", function (table) {
+      table.increments("id").primary();
+      table.integer("user_id").unsigned().notNullable();
+      table.foreign("user_id").references("users.user_id");
+      table.integer("quiz_id").unsigned().notNullable();
+      table.foreign("quiz_id").references("quiz.quiz_id");
+      table.boolean("is_correct").nullble();
+      table.timestamp("answered_at").notNullable().defaultTo(knex.fn.now());
     });
 };
 

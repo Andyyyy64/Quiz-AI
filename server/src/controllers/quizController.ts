@@ -8,18 +8,26 @@ const client: any = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const generateQuiz = async (category?: string, difficulty?: string) => {
+export const generateQuiz = async (category?: string, difficulty?: string, user_id?: number) => {
     if (category === undefined) {
         category = "ランダム";
     }
     if (difficulty === undefined) {
-        console.log("ランダム");
         difficulty = "ランダム";
     }
-
-    const pastQuizzesNames = await db.all("SELECT question FROM quiz");
-    const pastQuizzesNamesString = JSON.stringify(pastQuizzesNames);
-
+    // ユーザーが解いたクイズを取得
+    const pastQuizzes = await db.all(
+        "SELECT q.quiz_id, q.question FROM user_quiz_history uqh JOIN quiz q ON uqh.quiz_id = q.quiz_id WHERE uqh.user_id = $1",
+        [user_id ?? 1]
+    );
+    let pastQuestions: string[] = [];
+    // 過去に解いたクイズの質問リストを作成
+    if (pastQuizzes !== null) {
+        pastQuestions = pastQuizzes.map(quiz => quiz.question);
+    }
+    const pastQuestionsString = JSON.stringify(pastQuestions);
+    console.log("user_id: " + user_id);
+    console.log(pastQuestionsString);
     try {
         const response = await client.chat.completions.create({
             model: "gpt-4o-mini",
@@ -29,8 +37,8 @@ export const generateQuiz = async (category?: string, difficulty?: string) => {
                     content: `
                 あなたはクイズ作成者です。以下のJSON形式で、4つの選択肢と1つの正解があるクイズ問題を生成してください。
                 フォーマットに必ず従い、正しいJSONを返してください。ジャンルと難易度に基づいたクイズ問題を作成してください。
-                過去に生成した問題と重複しない問題を作成してください。
-                ${pastQuizzesNamesString},
+                以下の過去に生成した問題と重複しない問題を作成してください。
+                ${pastQuestionsString},
                 ジャンルがランダムの場合、[科学] [歴史] [芸術] [スポーツ] [文学] [地理] [一般常識]のいずれかです。
                 難易度がランダムの場合、「簡単」「普通」「難しい」[超難しい]のいずれかです。
                 出力はJSONのみを返してください。
@@ -58,8 +66,6 @@ export const generateQuiz = async (category?: string, difficulty?: string) => {
             max_tokens: 1000,
         });
 
-        console.log(response.choices[0]);
-
         let generatedQuiz = response.choices[0].message.content;
         // 余計な文字列を削除
         generatedQuiz = generatedQuiz.replace(/```json/g, '').replace(/```/g, '').trim();
@@ -71,13 +77,17 @@ export const generateQuiz = async (category?: string, difficulty?: string) => {
             // 生成したクイズをデータベースに保存(quiz_idはuuidを手動で挿入)
             const uuid: number = Math.floor(100000 + Math.random() * 900000);
 
+            // parsedQuizにquiz_idを追加
+            parsedQuiz.quiz_id = uuid;
+
+            // 選択肢をJSONに変換
             const choicesJson = JSON.stringify(parsedQuiz.choices);
 
             try {
                 await db.run(
                     "INSERT INTO quiz (quiz_id, question, category, difficulty, choices, explanation, correct_answer, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
                     [
-                        uuid,
+                        parsedQuiz.quiz_id,
                         parsedQuiz.question,
                         parsedQuiz.category,
                         parsedQuiz.difficulty,
@@ -108,9 +118,9 @@ export const generateQuiz = async (category?: string, difficulty?: string) => {
 };
 
 export const GenerateQuiz = async (req: Request, res: Response) => {
-    const { category, difficulty } = req.body;
+    const { category, difficulty, user_id } = req.body;
     try {
-        const quiz = await generateQuiz(category, difficulty);
+        const quiz = await generateQuiz(category, difficulty, user_id);
         console.log(quiz);
         return res.status(200).json(quiz);
     } catch (err) {

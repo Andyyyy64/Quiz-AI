@@ -4,6 +4,7 @@
  */
 exports.seed = async function (knex) {
   // Deletes ALL existing entries
+  await knex("user_quiz_history").del();
   await knex("multiplay_quiz_history").del();
   await knex("singleplay_quiz_history").del();
   await knex("multiplay_history").del();
@@ -124,5 +125,27 @@ exports.seed = async function (knex) {
   await knex("multiplay_quiz_history").insert([
     { session_id: multiplaySessionId1, quiz_id: quizId2 },
     { session_id: multiplaySessionId1, quiz_id: quizId3 },
+  ]);
+
+  // Insert user quiz history
+  await knex("user_quiz_history").insert([
+    {
+      user_id: userId1,
+      quiz_id: quizId1,
+      is_correct: true,
+      answered_at: knex.fn.now(),
+    },
+    {
+      user_id: userId1,
+      quiz_id: quizId2,
+      is_correct: false,
+      answered_at: knex.fn.now(),
+    },
+    {
+      user_id: userId2,
+      quiz_id: quizId3,
+      is_correct: true,
+      answered_at: knex.fn.now(),
+    },
   ]);
 };

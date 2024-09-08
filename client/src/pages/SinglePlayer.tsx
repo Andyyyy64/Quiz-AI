@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { QuizType } from "../types/quizType";
 
 import { generateQuiz } from "../api/quiz";
+import { saveAnsweredQuiz } from "../api/user";
+import { AuthContext } from "../context/AuthContext";
 import { useCountDown } from "../hooks/useCountDown";
 import { useNotification } from "../hooks/useNotification";
+import { useCalcDuration } from "../hooks/useCalcDuration";
 
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
@@ -34,6 +37,13 @@ export const SinglePlayer: React.FC = () => {
 
     const { countdown, isCounting, startCountDown, resetCountDown } = useCountDown(timeLimit);
     const { notification, showNotification } = useNotification();
+    const { duration, startCalc, stopCalc } = useCalcDuration();
+
+    const authContext = useContext(AuthContext);
+    if (authContext === undefined) {
+        throw new Error("useAuth must be used within an AuthProvider");
+    }
+    const { user } = authContext;
 
     const handleStartQuiz = () => {
         setIsSettings(false);
@@ -44,7 +54,7 @@ export const SinglePlayer: React.FC = () => {
     useEffect(() => {
         const fetchQuiz = async () => {
             if (is_loading && !is_settings) {
-                const res: any = await generateQuiz(category, difficulty);
+                const res: any = await generateQuiz(category, difficulty, user?.user_id);
                 setQuiz(res);
                 setIsLoading(false);
             }
@@ -55,6 +65,7 @@ export const SinglePlayer: React.FC = () => {
     // ローディングが終わったらゲームスタート
     useEffect(() => {
         if (!is_loading && !is_settings && quiz) {
+            startCalc(); // ゲームの開始時刻を記録
             setGameStart(true);
             startCountDown();
         }
@@ -63,9 +74,15 @@ export const SinglePlayer: React.FC = () => {
     // 回答か時間切れの場合、次の問題を取得
     useEffect(() => {
         const fetchNextQuiz = async () => {
-            const res: any = await generateQuiz(category, difficulty);
-            console.log(res);
-            setNextQuiz(res);
+            // 回答をユーザーの回答履歴に保存
+            saveAnsweredQuiz(quiz?.quiz_id, user?.user_id, isAnswerCorrect);
+            // 次の問題を取得(ただし最後は除く)
+            console.log(currentQuizIndex);
+            console.log(questionCount);
+            if (currentQuizIndex !== questionCount) {
+                const res: any = await generateQuiz(category, difficulty, user?.user_id);
+                setNextQuiz(res);
+            }
         }
         if ((isAnswerCorrect != null) || isTimeUp) {
             fetchNextQuiz();
@@ -79,7 +96,7 @@ export const SinglePlayer: React.FC = () => {
                 handleNextQuestion();
             }, 5000);
         }
-    }, [nextQuiz])
+    }, [nextQuiz, questionCount === currentQuizIndex])
 
     // 時間切れの場合
     useEffect(() => {
@@ -111,6 +128,8 @@ export const SinglePlayer: React.FC = () => {
         if (currentQuizIndex >= questionCount) {
             showNotification("クイズが終了しました。", "info");
             setGameStart(false);
+            stopCalc(); // ゲームの終了時刻
+            setIsAnswerCorrect(null);
             setIsEnded(true);
         } else {
             // 問題数とstateを更新
@@ -125,26 +144,26 @@ export const SinglePlayer: React.FC = () => {
 
     const handleRestart = () => {
         // ゲームをリスタート
-        setIsSettings(true);
-        setIsEnded(false);
-        setGameStart(false);
         setQuiz(undefined);
         setNextQuiz(undefined);
         setCorrectCount(0);
         setCurrentQuizIndex(1);
         resetCountDown();
+        setIsSettings(true);
+        setIsEnded(false);
+        setGameStart(false);
     }
 
     const handleRestartWithSettings = () => {
         // 設定そのままでリスタート
+        resetCountDown();
         setQuiz(undefined);
         setNextQuiz(undefined);
+        setCorrectCount(0);
+        setCurrentQuizIndex(1);
         setIsLoading(true);
         setIsEnded(false);
         setGameStart(false);
-        setCorrectCount(0);
-        setCurrentQuizIndex(1);
-        resetCountDown();
     }
 
     return (
@@ -199,10 +218,10 @@ export const SinglePlayer: React.FC = () => {
                 {
                     // リゾルト画面
                     !gameStart && isEnded && (
-                        <AfterSingleResult 
+                        <AfterSingleResult
                             correctCount={correctCount}
                             questionCount={questionCount}
-                            duration={timeLimit} // 仮
+                            duration={duration}
                             category={category}
                             difficulty={difficulty}
                             handleRestart={handleRestart}
