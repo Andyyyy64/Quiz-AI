@@ -67,12 +67,18 @@ exports.up = function (knex) {
       table.primary(["session_id", "quiz_id"]);
     })
     .createTable("user_quiz_history", function (table) {
-      table.increments("id").primary();
+      table.increments("quiz_id").primary();
       table.integer("user_id").unsigned().notNullable();
       table.foreign("user_id").references("users.user_id");
-      table.integer("quiz_id").unsigned().notNullable();
-      table.foreign("quiz_id").references("quiz.quiz_id");
-      table.boolean("is_correct").nullble();
+      table.string("question").notNullable();
+      table.string("correct_answer").notNullable();
+      table.json("choices").notNullable(); // 選択肢をJSONで格納
+      table.string("user_choices").notNullable();
+      table.string("category").notNullable().defaultTo("カテゴリなし");
+      table.string("difficulty").notNullable().defaultTo("簡単");
+      table.string("explanation").notNullable().defaultTo("説明なし");
+            
+      table.boolean("is_correct")
       table.timestamp("answered_at").notNullable().defaultTo(knex.fn.now());
     });
 };
@@ -83,6 +89,7 @@ exports.up = function (knex) {
  */
 exports.down = function (knex) {
   return knex.schema
+    .dropTable("user_quiz_history")
     .dropTable("multiplay_quiz_history")
     .dropTable("singleplay_quiz_history")
     .dropTable("multiplay_history")

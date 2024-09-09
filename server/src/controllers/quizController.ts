@@ -17,16 +17,12 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
     }
     // ユーザーが解いたクイズを取得
     const pastQuizzes = await db.all(
-        "SELECT q.quiz_id, q.question FROM user_quiz_history uqh JOIN quiz q ON uqh.quiz_id = q.quiz_id WHERE uqh.user_id = $1",
+        "SELECT question FROM user_quiz_history WHERE user_id = $1",
         [user_id ?? 1]
     );
-    let pastQuestions: string[] = [];
-    // 過去に解いたクイズの質問リストを作成
-    if (pastQuizzes !== null) {
-        pastQuestions = pastQuizzes.map(quiz => quiz.question);
-    }
+    // 過去に解いたクイズの質問リストを作成 
+    const pastQuestions = pastQuizzes?.map((quiz) => quiz.question);
     const pastQuestionsString = JSON.stringify(pastQuestions);
-    console.log("user_id: " + user_id);
     console.log(pastQuestionsString);
     try {
         const response = await client.chat.completions.create({
@@ -73,37 +69,6 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
         try {
             // クイズが文字列として返ってきた場合、JSONとしてパース
             const parsedQuiz = JSON.parse(generatedQuiz);
-
-            // 生成したクイズをデータベースに保存(quiz_idはuuidを手動で挿入)
-            const uuid: number = Math.floor(100000 + Math.random() * 900000);
-
-            // parsedQuizにquiz_idを追加
-            parsedQuiz.quiz_id = uuid;
-
-            // 選択肢をJSONに変換
-            const choicesJson = JSON.stringify(parsedQuiz.choices);
-
-            try {
-                await db.run(
-                    "INSERT INTO quiz (quiz_id, question, category, difficulty, choices, explanation, correct_answer, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-                    [
-                        parsedQuiz.quiz_id,
-                        parsedQuiz.question,
-                        parsedQuiz.category,
-                        parsedQuiz.difficulty,
-                        choicesJson,
-                        parsedQuiz.explanation,
-                        parsedQuiz.correct_answer,
-                        new Date(),
-                        new Date(),
-                    ]
-                );
-                console.log("クイズが正常に保存されました");
-            } catch (error) {
-                console.error("Failed to save quiz:", error);
-                return ({ error: "クイズの保存に失敗しました", details: error, response: response });
-            }
-
             // パースしたJSONをそのままフロントに返す
             return parsedQuiz;
         } catch (parseError) {
