@@ -12,7 +12,7 @@ export const SingleGame: React.FC<SingleGameProps> = ({
     isAnswerCorrect,
     correctCount,
     isTimeUp,
-    handleAnswerSelect
+    handleAnswerSelect,
 }) => {
     return (
         <div
