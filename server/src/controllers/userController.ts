@@ -219,8 +219,8 @@ export const saveAnsweredQuiz = async (req: Request, res: Response) => {
   console.log("saveAnsweredQuiz called");
   try {
     await db.run(
-      "INSERT INTO user_quiz_history (user_id, question, correct_answer, choices, category, difficulty, user_choices, is_correct, answered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-      [user_id, quiz.question, quiz.correct_answer, choicesJson, quiz.category, quiz.difficulty, user_choices, is_correct, new Date()]
+      "INSERT INTO user_quiz_history (user_id, question, correct_answer, choices, category, difficulty, explanation, user_choices, is_correct, answered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
+      [user_id, quiz.question, quiz.correct_answer, choicesJson, quiz.category, quiz.difficulty, quiz.explanation, user_choices, is_correct, new Date()]
     );
     console.log(user_id + " Answer saved");
     res.status(200).json({ message: "Answer saved" });

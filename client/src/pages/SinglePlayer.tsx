@@ -25,7 +25,6 @@ export const SinglePlayer: React.FC = () => {
     const [timeLimit, setTimeLimit] = useState(30);
     const [questionCount, setQuestionCount] = useState(10);
     const [correctCount, setCorrectCount] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState("");
     const [currentQuizIndex, setCurrentQuizIndex] = useState(1);
 
     const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null); // 回答正誤フラグ
@@ -105,19 +104,18 @@ export const SinglePlayer: React.FC = () => {
 
     // 回答送信時の処理
     const handleAnswerSelect = async (selectAnswer: string) => {
-        setSelectedAnswer(selectAnswer);
         if (selectAnswer === quiz?.correct_answer) {
             // 正解時の処理
             resetCountDown();
             // クイズと回答/正答をユーザーの履歴に保存
-            await saveAnsweredQuiz(user?.user_id, quiz, selectedAnswer, true);
+            await saveAnsweredQuiz(user?.user_id, quiz, selectAnswer, true);
             setIsAnswerCorrect(true);
-            setCorrectCount((prev) => prev + 1);
+            setCorrectCount((prev) => prev + 1);            
         } else {
             // 不正解時の処理
             resetCountDown();
             // クイズと回答/正答をユーザーの履歴に保存
-            await saveAnsweredQuiz(user?.user_id, quiz, selectedAnswer, false);
+            await saveAnsweredQuiz(user?.user_id, quiz, selectAnswer, false);
             setIsAnswerCorrect(false);
         }
     };
