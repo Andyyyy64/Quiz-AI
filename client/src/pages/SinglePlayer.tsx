@@ -74,11 +74,7 @@ export const SinglePlayer: React.FC = () => {
     // 回答か時間切れの場合、次の問題を取得
     useEffect(() => {
         const fetchNextQuiz = async () => {
-            // 回答をユーザーの回答履歴に保存
-            saveAnsweredQuiz(quiz?.quiz_id, user?.user_id, isAnswerCorrect);
             // 次の問題を取得(ただし最後は除く)
-            console.log(currentQuizIndex);
-            console.log(questionCount);
             if (currentQuizIndex !== questionCount) {
                 const res: any = await generateQuiz(category, difficulty, user?.user_id);
                 setNextQuiz(res);
@@ -107,17 +103,19 @@ export const SinglePlayer: React.FC = () => {
     }, [countdown])
 
     // 回答送信時の処理
-    const handleAnswerSelect = (selectAnswer: string) => {
+    const handleAnswerSelect = async (selectAnswer: string) => {
         if (selectAnswer === quiz?.correct_answer) {
-            console.log("correct");
             // 正解時の処理
             resetCountDown();
+            // クイズと回答/正答をユーザーの履歴に保存
+            await saveAnsweredQuiz(user?.user_id, quiz, selectAnswer, true);
             setIsAnswerCorrect(true);
-            setCorrectCount((prev) => prev + 1);
+            setCorrectCount((prev) => prev + 1);            
         } else {
             // 不正解時の処理
-            console.log("wrong");
             resetCountDown();
+            // クイズと回答/正答をユーザーの履歴に保存
+            await saveAnsweredQuiz(user?.user_id, quiz, selectAnswer, false);
             setIsAnswerCorrect(false);
         }
     };
