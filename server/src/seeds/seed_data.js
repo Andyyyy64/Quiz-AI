@@ -4,12 +4,11 @@
  */
 exports.seed = async function (knex) {
   // Deletes ALL existing entries
-  await knex("user_quiz_history").del();
   await knex("multiplay_quiz_history").del();
   await knex("singleplay_quiz_history").del();
   await knex("multiplay_history").del();
   await knex("singleplay_history").del();
-  await knex("quiz").del();
+  await knex("user_quiz_history").del();
   await knex("users").del();
 
   // Insert users
@@ -47,45 +46,49 @@ exports.seed = async function (knex) {
   const userId1 = users[0].user_id; // Alice's user_id
   const userId2 = users[1].user_id; // Bob's user_id
 
-  // Insert quizzes
-  const quizzes = await knex("quiz")
-    .insert([
+
+    // Insert user quiz history
+    await knex("user_quiz_history").insert([
       {
+        user_id: userId1,
+        quiz_id: 400000,
         question: "2+2は何ですか?",
         correct_answer: "4",
         choices: JSON.stringify(["1", "2", "3", "4"]),
         category: "数学",
         difficulty: "簡単",
         explanation: "2+2=4です",
-        created_at: knex.fn.now(),
-        updated_at: knex.fn.now(),
+        user_choices: "4",
+        is_correct: true,
+        answered_at: knex.fn.now(),
       },
       {
+        user_id: userId1,
+        quiz_id: 4000001,
         question: "フランスの首都はどこですか？",
         correct_answer: "パリ",
         choices: JSON.stringify(["London", "Berlin", "Paris", "Rome"]),
         category: "地理",
         difficulty: "簡単",
         explanation: "フランスの首都はパリです",
-        created_at: knex.fn.now(),
-        updated_at: knex.fn.now(),
+        user_choices: "London",
+        is_correct: false,
+        answered_at: knex.fn.now(),
       },
       {
+        user_id: userId2,
+        quiz_id: 4000002,
         question: "水の沸点は何度ですか？",
         correct_answer: "100°C",
         choices: JSON.stringify(["0°C", "50°C", "100°C", "200°C"]),
         category: "科学",
         difficulty: "簡単",
         explanation: "水の沸点は100°Cです",
-        created_at: knex.fn.now(),
-        updated_at: knex.fn.now(),
+        user_choices: "100°C",
+        is_correct: true,
+        answered_at: knex.fn.now(),
       },
-    ])
-    .returning("quiz_id");
-
-  const quizId1 = quizzes[0].quiz_id;
-  const quizId2 = quizzes[1].quiz_id;
-  const quizId3 = quizzes[2].quiz_id;
+    ]);
 
   // Insert singleplay history
   const singleplayHistory = await knex("singleplay_history")
@@ -105,8 +108,8 @@ exports.seed = async function (knex) {
 
   // Insert into singleplay_quiz_history (link quizzes to singleplay history)
   await knex("singleplay_quiz_history").insert([
-    { singleplay_id: singleplayId1, quiz_id: quizId1 },
-    { singleplay_id: singleplayId1, quiz_id: quizId2 },
+    { singleplay_id: singleplayId1, quiz_id: 4000001 },
+    { singleplay_id: singleplayId1, quiz_id: 4000002 },
   ]);
 
   // Insert multiplay history
@@ -128,50 +131,6 @@ exports.seed = async function (knex) {
 
   // Insert into multiplay_quiz_history (link quizzes to multiplay history)
   await knex("multiplay_quiz_history").insert([
-    { session_id: multiplaySessionId1, quiz_id: quizId2 },
-    { session_id: multiplaySessionId1, quiz_id: quizId3 },
-  ]);
-
-  // Insert user quiz history
-  await knex("user_quiz_history").insert([
-    {
-      user_id: userId1,
-      quiz_id: 400000,
-      question: "2+2は何ですか?",
-      correct_answer: "4",
-      choices: JSON.stringify(["1", "2", "3", "4"]),
-      category: "数学",
-      difficulty: "簡単",
-      explanation: "2+2=4です",
-      user_choices: "4",
-      is_correct: true,
-      answered_at: knex.fn.now(),
-    },
-    {
-      user_id: userId1,
-      quiz_id: 4000001,
-      question: "フランスの首都はどこですか？",
-      correct_answer: "パリ",
-      choices: JSON.stringify(["London", "Berlin", "Paris", "Rome"]),
-      category: "地理",
-      difficulty: "簡単",
-      explanation: "フランスの首都はパリです",
-      user_choices: "London",
-      is_correct: false,
-      answered_at: knex.fn.now(),
-    },
-    {
-      user_id: userId2,
-      quiz_id: 4000002,
-      question: "水の沸点は何度ですか？",
-      correct_answer: "100°C",
-      choices: JSON.stringify(["0°C", "50°C", "100°C", "200°C"]),
-      category: "科学",
-      difficulty: "簡単",
-      explanation: "水の沸点は100°Cです",
-      user_choices: "100°C",
-      is_correct: true,
-      answered_at: knex.fn.now(),
-    },
+    { session_id: multiplaySessionId1, quiz_id: 400000 },
   ]);
 };

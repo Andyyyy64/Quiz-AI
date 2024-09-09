@@ -3,6 +3,7 @@ import db from "../database/database"
 
 export const getSinglePlayHistory = async (req: Request, res: Response) => {
     const { user_id } = req.params;
+    console.log(user_id);
     try {
         const data = await db.get("SELECT * FROM singleplay_history WHERE user_id = $1",
             [user_id]
@@ -84,9 +85,12 @@ export const saveMultiPlayQuizHistory = async (req: Request, res: Response) => {
 export const getSinglePlayQuizHistory = async (req: Request, res: Response) => {
     const { singleplay_id } = req.params;
     try {
-        const data = await db.get("SELECT * FROM singleplay_quiz_history WHERE singleplay_id = $1",
-            [singleplay_id]
-        );
+        const data = await db.all(`
+            SELECT uqh.*, uqh.user_choices, uqh.is_correct
+            FROM singleplay_quiz_history sqh
+            JOIN user_quiz_history uqh ON sqh.quiz_id = uqh.quiz_id
+            WHERE sqh.singleplay_id = $1
+        `, [singleplay_id]);
         res.status(200).json(data);
     } catch (error: any) {
         console.error(error);
@@ -97,9 +101,12 @@ export const getSinglePlayQuizHistory = async (req: Request, res: Response) => {
 export const getMultiPlayQuizHistory = async (req: Request, res: Response) => {
     const { session_id } = req.params;
     try {
-        const data = await db.get("SELECT * FROM multiplay_quiz_history WHERE session_id = $1",
-            [session_id]
-        );
+        const data = await db.all(`
+            SELECT uqh.*, uqh.user_choices, uqh.is_correct
+            FROM multiplay_quiz_history mqh
+            JOIN user_quiz_history uqh ON mqh.quiz_id = uqh.quiz_id
+            WHERE mqh.session_id = $1
+        `, [session_id]);
         res.status(200).json(data);
     } catch (error: any) {
         console.error(error);

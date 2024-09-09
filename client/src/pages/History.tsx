@@ -7,7 +7,7 @@ import { MultiPlayerHistory } from '../components/History/MultiPlayerHistory';
 import { Users, User } from "lucide-react";
 
 export const History: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<'singleplayer' | 'multiplayer'>('singleplayer');
+    const [activeTab, setActiveTab] = useState<'singleplayer' | 'multiplayer'>('multiplayer');
 
     const authContext = useContext(AuthContext);
     if (authContext === undefined) {
@@ -22,10 +22,11 @@ export const History: React.FC = () => {
                 <h1 className="text-4xl font-bold mb-8 text-center">クイズの履歴</h1>
 
                 <div className="bg-white rounded-xl shadow-xl p-6 max-w-3xl mx-auto">
-                    <div className="flex mb-6">
+                    <div className="flex mb-6 gap-2">
                         <button
                             onClick={() => setActiveTab('multiplayer')}
-                            className={`flex-1 py-2 px-4 text-center rounded-l-md flex items-center justify-center ${activeTab === 'multiplayer'
+                            className={`flex-1 py-2 px-4 text-center flex items-center justify-center rounded-lg shadow-sm
+                                ${activeTab === 'multiplayer'
                                 ? 'bg-[#4ECDC4] text-white'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
@@ -35,7 +36,8 @@ export const History: React.FC = () => {
                         </button>
                         <button
                             onClick={() => setActiveTab('singleplayer')}
-                            className={`flex-1 py-2 px-4 text-center rounded-r-md flex items-center justify-center ${activeTab === 'singleplayer'
+                            className={`flex-1 py-2 px-4 text-center flex items-center justify-center rounded-lg shadow-sm
+                                ${activeTab === 'singleplayer'
                                 ? 'bg-[#4ECDC4] text-white'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}

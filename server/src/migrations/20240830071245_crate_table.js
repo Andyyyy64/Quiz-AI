@@ -19,16 +19,20 @@ exports.up = function (knex) {
       table.timestamp("created_at").defaultTo(knex.fn.now());
       table.timestamp("updated_at").defaultTo(knex.fn.now());
     })
-    .createTable("quiz", function (table) {
+    .createTable("user_quiz_history", function (table) {
       table.increments("quiz_id").primary();
+      table.integer("user_id").unsigned().notNullable();
+      table.foreign("user_id").references("users.user_id");
       table.string("question").notNullable();
       table.string("correct_answer").notNullable();
       table.json("choices").notNullable(); // 選択肢をJSONで格納
+      table.string("user_choices").notNullable();
       table.string("category").notNullable().defaultTo("カテゴリなし");
       table.string("difficulty").notNullable().defaultTo("簡単");
       table.string("explanation").notNullable().defaultTo("説明なし");
-      table.timestamp("created_at").defaultTo(knex.fn.now());
-      table.timestamp("updated_at").defaultTo(knex.fn.now());
+            
+      table.boolean("is_correct")
+      table.timestamp("answered_at").notNullable().defaultTo(knex.fn.now());
     })
     .createTable("singleplay_history", function (table) {
       table.increments("id").primary();
@@ -46,7 +50,7 @@ exports.up = function (knex) {
       table.integer("singleplay_id").unsigned().notNullable();
       table.foreign("singleplay_id").references("singleplay_history.id");
       table.integer("quiz_id").unsigned().notNullable();
-      table.foreign("quiz_id").references("quiz.quiz_id");
+      table.foreign("quiz_id").references("user_quiz_history.quiz_id");
       table.primary(["singleplay_id", "quiz_id"]);
     })
     .createTable("multiplay_history", function (table) {
@@ -68,23 +72,8 @@ exports.up = function (knex) {
       table.integer("session_id").unsigned().notNullable();
       table.foreign("session_id").references("multiplay_history.session_id");
       table.integer("quiz_id").unsigned().notNullable();
-      table.foreign("quiz_id").references("quiz.quiz_id");
+      table.foreign("quiz_id").references("user_quiz_history.quiz_id");
       table.primary(["session_id", "quiz_id"]);
-    })
-    .createTable("user_quiz_history", function (table) {
-      table.increments("quiz_id").primary();
-      table.integer("user_id").unsigned().notNullable();
-      table.foreign("user_id").references("users.user_id");
-      table.string("question").notNullable();
-      table.string("correct_answer").notNullable();
-      table.json("choices").notNullable(); // 選択肢をJSONで格納
-      table.string("user_choices").notNullable();
-      table.string("category").notNullable().defaultTo("カテゴリなし");
-      table.string("difficulty").notNullable().defaultTo("簡単");
-      table.string("explanation").notNullable().defaultTo("説明なし");
-            
-      table.boolean("is_correct")
-      table.timestamp("answered_at").notNullable().defaultTo(knex.fn.now());
     });
 };
 

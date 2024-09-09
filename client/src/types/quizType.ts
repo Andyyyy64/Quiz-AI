@@ -67,3 +67,17 @@ export interface QuizDisplayProps extends QuizProps {
     countdown: number;
     isCounting: boolean;
 }
+
+export type JoinedQuizType = {
+    quiz_id?: number;
+    question: string;
+    category: Category | string; // カテゴリは仮なのでstringを許容
+    difficulty: Difficulty;
+    choices: string[];
+    explanation: string;
+    correct_answer: string;
+    user_choices: string;
+    user_id: number;
+    is_correct: boolean;
+    answered_at: Date;
+}

@@ -11,6 +11,9 @@ import { SinglePlayer } from "./pages/SinglePlayer";
 import { Profile } from "./pages/Profile";
 import { History } from "./pages/History";
 
+import { SingleHistoryDetail } from "./components/History/SingleHistoryDetail";
+import { MultiHistoryDetail } from "./components/History/MultiHistoryDetail";
+
 import { PrivateRoute } from "./components/PrivateRoute";
 
 import "./index.css";
@@ -18,7 +21,7 @@ import "./index.css";
 export const App: React.FC = () => {
   return (
     <div className="relative min-h-screen">
-      <div className="background-container"></div> {/* 背景コンテナを追加 */}
+      <div className="background-container"></div> {/* 背景コンテナ */}
       <Router>
         <Routes>
           <Route
@@ -38,7 +41,10 @@ export const App: React.FC = () => {
           <Route path="/singleplay" element={<SinglePlayer />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/history" element={<History />} />
-          
+
+          <Route path="/history/singleplay/:id" element={<SingleHistoryDetail />} />
+          <Route path="/history/multiplay/:id" element={<MultiHistoryDetail />} />
+
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>
       </Router>
