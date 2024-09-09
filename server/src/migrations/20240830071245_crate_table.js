@@ -34,6 +34,9 @@ exports.up = function (knex) {
       table.increments("id").primary();
       table.integer("user_id").unsigned().notNullable();
       table.foreign("user_id").references("users.user_id");
+      table.string("category").notNullable().defaultTo("カテゴリなし");
+      table.string("difficulty").notNullable().defaultTo("簡単");
+      table.integer("question_num").notNullable();
       table.integer("correct_num").notNullable().defaultTo(0);
       table.integer("duration").notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());
@@ -52,8 +55,10 @@ exports.up = function (knex) {
       table.foreign("user_id").references("users.user_id");
       table.integer("opponent_user_id").unsigned().notNullable();
       table.foreign("opponent_user_id").references("users.user_id");
+      table.string("opponent_name").notNullable();
       table.integer("who_win").unsigned().notNullable();
       table.foreign("who_win").references("users.user_id");
+      table.integer("question_num").notNullable();
       table.integer("points_awarded").notNullable();
       table.integer("match_duration").notNullable();
       table.timestamp("created_at").defaultTo(knex.fn.now());

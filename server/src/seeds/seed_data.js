@@ -91,6 +91,9 @@ exports.seed = async function (knex) {
   const singleplayHistory = await knex("singleplay_history")
     .insert({
       user_id: userId1,
+      category: "数学",
+      difficulty: "簡単",
+      question_num: 5,
       correct_num: 2,
       duration: 120,
       created_at: knex.fn.now(),
@@ -111,8 +114,10 @@ exports.seed = async function (knex) {
     .insert({
       user_id: userId1,
       opponent_user_id: userId2,
+      opponent_name: "Bob",
       who_win: userId1, // User 1 won
       points_awarded: 50,
+      question_num: 5,
       match_duration: 300,
       created_at: knex.fn.now(),
       updated_at: knex.fn.now(),
