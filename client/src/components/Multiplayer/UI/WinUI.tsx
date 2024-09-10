@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Trophy, Star, ArrowRight } from "lucide-react"
 import confetti from 'canvas-confetti'
+import { MultiResultUIProps } from '../../../types/quizType'
 
-export const WinUI = () => {
+export const WinUI: React.FC<MultiResultUIProps> = ({ handleGoHistory }) => {
     const navi = useNavigate()
 
     useEffect(() => {
@@ -32,11 +33,6 @@ export const WinUI = () => {
     const handleTopClick = () => {
         navi('/')
     }
-
-    const handleHistoryClick = (id: number) => {
-        navi(`/history/${id}`)
-    }
-
     return (
         <div className="bg-inherit text-[#333333] relative overflow-hidden flex items-center justify-center">
             <div className="bg-white rounded-xl shadow-lg p-8 max-w-md mx-auto mb-5">
@@ -46,7 +42,7 @@ export const WinUI = () => {
                 <button
                     className="mb-6 bg-[#4ECDC4] hover:bg-[#45b7a7] text-white 
                         p-2 pl-5 pr-5 rounded-lg"
-                    onClick={() => handleHistoryClick(1)} // 1は仮のid
+                    onClick={handleGoHistory} // 1は仮のid
                 >
                     履歴を見る
                 </button>

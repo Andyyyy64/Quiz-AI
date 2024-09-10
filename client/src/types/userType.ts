@@ -29,4 +29,5 @@ export type wsUserType = {
     rank: string;
     prof_image_url: string;
     ws: WebSocket;
+    correctCount: number;
 }

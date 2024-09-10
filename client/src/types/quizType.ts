@@ -34,6 +34,7 @@ export type QuizProps = {
     correctCount: number;
     questionCount?: number;
     isMultiplayer?: boolean;
+    isDraw?: boolean;
     handleAnswerSelect: (selectAnswer: string) => void;
 }
 
@@ -66,4 +67,23 @@ export interface QuizDisplayProps extends QuizProps {
     opponent: wsUserType | null;
     countdown: number;
     isCounting: boolean;
+}
+
+export type MultiResultUIProps = {
+    winner?: string;
+    handleGoHistory: () => void;
+}
+
+export type JoinedQuizType = {
+    quiz_id?: number;
+    question: string;
+    category: Category | string; // カテゴリは仮なのでstringを許容
+    difficulty: Difficulty;
+    choices: string[];
+    explanation: string;
+    correct_answer: string;
+    user_choices: string;
+    user_id: number;
+    is_correct: boolean;
+    answered_at: Date;
 }

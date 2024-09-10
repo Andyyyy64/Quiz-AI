@@ -13,6 +13,7 @@ const pool: Pool = new Pool({
     ? { rejectUnauthorized: false }
     : false,
 });
+console.log(process.env.NODE_ENV);
 export default {
   get: async (query: string, params?: Array<string | number | boolean | null>) => {
     let db: PoolClient | null = null;
@@ -46,11 +47,14 @@ export default {
     }
   },
 
-  run: async (query: string, params?: Array<string | number | boolean | null>) => {
+  run: async (query: string, params?: Array<string | number | boolean | null>, returning?: boolean) => {
     let db: PoolClient | null = null;
     try {
       db = await pool.connect();
-      await db.query(query, params);
+      const result = await db.query(query, params);
+      if (returning) {
+        return result; // 変更: rows 全体を返す
+      }
       return true;
     } catch (error) {
       console.error('Failed to execute query:', query, error);

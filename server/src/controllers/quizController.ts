@@ -8,22 +8,33 @@ const client: any = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const generateQuiz = async (category?: string, difficulty?: string, user_id?: number) => {
-    if (category === undefined) {
-        category = "ランダム";
+export const generateQuiz = async (category?: string, difficulty?: string, user_id?: number, opponent_id?: number) => {
+    const categories = ["科学", "歴史", "芸術", "スポーツ", "文学", "地理", "一般常識"];
+    const difficulties = ["簡単", "普通", "難しい", "超難しい"];
+
+    if (!category || category === "ランダム") {
+        category = categories[Math.floor(Math.random() * categories.length)];
     }
-    if (difficulty === undefined) {
-        difficulty = "ランダム";
+    if (!difficulty || difficulty === "ランダム") {
+        difficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
     }
-    // ユーザーが解いたクイズを取得
+    console.log("Category: " + category + ", Difficulty: " + difficulty);
+    // ユーザーが解いたクイズを取得    
     const pastQuizzes = await db.all(
         "SELECT question FROM user_quiz_history WHERE user_id = $1",
         [user_id ?? 1]
     );
+    // 対戦相手がいる場合、対戦相手が解いたクイズも取得
+    const opponentQuizzes = await db.all(
+        "SELECT question FROM user_quiz_history WHERE user_id = $1",
+        [opponent_id ?? 2]
+    );
     // 過去に解いたクイズの質問リストを作成 
     const pastQuestions = pastQuizzes?.map((quiz) => quiz.question);
+    const opponentQuestions = opponentQuizzes?.map((quiz) => quiz.question);
     const pastQuestionsString = JSON.stringify(pastQuestions);
-    console.log(pastQuestionsString);
+    const opponentQuestionsString = JSON.stringify(opponentQuestions);
+
     try {
         const response = await client.chat.completions.create({
             model: "gpt-4o-mini",
@@ -31,13 +42,14 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
                 {
                     role: "system",
                     content: `
-                あなたはクイズ作成者です。以下のJSON形式で、4つの選択肢と1つの正解があるクイズ問題を生成してください。
-                フォーマットに必ず従い、正しいJSONを返してください。ジャンルと難易度に基づいたクイズ問題を作成してください。
-                以下の過去に生成した問題と重複しない問題を作成してください。
-                ${pastQuestionsString},
-                ジャンルがランダムの場合、[科学] [歴史] [芸術] [スポーツ] [文学] [地理] [一般常識]のいずれかです。
-                難易度がランダムの場合、「簡単」「普通」「難しい」[超難しい]のいずれかです。
-                出力はJSONのみを返してください。
+                    あなたはクイズ作成者です。以下のJSON形式で、4つの選択肢と1つの正解がある問題を生成してください。
+                    **過去に生成した問題や類似の表現、または同じテーマを使わないように注意してください。**
+                    指定されたジャンルと難易度に基づいたクイズ問題を生成してください。高校生レベルを[普通]としてください。
+                    フォーマットに必ず従い、正しいJSONを返してください。   
+                    以下の過去に生成した問題とは絶対に似ていない、重複しない問題を生成してください:
+                    ${pastQuestionsString},
+                    ${opponentQuestionsString},
+                    出力はJSONのみを返してください。
 
                 フォーマット:
                 {
@@ -52,6 +64,9 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
                     ],
                     "correct_answer": "<正解>"
                     "explanation": "<解説>"
+
+                    また、**正しい事実に基づき、情報源が明確である問題を作成してください。**
+                    あなたが作成した問題は、他のユーザーが解くことがありますので、正確な情報を提供してください。
                 }`
                 },
                 {
@@ -61,7 +76,7 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
             ],
             max_tokens: 1000,
         });
-
+        console.log("total_tokens: " + response.usage.total_tokens);
         let generatedQuiz = response.choices[0].message.content;
         // 余計な文字列を削除
         generatedQuiz = generatedQuiz.replace(/```json/g, '').replace(/```/g, '').trim();

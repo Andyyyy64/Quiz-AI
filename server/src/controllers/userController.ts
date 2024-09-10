@@ -215,15 +215,19 @@ export const uploadImage = async (req: MulterRequest, res: Response) => {
 
 export const saveAnsweredQuiz = async (req: Request, res: Response) => {
   const { user_id, quiz, user_choices, is_correct } = req.body;
-  const choicesJson = JSON.stringify(quiz.choices);
-  console.log("saveAnsweredQuiz called");
+  const choicesJson = JSON.stringify(quiz.choices)
   try {
-    await db.run(
-      "INSERT INTO user_quiz_history (user_id, question, correct_answer, choices, category, difficulty, explanation, user_choices, is_correct, answered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
-      [user_id, quiz.question, quiz.correct_answer, choicesJson, quiz.category, quiz.difficulty, quiz.explanation, user_choices, is_correct, new Date()]
+    const result: any = await db.run(
+      "INSERT INTO user_quiz_history (user_id, question, correct_answer, choices, category, difficulty, explanation, user_choices, is_correct, answered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING quiz_id",
+      [user_id, quiz.question, quiz.correct_answer, choicesJson, quiz.category, quiz.difficulty, quiz.explanation, user_choices, is_correct, new Date()],
+      true
     );
-    console.log(user_id + " Answer saved");
-    res.status(200).json({ message: "Answer saved" });
+    if (result && result.rows.length > 0) {
+      const quiz_id = result.rows[0].quiz_id;
+      res.status(200).json({ message: "Answer saved", quizID: quiz_id });
+    } else {
+      throw new Error("Failed to retrieve quiz_id");
+    }
   } catch (err) {
     console.error("Failed to save answer:", err);
     return res.status(500).json({ message: "Failed to save answer" });

@@ -5,8 +5,9 @@ import http from 'http';
 
 import userRouter from './routes/userRoutes';
 import authRouter from './routes/authRoutes';
-import quizRouter from './routes/quizRoutes'
+import quizRouter from './routes/quizRoutes';
 import playRoutes from './routes/playRoutes';
+import historyRouter from './routes/histroyRoutes';
 
 import { setupWebSocketServer } from './ws/setupWebScoketServer';
 
@@ -24,6 +25,7 @@ app.use('/user', userRouter);
 app.use('/auth', authRouter);
 app.use('/quiz', quizRouter);
 app.use('/play', playRoutes);
+app.use('/history', historyRouter);
 
 const server = http.createServer(app);
 setupWebSocketServer(server);
