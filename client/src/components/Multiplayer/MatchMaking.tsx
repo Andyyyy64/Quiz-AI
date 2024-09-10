@@ -14,6 +14,7 @@ import { LoseUI } from "./UI/LoseUI";
 
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { useCountDown } from "../../hooks/useCountDown";
+import { useCalcDuration } from "../../hooks/useCalcDuration";
 import { useNotification } from "../../hooks/useNotification";
 
 import { QuizType } from "../../types/quizType";
@@ -54,6 +55,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
     useCountDown(10);
+  const { duration, startCountUp, stopCountUp, resetCountUp } = useCalcDuration();
 
   const { notification, showNotification } = useNotification();
   const navi = useNavigate();
@@ -80,6 +82,8 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
           resetCountDown();
           setIsMatched(true);
           startCountDown();
+          // マッチ時間の計測開始
+          startCountUp();
         }, 3000); // 3秒後に開始
 
         // 相手が正答した場合、
@@ -213,9 +217,10 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       !isHistorySaved && // 履歴がまだ保存されていない
       (answerdQuizIds.length === currentQuizIndex) // 全てのクイズの履歴が保存された
     ) {
-      console.log(answerdQuizIds);
+      stopCountUp(); // マッチ時間の計測を終了
       handleSaveHistory(opponent);
       setIsHistorySaved(true); // 履歴が保存されたらフラグを立てる
+      resetCountUp();
     }
   }, [matchEnd, answerdQuizIds, currentQuizIndex]);
 
@@ -255,7 +260,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
 
   // マッチングの履歴を保存する処理
   const handleSaveHistory = async (opponentt: any) => {
-    const match_duration = 100; // 仮のマッチ時間
+    const match_duration = duration;
     const points_awarded = correctCount * 10; // 仮のスコア計算
     const winnerId = winner === user?.name ? user.user_id : opponentt?.id;
 

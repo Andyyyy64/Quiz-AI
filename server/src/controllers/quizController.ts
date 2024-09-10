@@ -9,7 +9,7 @@ const client: any = new OpenAI({
 });
 
 export const generateQuiz = async (category?: string, difficulty?: string, user_id?: number, opponent_id?: number) => {
-    const categories = ["科学", "歴史", "芸術", "スポーツ", "文学", "地理", "一般常識"];
+    const categories = ["科学", "日本史", "芸術", "文学", "地理", "世界史", "コンピュータサイエンス", "一般常識"];
     const difficulties = ["簡単", "普通", "難しい", "超難しい"];
 
     if (!category || category === "ランダム") {

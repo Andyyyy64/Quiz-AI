@@ -37,10 +37,10 @@ export const QuizDisplay: React.FC<QuizProps> = ({
                 <button
                   key={index}
                   disabled={!canAnswer}
-                  className={`text-lg py-4 bg-white border-2 border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4]
-                 hover:cursor-pointer rounded-lg transition-all
-                 ${!canAnswer ? "hover:bg-inherit hover:text-[#4ECDC4] hover:cursor-default"
-                      : "hover:bg-[#4ECDC4] hover:text-white"
+                  className={`text-lg py-4 border-2 rounded-lg transition-all flex items-center justify-center
+                    ${canAnswer
+                      ? 'bg-white border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white hover:cursor-pointer'
+                      : 'bg-[#FF6B6B] border-[#FF6B6B] text-white hover:cursor-not-allowed'
                     }`}
                   onClick={() => handleAnswerSelect(item)}
                 >
