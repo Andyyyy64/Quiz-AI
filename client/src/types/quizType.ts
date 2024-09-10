@@ -35,6 +35,7 @@ export type QuizProps = {
     questionCount?: number;
     isMultiplayer?: boolean;
     isDraw?: boolean;
+    opponentAnswer?: string;
     handleAnswerSelect: (selectAnswer: string) => void;
 }
 

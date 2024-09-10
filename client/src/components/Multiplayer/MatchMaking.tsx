@@ -31,6 +31,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const [nextQuiz, setNextQuiz] = useState<QuizType>(); // 次のクイズ 
   const [opponent, setOpponent] = useState<wsUserType | null>(null); // マッチした相手の情報
   const [userAnswer, setUserAnswer] = useState<string>(""); // ユーザーの回答
+  const [opponentAnswer, setOpponentAnswer] = useState<string>(""); // 相手の回答
   const [currentQuizIndex, setCurrentQuizIndex] = useState(1); // 現在のクイズのインデックス
   const [correctCount, setCorrectCount] = useState(0); // 正解数
   const [answerdQuizIds, setAnsweredQuizIds] = useState<number[]>([]); // 解答済みクイズID
@@ -96,6 +97,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
         // 相手が誤答した場合、
       } else if (data.message === "opponent_answerd" && data.is_correct === false) {
         console.log("opponent_wrong_answer");
+        setOpponentAnswer(data.opponent_selected_answer);
         setEveryOneWrong((prev) => prev + 1);
         showNotification("相手が誤答しました！", "info");
 
@@ -141,7 +143,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   useEffect(() => {
     // nextQuizが存在し、勝者が決まっていない場合
     if (nextQuiz != undefined && !winner) {
-      console.log(nextQuiz.correct_answer);
       setTimeout(() => {
         handleNextQuestion();
       }, 5000);
@@ -205,13 +206,10 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       // 不正解時の処理
       setEveryOneWrong((prev) => prev + 1);
       send({ action: "answerd", selectedAnswer: selectAnswer });
-      showNotification("不正解です！", "error");
     }
   };
 
   useEffect(() => {
-    console.log("answerdQuizIds:", answerdQuizIds);
-    console.log("currentQuizIndex:", currentQuizIndex);
     if (
       matchEnd &&
       !isHistorySaved && // 履歴がまだ保存されていない
@@ -227,7 +225,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   // 次の問題に進む処理
   const handleNextQuestion = () => {
     // 10問終わって引き分けの場合
-    if (currentQuizIndex >= MATCH_QUESTION_NUM) {      
+    if (currentQuizIndex >= MATCH_QUESTION_NUM) {
       setWinner("引き分け");
       console.log("マッチ引き分け");
       console.log("correctCount:", correctCount);
@@ -254,7 +252,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const handleAnswerSaved = async (is_correct: boolean, quizz: QuizType | undefined, user_answer?: string) => {
     const res = await saveAnsweredQuiz(user?.user_id, quizz, user_answer ? user_answer : "", is_correct);
     const quiz_id = res.quizID;
-    console.log("got quiz_id", quiz_id);
     setAnsweredQuizIds((prev) => [...prev, quiz_id]);
   }
 
@@ -276,7 +273,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
     const multiSessionId = res.id;
     setSessionId(multiSessionId);
     // このマッチにおけるクイズ履歴を保存
-    console.log(answerdQuizIds);
     await saveMultiQuizHistory(multiSessionId, answerdQuizIds);
 
     setAnsweredQuizIds([]);
@@ -315,6 +311,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
           currentQuizIndex={currentQuizIndex}
           correctCount={correctCount}
           isDraw={isDraw}
+          opponentAnswer={opponentAnswer}
         />
       )}
       {/* 勝者が決まったら表示　*/}
@@ -324,9 +321,9 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
             winner === user?.name ? (
               <WinUI handleGoHistory={handleGoHistory} />
             ) : (
-              <LoseUI 
-              winner={winner}
-              handleGoHistory={handleGoHistory} 
+              <LoseUI
+                winner={winner}
+                handleGoHistory={handleGoHistory}
               />
             )
           }

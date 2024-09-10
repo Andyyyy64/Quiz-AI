@@ -1,5 +1,4 @@
 import { WebSocketServer, WebSocket } from 'ws';
-import axios from 'axios';
 import { QuizType } from '../type/quizType';
 import { generateQuiz } from '../controllers/quizController';
 
@@ -95,7 +94,11 @@ export const setupWebSocketServer = (server: any) => {
                     currentPlayer.opponent.ws.send(JSON.stringify({ message: 'opponent_answerd', is_correct: true, quiz: quiz }));
                 } else {
                     console.log('Wrong answer');
-                    currentPlayer.opponent.ws.send(JSON.stringify({ message: 'opponent_answerd', is_correct: false }));
+                    currentPlayer.opponent.ws.send(JSON.stringify({
+                        message: 'opponent_answerd',
+                        is_correct: false,
+                        opponent_selected_answer: selectedAnswer
+                    }));
                 }
             } else if (action === 'wrong_answer' && currentPlayer.opponent) {
                 currentPlayer.opponent.ws.send(
