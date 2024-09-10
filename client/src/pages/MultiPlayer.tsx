@@ -21,7 +21,7 @@ export const Multiplayer: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-inherit">
       <Header />
-      <main className="flex-grow flex flex-col justify-center items-center">
+      <main className="flex-grow flex flex-col justify-center relative items-center">
         <div className="w-full flex flex-col items-center">
           {!showMatchmaking && (
             <div>

@@ -222,7 +222,7 @@ export const SinglePlayer: React.FC = () => {
         navi(`/history/singleplay/${singleId}`);
     }
     return (
-        <div className="min-h-screen flex flex-col bg-inherit">
+        <div className="min-h-screen flex flex-col relative bg-inherit">
             {/* 通知 */}
             {notification && (
                 <Notification message={notification.message} type={notification.type} />
