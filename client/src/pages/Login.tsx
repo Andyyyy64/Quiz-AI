@@ -43,7 +43,7 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-inherit">
+    <div className="min-h-screen flex items-center justify-center relative bg-inherit">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
         <form onSubmit={handleLogin} className="space-y-6">

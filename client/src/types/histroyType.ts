@@ -6,6 +6,8 @@ export type SinglePlayHistoryType = {
     question_num: number;
     correct_num: number;
     duration: number;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export type SinglePlayQuizHistroyType = {

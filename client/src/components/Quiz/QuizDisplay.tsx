@@ -14,6 +14,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
   correctCount,
   isMultiplayer,
   isDraw,
+  opponentAnswer
 }) => {
   return (
     <div className="w-full text-center mt-8 relative">
@@ -33,20 +34,27 @@ export const QuizDisplay: React.FC<QuizProps> = ({
               {quiz?.question}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {quiz?.choices.map((item, index) => (
-                <button
-                  key={index}
-                  disabled={!canAnswer}
-                  className={`text-lg py-4 bg-white border-2 border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4]
-                 hover:cursor-pointer rounded-lg transition-all
-                 ${!canAnswer ? "hover:bg-inherit hover:text-[#4ECDC4] hover:cursor-default"
-                      : "hover:bg-[#4ECDC4] hover:text-white"
-                    }`}
-                  onClick={() => handleAnswerSelect(item)}
-                >
-                  {item}
-                </button>
-              ))}
+              {quiz?.choices.map((item, index) => {
+                // 敵が選んだ選択肢が間違っていた場合にハイライト
+                const isOpponentWrong: boolean = Boolean(isMultiplayer && opponentAnswer && opponentAnswer === item && !isAnswerCorrect);
+
+                return (
+                  <button
+                    key={index}
+                    disabled={!canAnswer || isOpponentWrong}
+                    className={`text-lg py-4 border-2 rounded-lg transition-all flex items-center justify-center
+                      ${canAnswer
+                        ? 'border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white hover:cursor-pointer bg-white'
+                        : 'bg-[#FF6B6B] border-[#FF6B6B] text-white hover:cursor-not-allowed'
+                      }
+                      ${isOpponentWrong ? 'bg-[#FF6B6B] border-[#FF6B6B] hover:cursor-not-allowed hover:bg-[#FF6B6B]' : ''}
+                    `}
+                    onClick={() => handleAnswerSelect(item)}
+                  >
+                    {item}
+                  </button>
+                );
+              })}
             </div>
           </div>
         ) : (
