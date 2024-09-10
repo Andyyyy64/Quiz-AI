@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import db from '../database/database';
@@ -10,7 +10,7 @@ const client: any = new OpenAI({
 
 export const generateQuiz = async (category?: string, difficulty?: string, user_id?: number, opponent_id?: number) => {
     const categories = ["科学", "日本史", "芸術", "文学", "地理", "世界史", "コンピュータサイエンス", "一般常識"];
-    const difficulties = ["簡単", "普通", "難しい", "超難しい"];
+    const difficulties = ["普通", "難しい", "超難しい", "難しい"];
 
     if (!category || category === "ランダム") {
         category = categories[Math.floor(Math.random() * categories.length)];
@@ -33,7 +33,7 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
     const pastQuestions = pastQuizzes?.map((quiz) => quiz.question);
     const opponentQuestions = opponentQuizzes?.map((quiz) => quiz.question);
     const pastQuestionsString = JSON.stringify(pastQuestions);
-    const opponentQuestionsString = JSON.stringify(opponentQuestions);
+    const opponentQuestionsString = JSON.stringify(opponentQuestions);    
 
     try {
         const response = await client.chat.completions.create({
@@ -46,7 +46,7 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
                     **過去に生成した問題や類似の表現、または同じテーマを使わないように注意してください。**
                     指定されたジャンルと難易度に基づいたクイズ問題を生成してください。高校生レベルを[普通]としてください。
                     フォーマットに必ず従い、正しいJSONを返してください。   
-                    以下の過去に生成した問題とは絶対に似ていない、重複しない問題を生成してください:
+                    以下の過去に生成した問題の問題文をすべて確認して、絶対に 似ていない/重複しない 問題を生成してください:
                     ${pastQuestionsString},
                     ${opponentQuestionsString},
                     出力はJSONのみを返してください。
@@ -73,8 +73,9 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
                     role: "user",
                     content: `ジャンル「${category}」、難易度「${difficulty}」のクイズ問題を作成してください。`
                 }
-            ],
-            max_tokens: 1000,
+            ],            
+            max_tokens: 10000,
+            response_format: { type: "json_object"}
         });
         console.log("total_tokens: " + response.usage.total_tokens);
         let generatedQuiz = response.choices[0].message.content;
