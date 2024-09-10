@@ -260,7 +260,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
 
   // マッチングの履歴を保存する処理
   const handleSaveHistory = async (opponentt: any) => {
-    const match_duration = duration; // 仮のマッチ時間
+    const match_duration = duration;
     const points_awarded = correctCount * 10; // 仮のスコア計算
     const winnerId = winner === user?.name ? user.user_id : opponentt?.id;
 
