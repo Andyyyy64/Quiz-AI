@@ -8,6 +8,20 @@ type SinglePlayerHistoryProps = {
     user_id: number;
 };
 
+// 日付を "MM/DD" 形式にフォーマットする関数（Date型かISO 8601文字列を受け取る）
+const formatDateToMonthDay = (dateInput: string | Date): string => {
+    const date = new Date(dateInput); // 文字列の場合はDate型に変換
+    if (isNaN(date.getTime())) {
+        return "Invalid Date"; // 無効な日付の場合のフォールバック
+    }
+    const options: Intl.DateTimeFormatOptions = {
+        timeZone: 'Asia/Tokyo',
+        month: 'numeric',
+        day: 'numeric',
+    };
+    return new Intl.DateTimeFormat('ja-JP', options).format(date);
+};
+
 export const SinglePlayerHistory: React.FC<SinglePlayerHistoryProps> = ({ user_id }) => {
     const [singleHistory, setSingleHistory] = useState<Array<SinglePlayHistoryType>>([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -36,7 +50,7 @@ export const SinglePlayerHistory: React.FC<SinglePlayerHistoryProps> = ({ user_i
                             <Star className="h-8 w-8 text-[#4ECDC4]" />
                             <div>
                                 <p className="font-semibold">{history.category == "" ? "ランダム" : history.category}</p>
-                                <p className="text-sm text-gray-600">日にち{ }</p>
+                                <p className="text-sm text-gray-600">{formatDateToMonthDay(history.created_at)}</p>
                             </div>
                         </div>
                         <div className="flex items-center space-x-4">

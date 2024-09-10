@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useEffect, useState } from 'react';
 import { MultiPlayHistoryType } from '../../types/histroyType';
 import { getMultiHistory } from '../../api/history';
@@ -8,6 +6,20 @@ import { ChevronRight, Trophy, Medal } from "lucide-react";
 
 type MultiPlayerHistoryProps = {
     user_id: number;
+};
+
+// 日付を "MM/DD" 形式にフォーマットする関数（Date型かISO 8601文字列を受け取る）
+const formatDateToMonthDay = (dateInput: string | Date): string => {
+    const date = new Date(dateInput); // 文字列の場合はDate型に変換
+    if (isNaN(date.getTime())) {
+        return "Invalid Date"; // 無効な日付の場合のフォールバック
+    }
+    const options: Intl.DateTimeFormatOptions = {
+        timeZone: 'Asia/Tokyo',
+        month: 'numeric',
+        day: 'numeric',
+    };
+    return new Intl.DateTimeFormat('ja-JP', options).format(date);
 };
 
 export const MultiPlayerHistory: React.FC<MultiPlayerHistoryProps> = ({ user_id }) => {
@@ -24,7 +36,6 @@ export const MultiPlayerHistory: React.FC<MultiPlayerHistoryProps> = ({ user_id 
         };
         fetchMultiHistory();
     }, [user_id]);
-
 
     return (
         <div className="grid grid-cols-1 gap-4">
@@ -43,7 +54,7 @@ export const MultiPlayerHistory: React.FC<MultiPlayerHistoryProps> = ({ user_id 
                             )}
                             <div>
                                 <p className="font-semibold">{battle.opponent_name}</p>
-                                <p className="text-sm text-gray-600">{ }</p>
+                                <p className="text-sm text-gray-600">{formatDateToMonthDay(battle.created_at)}</p>
                             </div>
                         </div>
                         <div className="flex items-center space-x-4">
