@@ -86,7 +86,7 @@ export const Profile: React.FC = () => {
       <Header />
       <div
         className="w-full flex-grow flex flex-col items-center justify-center bg-white rounded-xl 
-      shadow-xl p-8 max-w-2xl mx-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      shadow-xl p-8 max-w-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
         <h1 className="text-3xl font-bold mb-4">プロフィール</h1>
         {loading ? (
