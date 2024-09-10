@@ -3,9 +3,8 @@ import db from "../database/database"
 
 export const getSinglePlayHistory = async (req: Request, res: Response) => {
     const { user_id } = req.params;
-    console.log(user_id);
     try {
-        const data = await db.get("SELECT * FROM singleplay_history WHERE user_id = $1",
+        const data = await db.all("SELECT * FROM singleplay_history WHERE user_id = $1",
             [user_id]
         );
         res.status(200).json(data);
@@ -18,8 +17,33 @@ export const getSinglePlayHistory = async (req: Request, res: Response) => {
 export const getMultiPlayHistory = async (req: Request, res: Response) => {
     const { user_id } = req.params;
     try {
-        const data = await db.get("SELECT * FROM multiplay_history WHERE user_id = $1",
+        const data = await db.all("SELECT * FROM multiplay_history WHERE user_id = $1",
             [user_id]
+        );
+        res.status(200).json(data);
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export const getSinglePlayHistoryById = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const data = await db.get("SELECT * FROM singleplay_history WHERE id = $1", [id]);
+        console.log(data);
+        res.status(200).json(data);
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export const getMultiPlayHistoryById = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const data = await db.get("SELECT * FROM multiplay_history WHERE session_id = $1",
+            [id]
         );
         res.status(200).json(data);
     } catch (error: any) {
@@ -31,24 +55,22 @@ export const getMultiPlayHistory = async (req: Request, res: Response) => {
 export const saveSinglePlayHistory = async (req: Request, res: Response) => {
     const { user_id, category, difficulty, question_num, correct_num, duration } = req.body;
     try {
-        const data = await db.run("INSERT INTO singleplay_history (user_id, category, difficulty, question_num, correct_num, duration, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-            [user_id, category, difficulty, question_num, correct_num, duration, new Date(), new Date()]
+        const result: any = await db.run(
+            `INSERT INTO singleplay_history 
+            (user_id, category, difficulty, question_num, correct_num, duration, created_at, updated_at) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+            RETURNING id`,
+            [user_id, category, difficulty, question_num, correct_num, duration, new Date(), new Date()],
+            true
         );
-        res.status(200).json(data);
-    } catch (error: any) {
-        console.error(error);
-        res.status(500).json({ message: error.message });
-    }
-}
-
-export const saveSinglePlayQuizHistory = async (req: Request, res: Response) => {
-    const { singleplay_id, quiz_id } = req.body;
-
-    try {
-        const data = await db.run("INSERT INTO singleplay_quiz_history (singleplay_id, quiz_id) VALUES ($1, $2)",
-            [singleplay_id, quiz_id]
-        );
-        res.status(200).json(data);
+        if (result && result.rows && result.rows.length > 0) {
+            const singleplay_id = result.rows[0].id;
+            console.log("Saving single history, ID: " + singleplay_id);
+            res.status(200).json({ id: singleplay_id });
+        } else {
+            console.error("No rows returned from the INSERT query");
+            res.status(500).json({ message: 'Failed to retrieve the inserted ID.' });
+        }
     } catch (error: any) {
         console.error(error);
         res.status(500).json({ message: error.message });
@@ -56,28 +78,80 @@ export const saveSinglePlayQuizHistory = async (req: Request, res: Response) => 
 }
 
 export const saveMultiPlayHistory = async (req: Request, res: Response) => {
-    const { session_id, user_id, opponent_user_id, who_win, points_awarded, match_duration } = req.body;
+    const { user_id, opponent, who_win, points_awarded, match_duration, question_num } = req.body;
+    console.log(opponent);
     try {
-        const data = await db.run("INSERT INTO multiplay_history (session_id, user_id, opponent_user_id, who_win, points_awarded, match_duration, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-            [session_id, user_id, opponent_user_id, who_win, points_awarded, match_duration, new Date(), new Date()]
+        // Modify the query to return the inserted ID
+        const result: any = await db.run(
+            `INSERT INTO multiplay_history 
+            (user_id, opponent_user_id, opponent_name, who_win, points_awarded, match_duration, question_num, created_at, updated_at) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+            RETURNING session_id`,
+            [user_id, opponent.id, opponent.name, who_win, points_awarded, match_duration, question_num, new Date(), new Date()],
+            true
         );
-        res.status(200).json(data);
+
+        if (result && result.rows && result.rows.length > 0) {
+            const multiplay_id = result.rows[0].session_id;
+            console.log("Saving multiplay history, ID: " + multiplay_id);
+            res.status(200).json({ id: multiplay_id });
+        } else {
+            console.error("No rows returned from the INSERT query");
+            res.status(500).json({ message: 'Failed to retrieve the inserted ID.' });
+        }
     } catch (error: any) {
         console.error(error);
         res.status(500).json({ message: error.message });
     }
 }
 
-export const saveMultiPlayQuizHistory = async (req: Request, res: Response) => {
-    const { session_id, quiz_id } = req.body;
-
+export const saveSinglePlayQuizHistory = async (req: Request, res: Response) => {
+    const { singleplay_id, quiz_ids } = req.body;
+    console.log(quiz_ids);
     try {
-        const data = await db.run("INSERT INTO multiplay_quiz_history (session_id, quiz_id) VALUES ($1, $2)",
-            [session_id, quiz_id]
-        );
-        res.status(200).json(data);
+        // トランザクションを開始
+        await db.run('BEGIN');
+
+        // 各クイズを個別に挿入
+        for (const quiz_id of quiz_ids) {
+            await db.run('INSERT INTO singleplay_quiz_history (singleplay_id, quiz_id) VALUES ($1, $2)',
+                [singleplay_id, quiz_id]);
+        }
+
+        // コミット
+        await db.run('COMMIT');
+
+        console.log("Saving singleplay quiz history");
+        res.status(200).json({ message: 'Quiz history saved successfully' });
     } catch (error: any) {
-        console.error(error);
+        await db.run('ROLLBACK');
+        console.error('Failed to save single play quiz history:', error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export const saveMultiPlayQuizHistory = async (req: Request, res: Response) => {
+    const { session_id, quiz_ids } = req.body;
+    console.log("saveMultiPlayQuizHistory");
+    console.log(quiz_ids);
+    try {
+        // トランザクションを開始
+        await db.run('BEGIN');
+
+        // 各クイズを個別に挿入
+        for (const quiz_id of quiz_ids) {
+            await db.run('INSERT INTO multiplay_quiz_history (session_id, quiz_id) VALUES ($1, $2)',
+                [session_id, quiz_id]);
+        }
+
+        // コミット
+        await db.run('COMMIT');
+
+        console.log("Saving multiplay quiz history");
+        res.status(200).json({ message: 'Quiz history saved successfully' });
+    } catch (error: any) {
+        await db.run('ROLLBACK');
+        console.error('Failed to save single play quiz history:', error);
         res.status(500).json({ message: error.message });
     }
 }

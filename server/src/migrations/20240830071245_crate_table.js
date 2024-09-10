@@ -83,11 +83,10 @@ exports.up = function (knex) {
  */
 exports.down = function (knex) {
   return knex.schema
-    .dropTable("user_quiz_history")
     .dropTable("multiplay_quiz_history")
     .dropTable("singleplay_quiz_history")
     .dropTable("multiplay_history")
     .dropTable("singleplay_history")
-    .dropTable("quiz")
+    .dropTable("user_quiz_history")
     .dropTable("users");
 };

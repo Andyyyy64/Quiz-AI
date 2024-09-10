@@ -4,7 +4,7 @@ import { QuizType } from '../type/quizType';
 import { generateQuiz } from '../controllers/quizController';
 
 interface Player {
-    id: string;
+    id: number;
     name: string;
     rank: string;
     prof_image_url?: string;
@@ -41,7 +41,7 @@ export const setupWebSocketServer = (server: any) => {
 
                     // クイズを生成してプレイヤーに送信
                     try {
-                        quiz = await generateQuiz();
+                        quiz = await generateQuiz("ランダム", "ランダム", currentPlayer.id, currentPlayer.opponent.id);
                     } catch (error) {
                         console.error('クイズの取得に失敗しました:', error);
                         throw error;
@@ -92,14 +92,8 @@ export const setupWebSocketServer = (server: any) => {
                 // 正解の場合
                 if (selectedAnswer === quiz.correct_answer) {
                     currentPlayer.correctCount += 1;
-                    currentPlayer.opponent.ws.send(JSON.stringify({ message: 'opponent_answerd', is_correct: true }));
+                    currentPlayer.opponent.ws.send(JSON.stringify({ message: 'opponent_answerd', is_correct: true, quiz: quiz }));
                     console.log('Correct answer:', currentPlayer.correctCount);
-                    // 5点先取で勝利
-                    if (currentPlayer.correctCount >= 5) {
-                        console.log('Winner:', currentPlayer.name);
-                        ws.send(JSON.stringify({ winner: currentPlayer.name }));
-                        currentPlayer.opponent.ws.send(JSON.stringify({ winner: currentPlayer.name }));
-                    }
                 } else {
                     console.log('Wrong answer');
                     currentPlayer.opponent.ws.send(JSON.stringify({ message: 'opponent_answerd', is_correct: false }));
@@ -112,9 +106,12 @@ export const setupWebSocketServer = (server: any) => {
                 // 次のクイズを生成して送信
             } else if (action === 'fetch_next_quiz' && currentPlayer.opponent) {
                 console.log('Fetching next quiz...');
-                quiz = await generateQuiz();
+                // クイズを生成してプレイヤーに送信
+                quiz = await generateQuiz("ランダム", "ランダム", currentPlayer.id, currentPlayer.opponent.id);
                 ws.send(JSON.stringify({ quiz, message: 'next_quiz' }));
-                if(currentPlayer.opponent.ws.readyState === WebSocket.OPEN) {
+
+                // 相手プレイヤーにも送信
+                if (currentPlayer.opponent.ws.readyState === WebSocket.OPEN) {
                     currentPlayer.opponent.ws.send(JSON.stringify({ quiz, message: 'next_quiz' }));
                 } else {
                     throw new Error('Opponent WebSocket is not open.');
@@ -125,11 +122,28 @@ export const setupWebSocketServer = (server: any) => {
                     JSON.stringify({ message: 'time_up_refetch' })
                 )
             } else if (action === 'victory' && currentPlayer.opponent) {
-                currentPlayer.opponent.ws.send(
-                    JSON.stringify({ winner })
+                console.log('Victory:', winner);
+
+                currentPlayer.ws.send(
+                    JSON.stringify({
+                        winner: winner,
+                        opponent: {
+                            id: currentPlayer.opponent.id,
+                            name: currentPlayer.opponent.name,
+                            correctCount: currentPlayer.opponent.correctCount,
+                        }
+                    })
                 )
-                ws.send(
-                    JSON.stringify({ winner })
+
+                currentPlayer.opponent.ws.send(
+                    JSON.stringify({
+                        winner: winner,
+                        opponent: {
+                            id: currentPlayer.id,
+                            name: currentPlayer.name,
+                            correctCount: currentPlayer.correctCount,
+                        }
+                    })
                 )
             }
         });
@@ -137,7 +151,7 @@ export const setupWebSocketServer = (server: any) => {
         ws.on('close', () => {
             console.log('A player has disconnected.');
 
-            // 現在のプレイヤーが接続を切った場合
+        // 現在のプレイヤーが接続を切った場合
             if (currentPlayer?.opponent) {
                 const opponent = currentPlayer.opponent;
 

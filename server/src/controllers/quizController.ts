@@ -8,22 +8,29 @@ const client: any = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-export const generateQuiz = async (category?: string, difficulty?: string, user_id?: number) => {
+export const generateQuiz = async (category?: string, difficulty?: string, user_id?: number, opponent_id?: number) => {
     if (category === undefined) {
         category = "ランダム";
     }
     if (difficulty === undefined) {
         difficulty = "ランダム";
     }
-    // ユーザーが解いたクイズを取得
+    // ユーザーが解いたクイズを取得    
     const pastQuizzes = await db.all(
         "SELECT question FROM user_quiz_history WHERE user_id = $1",
         [user_id ?? 1]
     );
+    // 対戦相手がいる場合、対戦相手が解いたクイズも取得
+    const opponentQuizzes = await db.all(
+        "SELECT question FROM user_quiz_history WHERE user_id = $1",
+        [opponent_id ?? 2]
+    );
+    
     // 過去に解いたクイズの質問リストを作成 
     const pastQuestions = pastQuizzes?.map((quiz) => quiz.question);
+    const opponentQuestions = opponentQuizzes?.map((quiz) => quiz.question);
     const pastQuestionsString = JSON.stringify(pastQuestions);
-    console.log(pastQuestionsString);
+    const opponentQuestionsString = JSON.stringify(opponentQuestions);
     try {
         const response = await client.chat.completions.create({
             model: "gpt-4o-mini",
@@ -33,8 +40,9 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
                     content: `
                 あなたはクイズ作成者です。以下のJSON形式で、4つの選択肢と1つの正解があるクイズ問題を生成してください。
                 フォーマットに必ず従い、正しいJSONを返してください。ジャンルと難易度に基づいたクイズ問題を作成してください。
-                以下の過去に生成した問題と重複しない問題を作成してください。
+                以下の過去に生成した問題とは似てない、絶対重複しない問題を生成してください:
                 ${pastQuestionsString},
+                ${opponentQuestionsString},
                 ジャンルがランダムの場合、[科学] [歴史] [芸術] [スポーツ] [文学] [地理] [一般常識]のいずれかです。
                 難易度がランダムの場合、「簡単」「普通」「難しい」[超難しい]のいずれかです。
                 出力はJSONのみを返してください。
@@ -61,7 +69,7 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
             ],
             max_tokens: 1000,
         });
-
+        console.log("total_tokens: " + response.usage.total_tokens);
         let generatedQuiz = response.choices[0].message.content;
         // 余計な文字列を削除
         generatedQuiz = generatedQuiz.replace(/```json/g, '').replace(/```/g, '').trim();
