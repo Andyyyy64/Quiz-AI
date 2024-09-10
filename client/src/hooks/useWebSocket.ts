@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react";
+import { UserType } from "../types/userType";
 
-export const useWebSocket = (url: string, user: any, onMessage: (data: any) => void) => {
+export const useWebSocket = (url: string, user: UserType | null, onMessage: (data: any) => void) => {
     const ws = useRef<WebSocket | null>(null);
     const [status, setStatus] = useState("接続中...");
 
     useEffect(() => {
         // WebSocketオブジェクトをグローバルに保持するためにuseRefを使用
         ws.current = new WebSocket(url);
-
+        
         // WebSocketサーバーに接続
         ws.current.onopen = () => {
             setStatus("マッチ待機中");

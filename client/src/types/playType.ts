@@ -42,6 +42,7 @@ export type AfterSingleResultProps = {
     difficulty: string;
     handleRestart: () => void;
     handleRestartWithSettings: () => void;
+    handleGoHistory: () => void;
 }
 
 export type SingleGameProps = {
