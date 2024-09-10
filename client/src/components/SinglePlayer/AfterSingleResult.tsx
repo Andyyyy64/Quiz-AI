@@ -1,6 +1,6 @@
 import React from "react"
-import { Star, Clock, Book, RefreshCcw, Settings } from "lucide-react"
-import { LinearProgress, Button } from '@mui/material'
+import { Star, Clock, Book, RefreshCcw } from "lucide-react"
+import { Button } from '@mui/material'
 
 import { AfterSingleResultProps } from "../../types/playType"
 

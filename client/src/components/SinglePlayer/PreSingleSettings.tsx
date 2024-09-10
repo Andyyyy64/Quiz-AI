@@ -76,7 +76,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                             max={60}
                             step={5}
                             value={timeLimit}
-                            onChange={(e, newValue) => setTimeLimit(newValue as number)}
+                            onChange={(_e, newValue) => setTimeLimit(newValue as number)}
                             valueLabelDisplay="auto"
                             sx={{ color: "#FF6B6B" }}
                         />
@@ -93,7 +93,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                             max={20}
                             step={1}
                             value={questionCount}
-                            onChange={(e, newValue) => setQuestionCount(newValue as number)}
+                            onChange={(_e, newValue) => setQuestionCount(newValue as number)}
                             valueLabelDisplay="auto"
                             sx={{ color: "#4ECDC4" }}
                         />
