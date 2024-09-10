@@ -31,7 +31,6 @@ export const getSinglePlayHistoryById = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const data = await db.get("SELECT * FROM singleplay_history WHERE id = $1", [id]);
-        console.log(data);
         res.status(200).json(data);
     } catch (error: any) {
         console.error(error);
@@ -79,7 +78,6 @@ export const saveSinglePlayHistory = async (req: Request, res: Response) => {
 
 export const saveMultiPlayHistory = async (req: Request, res: Response) => {
     const { user_id, opponent, who_win, points_awarded, match_duration, question_num } = req.body;
-    console.log(opponent);
     try {
         // Modify the query to return the inserted ID
         const result: any = await db.run(
@@ -107,7 +105,6 @@ export const saveMultiPlayHistory = async (req: Request, res: Response) => {
 
 export const saveSinglePlayQuizHistory = async (req: Request, res: Response) => {
     const { singleplay_id, quiz_ids } = req.body;
-    console.log(quiz_ids);
     try {
         // トランザクションを開始
         await db.run('BEGIN');
@@ -133,7 +130,6 @@ export const saveSinglePlayQuizHistory = async (req: Request, res: Response) => 
 export const saveMultiPlayQuizHistory = async (req: Request, res: Response) => {
     const { session_id, quiz_ids } = req.body;
     console.log("saveMultiPlayQuizHistory");
-    console.log(quiz_ids);
     try {
         // トランザクションを開始
         await db.run('BEGIN');

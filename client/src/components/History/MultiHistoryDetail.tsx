@@ -15,12 +15,6 @@ export const MultiHistoryDetail: React.FC = () => {
     const [history, setHistory] = useState<MultiPlayHistoryType | null>(null);
     const [quizHistory, setQuizHistory] = useState<Array<JoinedQuizType>>([]);
 
-    const authContext = useContext(AuthContext);
-    if (authContext === undefined) {
-        throw new Error("useAuth must be used within an AuthProvider");
-    }
-    const { user } = authContext;
-
     // シングルプレイの履歴とクイズを取得
     useEffect(() => {
         const fetchHistory = async () => {

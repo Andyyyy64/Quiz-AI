@@ -68,6 +68,10 @@ export interface QuizDisplayProps extends QuizProps {
     isCounting: boolean;
 }
 
+export type MultiResultUIProps = {
+    handleGoHistory: () => void;
+}
+
 export type JoinedQuizType = {
     quiz_id?: number;
     question: string;

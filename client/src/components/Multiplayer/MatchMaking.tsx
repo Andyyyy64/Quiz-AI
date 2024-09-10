@@ -1,4 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { AuthContext } from "../../context/AuthContext";
 
 import { saveAnsweredQuiz } from "../../api/user";
@@ -21,7 +23,7 @@ import { Notification } from "../Common/Notification";
 
 export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchReset }) => {
   const MATCH_QUESTION_NUM = 10; // マッチング時の問題数
-  const MATCH_POINT = 2; // マッチング時のポイント数
+  const MATCH_POINT = 5; // マッチング時のポイント数
 
   // datas
   const [quiz, setQuiz] = useState<QuizType>(); // 現在のクイズ
@@ -38,6 +40,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null); // 回答の正誤
   const [canAnswer, setCanAnswer] = useState(true); // 回答可能フラグ
   const [isTimeUp, setIsTimeUp] = useState(false); // タイムアップフラグ
+
   const [winner, setWinner] = useState<string | null>(""); // 勝者
   const [isHistorySaved, setIsHistorySaved] = useState(false); // 履歴保存が終わったかどうかのフラグ
   const [matchEnd, setMatchEnd] = useState(false); // マッチ終了フラグ
@@ -46,6 +49,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
     useCountDown(10);
 
   const { notification, showNotification } = useNotification();
+  const navi = useNavigate();
 
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
@@ -86,12 +90,14 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
 
         // 相手の接続が切れた場合、マッチをリセット
       } else if (data.message === "Opponent has disconnected.") {
-        showNotification("相手の接続が切れました。topに戻ります", "error");
-        setTimeout(() => {
-          setIsMatched(false);
-          onMatchReset();
-        }, 3000);
-
+        if(!matchEnd && !winner) {
+          showNotification("相手の接続が切れました。topに戻ります", "error");
+          setTimeout(() => {
+            setIsMatched(false);
+            onMatchReset();
+          }, 3000);
+        }
+        
         // 次のクイズを受信した場合、
       } else if (data.message === "next_quiz") {
         console.log("next_quiz_feched");
@@ -153,7 +159,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       // 正解時の処理
       resetCountDown(); // カウントダウンをリセット
       setCorrectCount((prev) => prev + 1); // 正解数を更新
-      setIsAnswerCorrect(true); // 正解フラグを立てる
       handleAnswerSaved(true, quiz, selectAnswer); // クイズと回答/正答をユーザーの履歴に保存
       send({ action: "answerd", selectedAnswer: selectAnswer });
       // MATCH_POINT点先取した場合
@@ -161,6 +166,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
         send({ action: "victory", winner: user?.name });
         return;
       }
+      setIsAnswerCorrect(true); // 正解フラグを立てる
     } else {
       // 不正解時の処理
       send({ action: "answerd", selectedAnswer: selectAnswer });
@@ -238,6 +244,10 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
     setAnsweredQuizIds([]);
   }
 
+  const handleGoHistory = () => {
+    navi(`/history/multiplay/${sessionId}`);
+  }
+
   return (
     <div className="w-full h-full flex justify-center items-center relative">
       {/* 通知 */}
@@ -273,9 +283,9 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
         <div className="w-full text-center">
           {
             winner === user?.name ? (
-              <WinUI />
+              <WinUI handleGoHistory={handleGoHistory} />
             ) : (
-              <LoseUI />
+              <LoseUI handleGoHistory={handleGoHistory} />
             )
           }
         </div>

@@ -1,12 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import { Frown, ArrowRight, RefreshCw } from "lucide-react"
+import React from 'react'
+import { MultiResultUIProps } from '../../../types/quizType'
 
-export const LoseUI = () => {
+export const LoseUI: React.FC<MultiResultUIProps> = ({ handleGoHistory }) => {
   const navi = useNavigate()
-
-  const handleHistoryClick = (id: number) => {
-    navi(`/history/${id}`)
-  }
 
   const handleTopClick = () => {
     navi('/')
@@ -25,7 +23,7 @@ export const LoseUI = () => {
         <button
           className="mb-10 bg-[#4ECDC4] hover:bg-[#45b7a7] text-white 
                         p-2 pl-5 pr-5 rounded-lg"
-          onClick={() => handleHistoryClick(1)} // 1は仮のid
+          onClick={handleGoHistory}
         >
           履歴を見る
         </button>
