@@ -12,7 +12,8 @@ export const AfterSingleResult: React.FC<AfterSingleResultProps> = ({
     category,
     difficulty,
     handleRestart,
-    handleRestartWithSettings
+    handleRestartWithSettings,
+    handleGoHistory
 }) => {
     return (
         <main className="container mx-auto mt-10 px-4">
@@ -67,7 +68,7 @@ export const AfterSingleResult: React.FC<AfterSingleResultProps> = ({
                             fontWeight: "bold",
                             fontSize: "1.2rem",
                         }}
-                        onClick={handleRestart}
+                        onClick={handleGoHistory}
                     >
                         履歴をみる！
                     </Button>

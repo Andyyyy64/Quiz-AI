@@ -58,6 +58,7 @@ export const handleFileUpload = async (selectedFile: File) => {
 };
 
 export const saveAnsweredQuiz = async (user_id: number | undefined, quiz: QuizType | undefined, user_choices: string,  is_correct: boolean | null) => {
+    console.log("user_id:", user_id);
     const res = await axios.post(`${API_URL}/user/saveAnsweredQuiz`, { user_id, quiz, user_choices, is_correct }, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

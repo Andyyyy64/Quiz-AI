@@ -14,16 +14,21 @@ export const SinglePlayerHistory: React.FC<SinglePlayerHistoryProps> = ({ user_i
     useEffect(() => {
         const fetchSingleHistory = async () => {
             const singleRes = await getSingleHistory(user_id);
-            setSingleHistory([singleRes]);
+            console.log(singleRes);
+            if (Array.isArray(singleRes)) {
+                setSingleHistory(singleRes);
+            }
         };
         fetchSingleHistory();
-    }, [user_id]);
+    }, [user_id]);    
 
     return (
         <div className="grid grid-cols-1 gap-4">
             {singleHistory.length > 0 && singleHistory.map((history: SinglePlayHistoryType) => (
                 <Link to={`/history/singleplay/${history.id}`} key={history.id}>
-                    <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg
+                     hover:bg-gray-100 transition-colors"
+                    >
                         <div className="flex items-center space-x-4">
                             <Star className="h-8 w-8 text-[#4ECDC4]" />
                             <div>

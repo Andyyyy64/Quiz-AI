@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { MultiPlayHistoryType } from '../../types/histroyType';
-import { getMultiHistory } from '../../api/history';
+import { getMultiHistoryById } from '../../api/history';
 import { getMultiQuizHistroy } from '../../api/history';
 import { AuthContext } from '../../context/AuthContext';
 import { Brain, Clock, Trophy, User, CheckCircle, Star, XCircle } from "lucide-react"
@@ -24,7 +24,7 @@ export const MultiHistoryDetail: React.FC = () => {
     // シングルプレイの履歴とクイズを取得
     useEffect(() => {
         const fetchHistory = async () => {
-            const history = await getMultiHistory(Number(user?.user_id));
+            const history = await getMultiHistoryById(Number(id));
             setHistory(history);
         }
 

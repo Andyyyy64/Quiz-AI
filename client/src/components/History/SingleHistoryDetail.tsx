@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { SinglePlayHistoryType } from '../../types/histroyType';
-import { AuthContext } from '../../context/AuthContext';
 import { JoinedQuizType } from '../../types/quizType';
 import { Clock, CheckCircle, XCircle, Book, BarChart2, Tag, Star } from "lucide-react"
 
-import { getSingleHistory } from '../../api/history';
-import { getSingleQuizHistory } from '../../api/history';
-
+import { getSingleQuizHistory, getSingleHistoryById } from '../../api/history';
 import { Header } from '../Common/Header';
 import { Footer } from '../Common/Footer';
 
@@ -16,17 +13,10 @@ export const SingleHistoryDetail: React.FC = () => {
     const [history, setHistory] = useState<SinglePlayHistoryType | null>(null);
     const [quizHistory, setQuizHistory] = useState<Array<JoinedQuizType>>([]);
 
-    const authContext = useContext(AuthContext);
-    if (authContext === undefined) {
-        throw new Error("useAuth must be used within an AuthProvider");
-    }
-    const { user } = authContext;
-
     // シングルプレイの履歴とクイズを取得
     useEffect(() => {
         const fetchHistory = async () => {
-            const history = await getSingleHistory(Number(user?.user_id));
-            console.log(history);
+            const history = await getSingleHistoryById(Number(id));            
             setHistory(history);
         }
 
@@ -40,7 +30,6 @@ export const SingleHistoryDetail: React.FC = () => {
     }, [id]);
 
     const percentageCorrect = history && ((history.correct_num / history.question_num) * 100)
-    console.log(quizHistory);
 
     return (
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">

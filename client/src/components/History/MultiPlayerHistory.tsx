@@ -14,10 +14,14 @@ export const MultiPlayerHistory: React.FC<MultiPlayerHistoryProps> = ({ user_id 
     useEffect(() => {
         const fetchMultiHistory = async () => {
             const multiRes = await getMultiHistory(user_id);
-            setMultiHistory([multiRes]);
+            console.log(multiRes);
+            if (Array.isArray(multiRes)) {
+                setMultiHistory(multiRes); // Directly set the array
+            }
         };
         fetchMultiHistory();
     }, [user_id]);
+    
 
     return (
         <div className="grid grid-cols-1 gap-4">
