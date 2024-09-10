@@ -29,6 +29,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const [quiz, setQuiz] = useState<QuizType>(); // 現在のクイズ
   const [nextQuiz, setNextQuiz] = useState<QuizType>(); // 次のクイズ 
   const [opponent, setOpponent] = useState<wsUserType | null>(null); // マッチした相手の情報
+  const [userAnswer, setUserAnswer] = useState<string>(""); // ユーザーの回答
   const [currentQuizIndex, setCurrentQuizIndex] = useState(1); // 現在のクイズのインデックス
   const [correctCount, setCorrectCount] = useState(0); // 正解数
   const [answerdQuizIds, setAnsweredQuizIds] = useState<number[]>([]); // 解答済みクイズID
@@ -85,7 +86,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       } else if (data.message === "opponent_answerd" && data.is_correct === true) {
         resetCountDown();
         console.log("opponent_correct_answer");
-        handleAnswerSaved(false, data.quiz, "");
+        handleAnswerSaved(false, data.quiz, userAnswer);
         setIsAnswerCorrect(false);
 
         // 相手が誤答した場合、
@@ -150,7 +151,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       setCanAnswer(false);
       resetCountDown();
       // クイズをユーザーの履歴に保存
-      handleAnswerSaved(false, quiz, "");
+      handleAnswerSaved(false, quiz, userAnswer);
       // お互いのcountdonwは同期しているので2回送信してしまう
       // 一方のみに送信するようにidを比較
       if (((user?.user_id ?? 0) > (opponent?.id ?? 1))) {
@@ -164,7 +165,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
     if (isDraw && !winner) {
       setCanAnswer(false);
       resetCountDown();
-      handleAnswerSaved(false, quiz, "");
+      handleAnswerSaved(false, quiz, userAnswer);
       // 一方のみに送信するようにidを比較
       if (((user?.user_id ?? 0) > (opponent?.id ?? 1))) {
         send({ action: "fetch_next_quiz" });
@@ -182,6 +183,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   // 回答送信時の処理
   const handleAnswerSelect = async (selectAnswer: string) => {
     setCanAnswer(false);
+    setUserAnswer(selectAnswer);
     if (selectAnswer === quiz?.correct_answer) {
       // 正解時の処理
       resetCountDown(); // カウントダウンをリセット
@@ -220,8 +222,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   // 次の問題に進む処理
   const handleNextQuestion = () => {
     // 10問終わって引き分けの場合
-    if (currentQuizIndex >= MATCH_QUESTION_NUM && 
-      correctCount === opponent?.correctCount) {      
+    if (currentQuizIndex >= MATCH_QUESTION_NUM) {      
       setWinner("引き分け");
       console.log("マッチ引き分け");
       console.log("correctCount:", correctCount);
