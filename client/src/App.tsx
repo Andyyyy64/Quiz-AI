@@ -2,9 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Circle, X } from "lucide-react"
 
-import { Header } from "./components/Common/Header";
-import { Footer } from "./components/Common/Footer";
-
 import { Login } from "./pages/Login";
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";

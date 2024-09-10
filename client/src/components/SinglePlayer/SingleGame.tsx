@@ -17,7 +17,7 @@ export const SingleGame: React.FC<SingleGameProps> = ({
     return (
         <div
             className="w-full flex flex-col items-center max-w-4xl mx-auto 
-      bg-white/10 backdrop-blur-md rounded-lg shadow-lg p-6"
+      bg-white/10 backdrop-blur-2xl rounded-lg shadow-lg p-6"
         >
             <div className=' mb-10'>
                 <QuizProgressUI currentQuizIndex={currentQuizIndex} questionCount={questionCount} />
