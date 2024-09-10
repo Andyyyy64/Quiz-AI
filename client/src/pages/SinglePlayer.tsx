@@ -51,7 +51,7 @@ export const SinglePlayer: React.FC = () => {
     // hooks
     const { countdown, isCounting, startCountDown, resetCountDown } = useCountDown(timeLimit);
     const { notification, showNotification } = useNotification();
-    const { duration, startCalc, stopCalc } = useCalcDuration();
+    const { duration, startCountUp, stopCountUp, resetCountUp } = useCalcDuration();
     const navi = useNavigate();
 
     // context
@@ -82,9 +82,9 @@ export const SinglePlayer: React.FC = () => {
     // ローディングが終わったらゲームスタート
     useEffect(() => {
         if (!is_loading && !is_settings && quiz) {
-            startCalc(); // ゲームの開始時刻を記録
             setGameStart(true);
-            startCountDown();
+            startCountDown(); // タイムリミットのカウントダウンを開始
+            startCountUp(); // ゲームの開始時刻を記録
         }
     }, [quiz])
 
@@ -136,7 +136,7 @@ export const SinglePlayer: React.FC = () => {
     useEffect(() => {
         const saveHistory = async () => {
             if (isEnded) {
-                console.log(answeredQuizIds);
+                stopCountUp(); // ゲームの終了時にカウントアップを停止
                 const res = await saveSingleHistory(user?.user_id, category, difficulty, questionCount, correctCount, duration);
                 const singleplay_id = res.id;
                 setSingleId(singleplay_id);
@@ -180,7 +180,6 @@ export const SinglePlayer: React.FC = () => {
         if (currentQuizIndex >= questionCount) {
             showNotification("クイズが終了しました。", "info")
             setGameStart(false);
-            stopCalc(); // ゲームの終了時刻
             setIsAnswerCorrect(null);
             setIsEnded(true);
         } else {
@@ -194,28 +193,36 @@ export const SinglePlayer: React.FC = () => {
         }
     }
 
+    // ゲームをリスタート
     const handleRestart = () => {
-        // ゲームをリスタート
+        resetCountDown();
+        resetCountUp();
+        setIsAnswerCorrect(null);
         setQuiz(undefined);
         setNextQuiz(undefined);
         setCorrectCount(0);
         setCurrentQuizIndex(1);
-        resetCountDown();
-        setIsSettings(true);
+        setIsTimeUp(false);
         setIsEnded(false);
         setGameStart(false);
+
+        setIsSettings(true);
     }
 
+    // 設定そのままでリスタート
     const handleRestartWithSettings = () => {
-        // 設定そのままでリスタート
         resetCountDown();
+        resetCountUp();
+        setIsAnswerCorrect(null);
         setQuiz(undefined);
         setNextQuiz(undefined);
         setCorrectCount(0);
         setCurrentQuizIndex(1);
-        setIsLoading(true);
+        setIsTimeUp(false);
         setIsEnded(false);
         setGameStart(false);
+
+        setIsLoading(true);
     }
 
     const handleGoHistory = () => {

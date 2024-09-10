@@ -99,7 +99,7 @@ export const App: React.FC = () => {
     };
   }, [updateBubbles]);
 
-  const renderIcon = (icon: string, size: number) => {
+  const renderIcon = (icon: string, _size: number) => {
     switch (icon) {
       case 'circle':
         return <Circle className="w-full h-full" />;
