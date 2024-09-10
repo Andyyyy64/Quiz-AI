@@ -23,6 +23,7 @@ import { SingleGame } from "../components/SinglePlayer/SingleGame";
 import { AfterSingleResult } from "../components/SinglePlayer/AfterSingleResult";
 
 export const SinglePlayer: React.FC = () => {
+    // data
     const [quiz, setQuiz] = useState<QuizType>();
     const [nextQuiz, setNextQuiz] = useState<QuizType>();
     const [category, setCategory] = useState("");
@@ -34,25 +35,33 @@ export const SinglePlayer: React.FC = () => {
     const [answeredQuizIds, setAnsweredQuizIds] = useState<number[]>([]); // 解答したクイズIDを配列で保存
     const [singleId, setSingleId] = useState<number | null>(null); // シングルプレイID
 
-    const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null); // 回答正誤フラグ
+    // flags
+    // before game start
     const [is_settings, setIsSettings] = useState<boolean>(true); // 設定画面フラグ
     const [is_loading, setIsLoading] = useState<boolean>(false); // ローディングフラグ
-    const [isEnded, setIsEnded] = useState<boolean>(false); // ゲーム終了フラグ
+
+    // during game
+    const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null); // 回答正誤フラグ
     const [gameStart, setGameStart] = useState<boolean>(false); // ゲームスタートフラグ
     const [isTimeUp, setIsTimeUp] = useState<boolean>(false); // 時間切れフラグ
 
+    // after game
+    const [isEnded, setIsEnded] = useState<boolean>(false); // ゲーム終了フラグ
 
+    // hooks
     const { countdown, isCounting, startCountDown, resetCountDown } = useCountDown(timeLimit);
     const { notification, showNotification } = useNotification();
     const { duration, startCalc, stopCalc } = useCalcDuration();
     const navi = useNavigate();
 
+    // context
     const authContext = useContext(AuthContext);
     if (authContext === undefined) {
         throw new Error("useAuth must be used within an AuthProvider");
     }
     const { user } = authContext;
 
+    // ゲーム開始時に設定画面を非表示、ローディングを開始
     const handleStartQuiz = () => {
         setIsSettings(false);
         setIsLoading(true);
@@ -87,6 +96,12 @@ export const SinglePlayer: React.FC = () => {
                 console.log("fetching next quiz");
                 const res: any = await generateQuiz(category, difficulty, user?.user_id);
                 setNextQuiz(res);
+
+                // 最後の問題の場合はquizをフェッチせずにhandleNextQuestionを呼ぶ
+            } else {
+                setTimeout(() => {
+                    handleNextQuestion();
+                }, 5000);
             }
         }
         if ((isAnswerCorrect != null) || isTimeUp) {
@@ -101,7 +116,7 @@ export const SinglePlayer: React.FC = () => {
                 handleNextQuestion();
             }, 5000);
         }
-    }, [nextQuiz, questionCount === currentQuizIndex])
+    }, [nextQuiz])
 
     // 時間切れの場合
     useEffect(() => {
@@ -137,19 +152,24 @@ export const SinglePlayer: React.FC = () => {
         if (selectAnswer === quiz?.correct_answer) {
             // 正解時の処理
             resetCountDown();
+
             // クイズと回答/正答をユーザーの履歴に保存
             const res = await saveAnsweredQuiz(user?.user_id, quiz, selectAnswer, true);
             const quiz_id = res.quizID;
             setAnsweredQuizIds(prev => [...prev, quiz_id]);
+            // 正解フラグを立てる
             setIsAnswerCorrect(true);
+            // 正解数を更新
             setCorrectCount((prev) => prev + 1);
         } else {
             // 不正解時の処理
             resetCountDown();
+
             // クイズと回答/正答をユーザーの履歴に保存
             const res = await saveAnsweredQuiz(user?.user_id, quiz, selectAnswer, false);
             const quiz_id = res.quizID;
             setAnsweredQuizIds(prev => [...prev, quiz_id]);
+            // 不正解フラグを立てる
             setIsAnswerCorrect(false);
         }
     };
@@ -164,8 +184,8 @@ export const SinglePlayer: React.FC = () => {
             setIsAnswerCorrect(null);
             setIsEnded(true);
         } else {
-            // 問題数とstateを更新
             setIsAnswerCorrect(null);
+            // 現在の問題数を更新
             setCurrentQuizIndex((prev) => prev + 1);
             setIsTimeUp(false);
             // 次の問題をfetch

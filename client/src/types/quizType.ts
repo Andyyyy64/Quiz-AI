@@ -34,6 +34,7 @@ export type QuizProps = {
     correctCount: number;
     questionCount?: number;
     isMultiplayer?: boolean;
+    isDraw?: boolean;
     handleAnswerSelect: (selectAnswer: string) => void;
 }
 
@@ -69,6 +70,7 @@ export interface QuizDisplayProps extends QuizProps {
 }
 
 export type MultiResultUIProps = {
+    winner?: string;
     handleGoHistory: () => void;
 }
 

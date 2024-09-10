@@ -3,7 +3,7 @@ import { Frown, ArrowRight, RefreshCw } from "lucide-react"
 import React from 'react'
 import { MultiResultUIProps } from '../../../types/quizType'
 
-export const LoseUI: React.FC<MultiResultUIProps> = ({ handleGoHistory }) => {
+export const LoseUI: React.FC<MultiResultUIProps> = ({ handleGoHistory, winner }) => {
   const navi = useNavigate()
 
   const handleTopClick = () => {
@@ -19,7 +19,7 @@ export const LoseUI: React.FC<MultiResultUIProps> = ({ handleGoHistory }) => {
       <div className="bg-white rounded-xl shadow-lg p-8 max-w-md mx-auto mb-5">
         <Frown className="h-24 w-24 text-[#FF6B6B] mx-auto mb-6" />
         <h2 className="text-3xl font-bold mb-4 text-[#FF6B6B]">残念！</h2>
-        <p className="text-xl mb-10 font-semibold">マッチに負けてしまいました。よく頑張りました！</p>
+        <p className="text-xl mb-10 font-semibold">マッチに{winner == "引き分け" ? "引き分けてしまいました" : "負けてしまいました"}。よく頑張りました！</p>
         <button
           className="mb-10 bg-[#4ECDC4] hover:bg-[#45b7a7] text-white 
                         p-2 pl-5 pr-5 rounded-lg"

@@ -13,6 +13,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
   isTimeUp,
   correctCount,
   isMultiplayer,
+  isDraw,
 }) => {
   return (
     <div className="w-full text-center mt-8 relative">
@@ -26,7 +27,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
       )}
       {
         // 未回答 && 時間切れでない場合
-        isAnswerCorrect == null && !isTimeUp ? (
+        (isAnswerCorrect == null) && !isTimeUp && !isDraw ? (
           <div className="p-8 mb-8">
             <h2 className="text-2xl font-bold mb-16 text-center">
               {quiz?.question}
@@ -49,11 +50,11 @@ export const QuizDisplay: React.FC<QuizProps> = ({
             </div>
           </div>
         ) : (
-          // 回答済み || 時間切れ
+          // 回答済み || 時間切れ || 引き分け
           <div className="text-2xl">
             {
-              isTimeUp ? (
-                <h1 className="mb-10 font-bold text-2xl">時間切れ！</h1>
+              isTimeUp || isDraw ? (
+                <h1 className="mb-10 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
               ) : (
                 isAnswerCorrect ? (
                   <h1 className="mb-10 font-bold text-2xl">正解！</h1>

@@ -20,6 +20,7 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
   isTimeUp,
   currentQuizIndex,
   correctCount,
+  isDraw
 }) => {
   return (
     <div
@@ -41,6 +42,7 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
         isTimeUp={isTimeUp}
         correctCount={correctCount}
         isMultiplayer={true}
+        isDraw={isDraw}
       />
     </div>
   );

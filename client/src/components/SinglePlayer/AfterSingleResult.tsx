@@ -1,6 +1,6 @@
 import React from "react"
-import { Star, Clock, Book, RefreshCcw, Settings } from "lucide-react"
-import { LinearProgress, Button } from '@mui/material'
+import { Star, Clock, Book, RefreshCcw } from "lucide-react"
+import { Button } from '@mui/material'
 
 import { AfterSingleResultProps } from "../../types/playType"
 
@@ -44,19 +44,19 @@ export const AfterSingleResult: React.FC<AfterSingleResultProps> = ({
                             <Book className="h-5 w-5 text-[#4ECDC4] mr-2" />
                             <span className="font-semibold">カテゴリ</span>
                         </div>
-                        <p className="text-xl font-bold">{category}</p>
+                        <p className="text-xl font-bold">{category == "" ? "ランダム" : category}</p>
                     </div>
                     <div className="bg-gray-100 p-4 rounded-lg">
                         <div className="flex items-center mb-2">
                             <Star className="h-5 w-5 text-[#FFD93D] mr-2" />
                             <span className="font-semibold">Difficulty</span>
                         </div>
-                        <p className="text-xl font-bold">{difficulty}</p>
+                        <p className="text-xl font-bold">{difficulty == "" ? "ランダム" : difficulty}</p>
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                <Button
+                    <Button
                         className="w-full h-10 text-black hover:shadow-xl
                             hover:cursor-pointer hover:bg-[#4ECDC4] hover:text-white transition-all"
                         sx={{

@@ -20,7 +20,7 @@ export const SinglePlayerHistory: React.FC<SinglePlayerHistoryProps> = ({ user_i
         };
         fetchSingleHistory();
     }, [user_id]);    
-
+    
     return (
         <div className="grid grid-cols-1 gap-4">
             {singleHistory.length > 0 && singleHistory.map((history: SinglePlayHistoryType) => (
@@ -31,14 +31,14 @@ export const SinglePlayerHistory: React.FC<SinglePlayerHistoryProps> = ({ user_i
                         <div className="flex items-center space-x-4">
                             <Star className="h-8 w-8 text-[#4ECDC4]" />
                             <div>
-                                <p className="font-semibold">{history.category}</p>
+                                <p className="font-semibold">{history.category == "" ? "ランダム" : history.category}</p>
                                 <p className="text-sm text-gray-600">日にち{ }</p>
                             </div>
                         </div>
                         <div className="flex items-center space-x-4">
                             <div className="text-right">
                                 <p className="font-semibold">正解数 {history.correct_num}/{history.question_num}</p>
-                                <p className="text-sm text-gray-600">{history.difficulty} • {history.duration}秒</p>
+                                <p className="text-sm text-gray-600">難易度: {history.difficulty == "" ? "ランダム" : history.difficulty} • {history.duration}秒</p>
                             </div>
                             <ChevronRight className="h-5 w-5 text-gray-400" />
                         </div>

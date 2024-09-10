@@ -28,7 +28,7 @@ export const SingleHistoryDetail: React.FC = () => {
         fetchHistory();
         fetchQuizHistory();
     }, [id]);
-
+    
     const percentageCorrect = history && ((history.correct_num / history.question_num) * 100)
 
     return (
@@ -59,12 +59,12 @@ export const SingleHistoryDetail: React.FC = () => {
                                 <div className="flex flex-col items-center">
                                     <Tag className="h-8 w-8 text-[#4ECDC4] mb-2" />
                                     <p className="text-sm font-medium">カテゴリ</p>
-                                    <p className="text-lg font-bold">{history.category}</p>
+                                    <p className="text-lg font-bold">{history.category == "" ? "ランダム" : history.category}</p>
                                 </div>
                                 <div className="flex flex-col items-center">
                                     <Star className="h-8 w-8 text-[#FFD93D] mb-2" />
                                     <p className="text-sm font-medium">難易度</p>
-                                    <p className="text-lg font-bold">{history.difficulty}</p>
+                                    <p className="text-lg font-bold">{history.difficulty == "" ? "ランダム" : history.difficulty}</p>
                                 </div>
                                 <div className="flex flex-col items-center">
                                     <Book className="h-8 w-8 text-[#FF6B6B] mb-2" />

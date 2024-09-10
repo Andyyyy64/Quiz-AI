@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { MultiPlayHistoryType } from '../../types/histroyType';
 import { getMultiHistoryById } from '../../api/history';
 import { getMultiQuizHistroy } from '../../api/history';
-import { AuthContext } from '../../context/AuthContext';
 import { Brain, Clock, Trophy, User, CheckCircle, Star, XCircle } from "lucide-react"
 
 import { Header } from '../Common/Header';
@@ -31,7 +30,7 @@ export const MultiHistoryDetail: React.FC = () => {
         fetchQuizHistory();
     }, [id]);
 
-    console.log(history);
+    console.log(quizHistory);
 
     return (
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
