@@ -55,7 +55,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const [matchEnd, setMatchEnd] = useState(false); // マッチ終了フラグ
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
-    useCountDown(10);
+    useCountDown(30);
   const { duration, startCountUp, stopCountUp, resetCountUp } = useCalcDuration();
 
   const { notification, showNotification } = useNotification();
