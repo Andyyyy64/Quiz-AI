@@ -1,30 +1,33 @@
 import { useState, useEffect } from "react";
 
 export const useCalcDuration = () => {
-    const [startTime, setStartTime] = useState<number | null>(null);
-    const [endTime, setEndTime] = useState<number | null>(null);
-    const [duration, setDuration] = useState<number>(0);
+    const [duration, setCountUp] = useState<number>(0);
+    const [isCounting, setIsCounting] = useState<boolean>(false);
 
-    // マッチを開始する
-    const startCalc = () => {
-        setStartTime(Date.now()); // 現在の時刻を取得
-        setEndTime(null); // endTimeをリセット
-    };
-
-    // マッチを終了する
-    const stopCalc = () => {
-        if (startTime !== null) {
-            setEndTime(Date.now()); // 現在の時刻を取得
-        }
-    };
-
-    // 終了時刻がセットされたときに、開始時刻との差を計算
+    // カウントアップ処理
     useEffect(() => {
-        if (startTime !== null && endTime !== null) {
-            const diff = endTime - startTime; // 所要時間をミリ秒で計算
-            setDuration(Math.floor(diff / 1000)); // 秒単位で計算
+        let timer: ReturnType<typeof setTimeout>; // NodeJS.Timeoutの代わりにこちらを使用
+        if (isCounting) {
+            timer = setTimeout(() => {
+                setCountUp((prevCountUp) => prevCountUp + 1);
+            }, 1000);
         }
-    }, [endTime]); // endTimeが変更されたときだけ動作
 
-    return { startCalc, stopCalc, duration };
+        return () => clearTimeout(timer);
+    }, [isCounting, duration]);
+
+    const startCountUp = () => {
+        setIsCounting(true);
+    };
+
+    const stopCountUp = () => {
+        setIsCounting(false);
+    };
+
+    const resetCountUp = () => {
+        setIsCounting(false);
+        setCountUp(0);
+    };
+
+    return { duration, isCounting, startCountUp, stopCountUp, resetCountUp };
 };
