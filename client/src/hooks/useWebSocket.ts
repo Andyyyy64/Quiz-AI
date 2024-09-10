@@ -5,6 +5,7 @@ export const useWebSocket = (url: string, user: UserType | null, onMessage: (dat
     const ws = useRef<WebSocket | null>(null);
     const [status, setStatus] = useState("接続中...");
 
+    console.log(url);
     useEffect(() => {
         // WebSocketオブジェクトをグローバルに保持するためにuseRefを使用
         ws.current = new WebSocket(url);
