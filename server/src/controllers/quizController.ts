@@ -9,7 +9,7 @@ const client: any = new OpenAI({
 });
 
 export const generateQuiz = async (category?: string, difficulty?: string, user_id?: number, opponent_id?: number) => {
-    const categories = ["科学", "日本史", "芸術", "文学", "地理", "世界史", "コンピュータサイエンス", "一般常識"];
+    const categories = ["科学", "日本史", "芸術", "文学", "地理", "世界史", "情報", "一般常識"];
     const difficulties = ["普通", "難しい", "超難しい", "難しい"];
 
     if (!category || category === "ランダム") {
@@ -42,7 +42,7 @@ export const generateQuiz = async (category?: string, difficulty?: string, user_
                 {
                     role: "system",
                     content: `
-                    あなたはクイズ作成者です。以下のJSON形式で、4つの選択肢と1つの正解がある問題を生成してください。
+                    あなたはクイズ作成者です。以下のJSON形式で、**4つの選択肢と1つの正解がある問題を生成してください**
                     **過去に生成した問題や類似の表現、または同じテーマを使わないように注意してください。**
                     指定されたジャンルと難易度に基づいたクイズ問題を生成してください。高校生レベルを[普通]としてください。
                     フォーマットに必ず従い、正しいJSONを返してください。   

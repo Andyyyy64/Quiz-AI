@@ -72,7 +72,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                         </InputLabel>
                         <Slider
                             id="timeLimit"
-                            min={5}
+                            min={3}
                             max={60}
                             step={5}
                             value={timeLimit}
