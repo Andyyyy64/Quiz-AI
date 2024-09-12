@@ -44,7 +44,7 @@ export const Header: React.FC = () => {
           <Link to="/">
             <img
               className="w-44 h-22 object-fill"
-              src="favicon.png"
+              src="/favicon.png"
             />
           </Link>
         </div>
