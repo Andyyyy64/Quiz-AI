@@ -12,6 +12,7 @@ import { SinglePlayer } from "./pages/SinglePlayer";
 import { Profile } from "./pages/Profile";
 import { About } from "./pages/About";
 import { History } from "./pages/History";
+import { Ranking } from "./pages/Ranking";
 
 import { SingleHistoryDetail } from "./components/History/SingleHistoryDetail";
 import { MultiHistoryDetail } from "./components/History/MultiHistoryDetail";
@@ -162,6 +163,7 @@ export const App: React.FC = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/about" element={<About />} />
           <Route path="/history" element={<History />} />
+          <Route path="/rankings" element={<Ranking />} />
           <Route path="/history/singleplay/:id" element={<SingleHistoryDetail />} />
           <Route path="/history/multiplay/:id" element={<MultiHistoryDetail />} />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
