@@ -218,8 +218,8 @@ export const saveAnsweredQuiz = async (req: Request, res: Response) => {
   const choicesJson = JSON.stringify(quiz.choices)
   try {
     const result: any = await db.run(
-      "INSERT INTO user_quiz_history (user_id, question, correct_answer, choices, category, difficulty, explanation, user_choices, is_correct, answered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING quiz_id",
-      [user_id, quiz.question, quiz.correct_answer, choicesJson, quiz.category, quiz.difficulty, quiz.explanation, user_choices, is_correct, new Date()],
+      "INSERT INTO user_quiz_history (user_id, question, correct_answer, choices, category, subcategory, difficulty, explanation, user_choices, is_correct, answered_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING quiz_id",
+      [user_id, quiz.question, quiz.correct_answer, choicesJson, quiz.category, quiz.subcategory, quiz.difficulty, quiz.explanation, user_choices, is_correct, new Date()],
       true
     );
     if (result && result.rows.length > 0) {

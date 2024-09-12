@@ -26,8 +26,8 @@ export const SinglePlayer: React.FC = () => {
     // data
     const [quiz, setQuiz] = useState<QuizType>();
     const [nextQuiz, setNextQuiz] = useState<QuizType>();
-    const [category, setCategory] = useState("");
-    const [difficulty, setDifficulty] = useState("");
+    const [category, setCategory] = useState("ランダム");
+    const [difficulty, setDifficulty] = useState("ランダム");
     const [timeLimit, setTimeLimit] = useState(30);
     const [questionCount, setQuestionCount] = useState(10);
     const [correctCount, setCorrectCount] = useState(0);
@@ -38,6 +38,8 @@ export const SinglePlayer: React.FC = () => {
     // flags
     // before game start
     const [is_settings, setIsSettings] = useState<boolean>(true); // 設定画面フラグ
+    const [customCategory, setCustomCategory] = useState<string>(""); // カスタムカテゴリ
+    const [useCustomCategory, setUseCustomCategory] = useState<boolean>(false); // カスタムカテゴリフラグ
     const [is_loading, setIsLoading] = useState<boolean>(false); // ローディングフラグ
 
     // during game
@@ -71,7 +73,7 @@ export const SinglePlayer: React.FC = () => {
     useEffect(() => {
         const fetchQuiz = async () => {
             if (is_loading && !is_settings) {
-                const res: any = await generateQuiz(category, difficulty, user?.user_id);
+                const res: any = await generateQuiz(useCustomCategory ? customCategory : category, difficulty, user?.user_id);
                 setQuiz(res);
                 setIsLoading(false);
             }
@@ -94,7 +96,7 @@ export const SinglePlayer: React.FC = () => {
             // 次の問題を取得(ただし最後は除く)
             if (currentQuizIndex !== questionCount) {
                 console.log("fetching next quiz");
-                const res: any = await generateQuiz(category, difficulty, user?.user_id);
+                const res: any = await  generateQuiz(useCustomCategory ? customCategory : category, difficulty, user?.user_id);
                 setNextQuiz(res);
 
                 // 最後の問題の場合はquizをフェッチせずにhandleNextQuestionを呼ぶ
@@ -137,7 +139,7 @@ export const SinglePlayer: React.FC = () => {
         const saveHistory = async () => {
             if (isEnded) {
                 stopCountUp(); // ゲームの終了時にカウントアップを停止
-                const res = await saveSingleHistory(user?.user_id, category, difficulty, questionCount, correctCount, duration);
+                const res = await saveSingleHistory(user?.user_id, useCustomCategory ? customCategory : category, difficulty, questionCount, correctCount, duration);
                 const singleplay_id = res.id;
                 setSingleId(singleplay_id);
                 await saveSingleQuizHistory(singleplay_id, answeredQuizIds);
@@ -250,6 +252,10 @@ export const SinglePlayer: React.FC = () => {
                             questionCount={questionCount}
                             setQuestionCount={setQuestionCount}
                             handleStartQuiz={handleStartQuiz}
+                            customCategory={customCategory}
+                            setCustomCategory={setCustomCategory}
+                            useCustomCategory={useCustomCategory}
+                            setUseCustomCategory={setUseCustomCategory}
                         />
                     )
 

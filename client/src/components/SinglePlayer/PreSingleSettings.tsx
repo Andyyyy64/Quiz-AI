@@ -1,9 +1,9 @@
-import { Button, MenuItem, Select, Slider, InputLabel, FormControl } from '@mui/material';
+import { Button, Slider, InputLabel } from '@mui/material';
 import { Zap } from 'lucide-react';
 import { PreSingleSettingsProps } from '../../types/playType';
 
 const categories = [
-    "ランダム", "科学", "歴史", "地理", "文学", "映画", "音楽", "スポーツ"
+    "ランダム", "科学", "歴史", "地理", "文学", "一般常識", "数学", "工学", "心理学", "環境", "情報"
 ];
 
 const difficulties = ["ランダム", "簡単", "普通", "難しい", "超難しい"];
@@ -16,7 +16,11 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
     setQuestionCount,
     timeLimit,
     questionCount,
-    handleStartQuiz
+    handleStartQuiz,
+    customCategory,
+    setCustomCategory,
+    useCustomCategory,
+    setUseCustomCategory
 }) => {
 
     return (
@@ -24,46 +28,67 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
             <div className=" bg-white rounded-xl shadow-xl p-8">
                 <h1 className="text-3xl font-bold mb-10 text-center">クイズをカスタマイズしよう！</h1>
                 <div className="space-y-6">
-                    {/* カテゴリ*/}
-                    <FormControl fullWidth>
-                        <p className='font-bold'>カテゴリ</p>
-                        <Select
-                            labelId="category-label"
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            placeholder='カテゴリ'
-                            sx={{ height: 48, borderRadius: "10px" }}
-                            defaultValue='ランダム'
-                        >
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">カテゴリ</label>
+                        <div className="flex flex-wrap gap-2 mb-2">
                             {categories.map((cat) => (
-                                <MenuItem key={cat} value={cat}
-                                    sx={{ fontWeight: "bold", margin: 1, color: "#4ECDC4" }}
+                                <button
+                                    key={cat}
+                                    onClick={() => { setCategory(cat); setUseCustomCategory(false); }}
+                                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors
+                                        ${category === cat && !useCustomCategory
+                                            ? 'bg-[#4ECDC4] text-white'
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        }`}
                                 >
                                     {cat}
-                                </MenuItem>
+                                </button>
                             ))}
-                        </Select>
-                    </FormControl>
+                        </div>
+                        <div className="flex items-center space-x-2 mt-5">
+                            <input
+                                type="checkbox"
+                                id="customCategory"
+                                checked={useCustomCategory}
+                                onChange={(e) => setUseCustomCategory(e.target.checked)}
+                                className="rounded border-gray-300 text-[#4ECDC4] focus:ring-[#4ECDC4]"
+                            />
+                            <label
+                                htmlFor="customCategory"
+                                className="text-sm font-medium text-gray-700"
+                            >
+                                自分でカテゴリを決める！
+                            </label>
+                        </div>
+                        {useCustomCategory && (
+                            <input
+                                type="text"
+                                placeholder="カスタムカテゴリを入力"
+                                value={customCategory}
+                                onChange={(e) => setCustomCategory(e.target.value)}
+                                className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[#4ECDC4] focus:border-[#4ECDC4]"
+                            />
+                        )}
+                    </div>
 
-                    {/* 難易度 */}
-                    <FormControl fullWidth>
-                        <p className='font-bold'>難易度</p>
-                        <Select
-                            labelId="difficulty-label"
-                            value={difficulty}
-                            onChange={(e) => setDifficulty(e.target.value)}
-                            sx={{ height: 48, borderRadius: "10px" }}                                                    
-                            defaultValue='ランダム'
-                        >
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">難易度</label>
+                        <div className="flex gap-2">
                             {difficulties.map((diff) => (
-                                <MenuItem key={diff} value={diff}
-                                    sx={{ fontWeight: "bold", margin: 1, color: "#FF6B6B" }}
+                                <button
+                                    key={diff}
+                                    onClick={() => setDifficulty(diff)}
+                                    className={`flex-1 px-3 py-2 rounded-md text-sm font-medium transition-colors
+                        ${difficulty === diff
+                                            ? 'bg-[#FF6B6B] text-white'
+                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        }`}
                                 >
                                     {diff}
-                                </MenuItem>
+                                </button>
                             ))}
-                        </Select>
-                    </FormControl>
+                        </div>
+                    </div>
 
                     {/* 時間制限 */}
                     <div>
@@ -72,7 +97,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                         </InputLabel>
                         <Slider
                             id="timeLimit"
-                            min={5}
+                            min={2}
                             max={60}
                             step={5}
                             value={timeLimit}
@@ -118,6 +143,9 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                         開始
                     </Button>
                 </div>
+                <p className="mt-4 text-sm text-gray-500 text-center">
+                    当サイトではAIを活用してクイズを生成しているため、誤った解答や偏りのある問題が含まれる場合があります。あらかじめご了承ください。
+                </p>
             </div>
         </main>
     );

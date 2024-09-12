@@ -17,6 +17,7 @@ export type QuizType = {
     quiz_id?: number;
     question: string;
     category: Category | string; // カテゴリは仮なのでstringを許容
+    subcategory?: string; // サブカテゴリ
     difficulty: Difficulty;
     choices: string[];
     explanation: string;
