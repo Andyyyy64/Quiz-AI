@@ -5,7 +5,7 @@
  */
 module.exports = {
   development: {
-    client: 'pg',
+    client: "pg",
     connection: {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
@@ -14,10 +14,10 @@ module.exports = {
       port: process.env.DB_PORT || 5432,
     },
     migrations: {
-      directory: './src/migrations',
+      directory: "./src/migrations",
     },
     seeds: {
-      directory: './src/seeds',
+      directory: "./src/seeds",
     },
   },
 };

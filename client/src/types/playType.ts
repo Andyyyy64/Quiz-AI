@@ -32,6 +32,10 @@ export type PreSingleSettingsProps = {
     timeLimit: number;
     questionCount: number;
     handleStartQuiz: () => void;
+    customCategory: string;
+    setCustomCategory: React.Dispatch<React.SetStateAction<string>>;
+    useCustomCategory: boolean;
+    setUseCustomCategory: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type AfterSingleResultProps = {

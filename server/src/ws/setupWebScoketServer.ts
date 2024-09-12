@@ -15,7 +15,7 @@ interface Player {
 // 待機中のプレイヤーを格納するキュー
 const waitingPlayers: Player[] = [];
 
-let quiz: QuizType;
+let quiz: QuizType | undefined;
 
 export const setupWebSocketServer = (server: any) => {
     const wss = new WebSocketServer({ server });
@@ -41,6 +41,7 @@ export const setupWebSocketServer = (server: any) => {
                     // クイズを生成してプレイヤーに送信
                     try {
                         quiz = await generateQuiz("ランダム", "ランダム", currentPlayer.id, currentPlayer.opponent.id);
+                        console.log(quiz);
                     } catch (error) {
                         console.error('クイズの取得に失敗しました:', error);
                         throw error;
@@ -89,9 +90,13 @@ export const setupWebSocketServer = (server: any) => {
             // アクション処理
             if (action === 'answerd' && currentPlayer.opponent) {
                 // 正解の場合
-                if (selectedAnswer === quiz.correct_answer) {
+                if (selectedAnswer === quiz?.correct_answer) {
                     currentPlayer.correctCount += 1;
-                    currentPlayer.opponent.ws.send(JSON.stringify({ message: 'opponent_answerd', is_correct: true, quiz: quiz }));
+                    currentPlayer.opponent.ws.send(JSON.stringify({
+                        message: 'opponent_answerd',
+                        is_correct: true,
+                        quiz: quiz
+                    }));
                 } else {
                     console.log('Wrong answer');
                     currentPlayer.opponent.ws.send(JSON.stringify({
@@ -110,6 +115,7 @@ export const setupWebSocketServer = (server: any) => {
                 console.log('Fetching next quiz...');
                 // クイズを生成してプレイヤーに送信
                 quiz = await generateQuiz("ランダム", "ランダム", currentPlayer.id, currentPlayer.opponent.id);
+                console.log(quiz);
                 ws.send(JSON.stringify({ quiz, message: 'next_quiz' }));
 
                 // 相手プレイヤーにも送信
@@ -153,7 +159,7 @@ export const setupWebSocketServer = (server: any) => {
         ws.on('close', () => {
             console.log('A player has disconnected.');
 
-        // 現在のプレイヤーが接続を切った場合
+            // 現在のプレイヤーが接続を切った場合
             if (currentPlayer?.opponent) {
                 const opponent = currentPlayer.opponent;
 

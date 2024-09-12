@@ -65,3 +65,21 @@ export const saveAnsweredQuiz = async (user_id: number | undefined, quiz: QuizTy
     });
     return res.data;
 }
+
+export const updatePoints = async (user_id: number | undefined, points: number) => {
+    const res = await axios.post(`${API_URL}/user/updatePoints`, { user_id, points }, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+    });
+    return res.data;
+}
+
+export const getRanking = async () => {
+    const res = await axios.get(`${API_URL}/user/ranking`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+    });
+    return res.data;
+}

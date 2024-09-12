@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../context/AuthContext";
 
-import { saveAnsweredQuiz } from "../../api/user";
+import { saveAnsweredQuiz, updatePoints } from "../../api/user";
 import { saveMultiHistory, saveMultiQuizHistory } from "../../api/history";
 
 import { MultiGame } from "./UI/MultiGame";
@@ -55,7 +55,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const [matchEnd, setMatchEnd] = useState(false); // マッチ終了フラグ
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
-    useCountDown(10);
+    useCountDown(30);
   const { duration, startCountUp, stopCountUp, resetCountUp } = useCalcDuration();
 
   const { notification, showNotification } = useNotification();
@@ -258,8 +258,13 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   // マッチングの履歴を保存する処理
   const handleSaveHistory = async (opponentt: any) => {
     const match_duration = duration;
-    const points_awarded = correctCount * 10; // 仮のスコア計算
+    // 勝者によってポイントを変更
+    const points_awarded = winner === user?.name ? correctCount * 10 : 0;
+    const userPoints = user?.points ? user?.points : 0;
     const winnerId = winner === user?.name ? user.user_id : opponentt?.id;
+
+    // ポイントを更新
+    await updatePoints(user?.user_id, userPoints + points_awarded);
 
     // マッチング履歴を保存
     const res = await saveMultiHistory(
@@ -319,7 +324,10 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
         <div className="w-full text-center">
           {
             winner === user?.name ? (
-              <WinUI handleGoHistory={handleGoHistory} />
+              <WinUI 
+              handleGoHistory={handleGoHistory} 
+              correctCount={correctCount}
+              />
             ) : (
               <LoseUI
                 winner={winner}

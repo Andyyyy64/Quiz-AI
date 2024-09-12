@@ -36,7 +36,7 @@ export const Register: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center relative bg-inherit">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-semibold text-center mb-6">Register</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6">登録</h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleRegister} className="space-y-6">
           <div>
@@ -44,7 +44,7 @@ export const Register: React.FC = () => {
               htmlFor="name"
               className="block text-sm font-medium text-gray-700"
             >
-              Name
+              名前
             </label>
             <input
               id="name"
@@ -62,7 +62,7 @@ export const Register: React.FC = () => {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              Email
+              メールアドレス
             </label>
             <input
               id="email"
@@ -80,7 +80,7 @@ export const Register: React.FC = () => {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Password
+              パスワード
             </label>
             <input
               id="password"
@@ -98,7 +98,7 @@ export const Register: React.FC = () => {
               htmlFor="confirm-password"
               className="block text-sm font-medium text-gray-700"
             >
-              Confirm Password
+              パスワード確認
             </label>
             <input
               id="confirm-password"
@@ -117,17 +117,16 @@ export const Register: React.FC = () => {
               type="submit"
               className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
                 bg-[#FF6B6B] hover:bg-[#FF8787] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF8787]
-                ${
-                  password !== confirmPassword
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
+                ${password !== confirmPassword
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
                 }`}
               disabled={loading || password !== confirmPassword}
             >
               {loading ? (
                 <CircularProgress size={24} color="inherit" />
               ) : (
-                "Register"
+                "登録"
               )}
             </button>
           </div>
@@ -135,12 +134,12 @@ export const Register: React.FC = () => {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Already have an account?{" "}
+            すでにアカウントをもっていますか?{" "}
             <Link
               to="/login"
               className="font-medium text-[#FF6B6B] hover:text-[#FF8787]"
             >
-              Log in
+              ログイン
             </Link>
           </p>
         </div>

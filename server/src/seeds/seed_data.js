@@ -90,7 +90,6 @@ exports.seed = async function (knex) {
       },
     ]);
 
-  // Insert singleplay history
   const singleplayHistory = await knex("singleplay_history")
     .insert({
       user_id: userId1,
@@ -106,13 +105,11 @@ exports.seed = async function (knex) {
 
   const singleplayId1 = singleplayHistory[0].id;
 
-  // Insert into singleplay_quiz_history (link quizzes to singleplay history)
   await knex("singleplay_quiz_history").insert([
     { singleplay_id: singleplayId1, quiz_id: 4000001 },
     { singleplay_id: singleplayId1, quiz_id: 4000002 },
   ]);
 
-  // Insert multiplay history
   const multiplayHistory = await knex("multiplay_history")
     .insert({
       user_id: userId1,
@@ -129,7 +126,6 @@ exports.seed = async function (knex) {
 
   const multiplaySessionId1 = multiplayHistory[0].session_id;
 
-  // Insert into multiplay_quiz_history (link quizzes to multiplay history)
   await knex("multiplay_quiz_history").insert([
     { session_id: multiplaySessionId1, quiz_id: 400000 },
   ]);
