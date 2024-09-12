@@ -31,7 +31,7 @@ export const generateQuiz = async (
     user_id?: number,
     opponent_id?: number
 ): Promise<any> => {
-    const categories = ["科学", "文学", "地理", "歴史", "情報", "一般常識", "数学", "工学", "心理学", "環境"];
+    const categories = ["科学", "文学", "地理", "歴史", "情報", "一般常識", "工学", "心理学", "環境"];
     const difficulties = ["普通", "難しい", "超難しい", "難しい"];
 
     let subcategory: string | null = null; // サブカテゴリ
@@ -77,13 +77,6 @@ export const generateQuiz = async (
         "古典文学",   // 古典的な文学作品
         "近代文学",   // 近代の文学
         "詩"          // 詩や詩人に関する知識
-    ];
-
-    // 数学のサブカテゴリ
-    const mathCategories = [
-        "代数学",       // 代数と方程式
-        "幾何学",       // 幾何学
-        "確率・統計学"  // 確率と統計
     ];
 
     // 工学のサブカテゴリ
@@ -133,9 +126,6 @@ export const generateQuiz = async (
     }
     if (category && category === "文学") {
         subcategory = literatureCategories[Math.floor(Math.random() * literatureCategories.length)];
-    }
-    if (category && category === "数学") {
-        subcategory = mathCategories[Math.floor(Math.random() * mathCategories.length)];
     }
     if (category && category === "工学") {
         subcategory = engineeringCategories[Math.floor(Math.random() * engineeringCategories.length)];

@@ -3,7 +3,7 @@ import { Zap } from 'lucide-react';
 import { PreSingleSettingsProps } from '../../types/playType';
 
 const categories = [
-    "ランダム", "科学", "歴史", "地理", "文学", "一般常識", "数学", "工学", "心理学", "環境", "情報"
+    "ランダム", "科学", "歴史", "地理", "文学", "一般常識", "工学", "心理学", "環境", "情報"
 ];
 
 const difficulties = ["ランダム", "簡単", "普通", "難しい", "超難しい"];
