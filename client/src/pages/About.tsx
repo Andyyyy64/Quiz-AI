@@ -9,7 +9,7 @@ export const About = () => {
             <Header />
             <main className="container mx-auto mt-10 px-4">
                 <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-xl p-8">
-                    <h1 className="text-4xl font-bold mb-6 text-center text-[#FF6B6B]">AIクイズ！ について</h1>
+                    <h1 className="text-4xl font-bold mb-6 text-center text-black">AIクイズ！ について</h1>
                     <section className="mb-8">
                         <h2 className="text-2xl font-semibold mb-4 text-[#4ECDC4]">AIクイズ！ ってなに？</h2>
                         <p className="text-gray-700 leading-relaxed">
@@ -46,16 +46,16 @@ export const About = () => {
                             <div className="flex flex-col items-center text-center">
                                 <Trophy className="h-12 w-12 text-[#FF6B6B] mb-2" />
                                 <h3 className="font-semibold mb-1">リーダーボード</h3>
-                                <p className="text-sm text-gray-600">進捗を追跡し、ランクを上げよう</p>
+                                <p className="text-sm text-gray-600">進捗を追跡し、ランキングを上げよう</p>
                             </div>
                         </div>
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4 text-[#4ECDC4]">AIクイズ！ に関する注意点</h2>
+                        <h2 className="text-2xl font-semibold mb-4 text-[#FF6B6B]">AIクイズ！ に関する注意点</h2>
                         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
                             <p className="text-yellow-700">
-                                <strong>ご注意ください：</strong> AIクイズ！ のクイズは人工知能を使用して生成されています。私たちは正確さと品質を追求していますが、間違った回答や偏りのある質問が含まれる場合があります。ユーザーの皆様には、批判的な視点を持ってコンテンツに向き合い、不正確な点やバグなどがあれば報告して頂けると幸いです。
+                                <strong>ご注意ください：</strong> AIクイズ！ のクイズはAIを使用して生成されています。私たちは正確さと品質を追求していますが、間違った回答や偏りのある質問が含まれる場合があります。ユーザーの皆様には、批判的な視点を持ってコンテンツに向き合い、不正確な点やバグなどがあれば報告して頂けると幸いです。
                             </p>
                         </div>
                     </section>

@@ -115,6 +115,7 @@ export const setupWebSocketServer = (server: any) => {
                 console.log('Fetching next quiz...');
                 // クイズを生成してプレイヤーに送信
                 quiz = await generateQuiz("ランダム", "ランダム", currentPlayer.id, currentPlayer.opponent.id);
+                console.log(quiz);
                 ws.send(JSON.stringify({ quiz, message: 'next_quiz' }));
 
                 // 相手プレイヤーにも送信

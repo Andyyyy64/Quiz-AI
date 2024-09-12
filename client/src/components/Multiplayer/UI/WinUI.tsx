@@ -4,7 +4,7 @@ import { Trophy, Star, ArrowRight } from "lucide-react"
 import confetti from 'canvas-confetti'
 import { MultiResultUIProps } from '../../../types/quizType'
 
-export const WinUI: React.FC<MultiResultUIProps> = ({ handleGoHistory }) => {
+export const WinUI: React.FC<MultiResultUIProps> = ({ handleGoHistory, correctCount }) => {
     const navi = useNavigate()
 
     useEffect(() => {
@@ -39,6 +39,9 @@ export const WinUI: React.FC<MultiResultUIProps> = ({ handleGoHistory }) => {
                 <Trophy className="h-24 w-24 text-[#FFD93D] mx-auto mb-6 animate-bounce" />
                 <h2 className="text-3xl font-bold mb-4 text-[#4ECDC4]">おめでとうございます!</h2>
                 <p className="text-xl mb-6 font-semibold">マッチに勝利しました!</p>
+                <div className="text-center mb-5">
+                    <span className="font-bold text-[#4ECDC4]">{correctCount ? correctCount * 10 : 0}ポイント獲得！</span>
+                </div>
                 <button
                     className="mb-6 bg-[#4ECDC4] hover:bg-[#45b7a7] text-white 
                         p-2 pl-5 pr-5 rounded-lg"

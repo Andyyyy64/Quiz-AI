@@ -233,3 +233,53 @@ export const saveAnsweredQuiz = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Failed to save answer" });
   }
 }
+
+export const updateUserPoints = async (req: Request, res: Response) => {
+  const { user_id, points } = req.body;
+
+  try {
+    await db.run(
+      "UPDATE users SET points = $1 WHERE user_id = $2",
+      [points, user_id]
+    );
+
+    res.status(200).json({ message: "Points updated" });
+  } catch (err) {
+    console.error("Failed to update points:", err);
+    return res.status(500).json({ message: "Failed to update points" });
+  }
+}
+
+export const getAllRanking = async (req: Request, res: Response) => {
+  try {
+    const users: any = await db.all(
+      "SELECT user_id, name, prof_image_url, points FROM users ORDER BY points DESC LIMIT 10"
+    );
+
+    const updatedUser = await Promise.all(
+      users.map(async (user: any) => {
+        // 各ユーザーのマルチプレイ履歴を取得
+        const multiplay_history = await db.all(
+          "SELECT * FROM multiplay_history WHERE user_id = $1",
+          [user.user_id]
+        );
+
+        // 通算マッチ数と勝利数を計算
+        const totalMatchPlay = multiplay_history?.length;
+        const totalWin = multiplay_history?.filter((history: any) => history.who_win === user.user_id).length;
+
+        // 更新されたユーザー情報を返す
+        return {
+          ...user,
+          totalMatchPlay,
+          totalWin
+        };
+      })
+    );
+
+    res.status(200).json({ updatedUser });
+  } catch (err) {
+    console.error("Failed to get ranking:", err);
+    return res.status(500).json({ message: "Failed to get ranking" });
+  }
+}

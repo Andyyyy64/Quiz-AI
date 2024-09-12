@@ -73,6 +73,7 @@ export interface QuizDisplayProps extends QuizProps {
 
 export type MultiResultUIProps = {
     winner?: string;
+    correctCount?: number;
     handleGoHistory: () => void;
 }
 

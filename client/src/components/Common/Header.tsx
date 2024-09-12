@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 import { User, LogOut, Clock } from "lucide-react";
 import { AuthContext } from "../../context/AuthContext";
 
-import { Brain, Info } from "lucide-react";
+import { Brain, Info, BarChart } from "lucide-react";
 
 export const Header: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -32,9 +32,10 @@ export const Header: React.FC = () => {
     navi("/about");
   }
 
-  const handleSettingsClick = () => {
-    navi("/settings");
+  const handleRankingClick = () => {
+    navi("/rankings");
   }
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -77,6 +78,12 @@ export const Header: React.FC = () => {
                   onClick={handleHistoryClick}
                 >
                   <Clock className="h-6 w-6" />
+                </button>
+                <button
+                  className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"
+                  onClick={handleRankingClick}
+                >
+                  <BarChart className="h-6 w-6" />
                 </button>
                 <button
                   className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"

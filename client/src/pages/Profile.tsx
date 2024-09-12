@@ -150,10 +150,9 @@ export const Profile: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-[#666666]">
-                ランク
+                ランキング
               </label>
               <p className="text-lg font-semibold text-[#FF6B6B]">
-                {user?.rank}
               </p>
             </div>
             <div>
