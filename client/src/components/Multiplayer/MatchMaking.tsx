@@ -259,7 +259,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const handleSaveHistory = async (opponentt: any) => {
     const match_duration = duration;
     // 勝者によってポイントを変更
-    const points_awarded = winner === user?.name ? correctCount * 10 : 0;
+    const points_awarded = winner === user?.name ? correctCount * 10 : correctCount * 3;
     const userPoints = user?.points ? user?.points : 0;
     const winnerId = winner === user?.name ? user.user_id : opponentt?.id;
 

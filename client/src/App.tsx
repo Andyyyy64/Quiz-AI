@@ -42,7 +42,7 @@ export const App: React.FC = () => {
   const createBubbles = useCallback(() => {
     const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D'];
     const icons = ['❓', '🧠', '🏆', '⚡', '📚', 'circle', 'x'];
-    return Array.from({ length: 20 }, (_, i) => ({
+    return Array.from({ length: 25 }, (_, i) => ({
       id: i,
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
