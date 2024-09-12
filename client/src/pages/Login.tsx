@@ -45,14 +45,14 @@ export const Login: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center relative bg-inherit">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6">ログイン</h2>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              Email
+              メールアドレス
             </label>
             <input
               id="email"
@@ -70,7 +70,7 @@ export const Login: React.FC = () => {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Password
+              パスワード
             </label>
             <input
               id="password"
@@ -88,7 +88,7 @@ export const Login: React.FC = () => {
               to="/forgot-password"
               className="font-medium text-[#FF6B6B] focus:ring-[#FF8787] focus:border-[#FF8787] text-center"
             >
-              Forgot your password?
+              パスワードをお忘れですか？
             </Link>
           </div>
           <div>
@@ -101,7 +101,7 @@ export const Login: React.FC = () => {
               {loading ? (
                 <CircularProgress size={24} color="inherit" />
               ) : (
-                "Sign in"
+                "ログイン"
               )}
             </button>
           </div>
@@ -109,12 +109,12 @@ export const Login: React.FC = () => {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Don't have an account?{" "}
+            アカウントを登録していないですか?{" "}
             <Link
               to="/register"
               className="font-medium text-[#FF6B6B] focus:ring-[#FF8787] focus:border-[#FF8787]"
             >
-              Sign up
+              登録
             </Link>
           </p>
         </div>

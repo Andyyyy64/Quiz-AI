@@ -6,10 +6,13 @@ import { Login } from "./pages/Login";
 import { Home } from "./pages/Home";
 import { Register } from "./pages/Register";
 import { VerifyEmail } from "./pages/Verify-Email";
+
 import { Multiplayer } from "./pages/MultiPlayer";
 import { SinglePlayer } from "./pages/SinglePlayer";
 import { Profile } from "./pages/Profile";
+import { About } from "./pages/About";
 import { History } from "./pages/History";
+
 import { SingleHistoryDetail } from "./components/History/SingleHistoryDetail";
 import { MultiHistoryDetail } from "./components/History/MultiHistoryDetail";
 import { PrivateRoute } from "./components/PrivateRoute";
@@ -157,6 +160,7 @@ export const App: React.FC = () => {
           <Route path="/multiplay" element={<Multiplayer />} />
           <Route path="/singleplay" element={<SinglePlayer />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/about" element={<About />} />
           <Route path="/history" element={<History />} />
           <Route path="/history/singleplay/:id" element={<SingleHistoryDetail />} />
           <Route path="/history/multiplay/:id" element={<MultiHistoryDetail />} />

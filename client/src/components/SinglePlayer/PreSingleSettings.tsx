@@ -116,7 +116,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                         <Slider
                             id="questionCount"
                             min={5}
-                            max={20}
+                            max={100}
                             step={1}
                             value={questionCount}
                             onChange={(_e, newValue) => setQuestionCount(newValue as number)}
@@ -145,7 +145,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                     </Button>
                 </div>
                 <p className="mt-4 text-sm text-gray-500 text-center">
-                    当サイトではAIを活用してクイズを生成しているため、誤った解答や偏りのある問題が含まれる場合があります。あらかじめご了承ください。
+                    当サイトではAIを活用してクイズをリアルタイム生成しているため、誤った解答や偏りのある問題が含まれる場合があります。あらかじめご了承ください。
                 </p>
             </div>
         </main>
