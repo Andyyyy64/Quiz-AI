@@ -46,7 +46,7 @@ export const Rule: React.FC = () => {
             友達に挑戦して、誰が究極のクイズマスターかを確かめよう！
           </p>
         </div>
-        <p className="mt-4 text-sm text-gray-500 text-center">
+        <p className="text-sm text-gray-500 text-center">
           当サイトではAIを活用してクイズを生成しているため、誤った解答や偏りのある問題が含まれる場合があります。あらかじめご了承ください。
         </p>
       </div>

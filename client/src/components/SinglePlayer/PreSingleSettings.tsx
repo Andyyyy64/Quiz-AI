@@ -66,7 +66,8 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                                 placeholder="カスタムカテゴリを入力"
                                 value={customCategory}
                                 onChange={(e) => setCustomCategory(e.target.value)}
-                                className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-[#4ECDC4] focus:border-[#4ECDC4]"
+                                className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md 
+                                shadow-sm focus:outline-none focus:ring-1 focus:ring-[#4ECDC4] focus:border-[#4ECDC4]"
                             />
                         )}
                     </div>
