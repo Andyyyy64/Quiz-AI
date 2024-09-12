@@ -92,7 +92,11 @@ export const setupWebSocketServer = (server: any) => {
                 // 正解の場合
                 if (selectedAnswer === quiz?.correct_answer) {
                     currentPlayer.correctCount += 1;
-                    currentPlayer.opponent.ws.send(JSON.stringify({ message: 'opponent_answerd', is_correct: true, quiz: quiz }));
+                    currentPlayer.opponent.ws.send(JSON.stringify({
+                        message: 'opponent_answerd',
+                        is_correct: true,
+                        quiz: quiz
+                    }));
                 } else {
                     console.log('Wrong answer');
                     currentPlayer.opponent.ws.send(JSON.stringify({

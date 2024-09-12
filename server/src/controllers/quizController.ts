@@ -219,7 +219,7 @@ export const generateQuiz = async (
                     },
                     {
                         role: "user",
-                        content: `ジャンル「${subcategory}」、難易度「${difficulty}」のクイズ問題を作成してください。`
+                        content: `ジャンル「${subcategory !== null ? subcategory : category}」、難易度「${difficulty}」のクイズ問題を作成してください。`
                     }
                 ],
                 max_tokens: 4096,
