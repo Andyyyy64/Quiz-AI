@@ -32,33 +32,33 @@ export const Home: React.FC = () => {
       >
         <div className="text-center space-y-8 mb-16 w-full max-w-md">
           <Button
-            className="w-full h-16 text-black shadow-lg hover:shadow-xl 
-            hover:scale-105 hover:cursor-pointer hover:bg-[#FF8787] transition-all"
-            sx={{
-              backgroundColor: "#FF6B6B",
-              color: "white",
-              borderRadius: "9999px",
-              fontWeight: "bold",
-              fontSize: "1.2rem",
-            }}
-            onClick={handleMultiPlayClick}
-          >
-            <Users className="mr-4 h-8 w-8" />
-            マルチプレイ
-          </Button>
-          <Button
-            className="w-60 h-12 text-xl py-6 px-12 hover:bg-[#66e4db]
+            className="w-full h-16 text-xl py-6 px-12 hover:bg-[#66e4db]
             hover:scale-105 rounded-full transition-all"
             sx={{
               backgroundColor: "#4ECDC4",
               color: "white",
               borderRadius: "9999px",
               fontWeight: "bold",
+              fontSize: "1.2rem",
             }}
             onClick={handleSinglePlayClick}
           >
-            <User className="mr-4 h-6 w-6" />
+            <User className="mr-4 h-8 w-8" />
             シングルプレイ
+          </Button>
+          <Button
+            className=" w-60 h-12 text-black shadow-lg
+            hover:scale-105 hover:cursor-pointer hover:bg-[#FF8787] transition-all"
+            sx={{
+              backgroundColor: "#FF6B6B",
+              color: "white",
+              borderRadius: "9999px",
+              fontWeight: "bold",
+            }}
+            onClick={handleMultiPlayClick}
+          >
+            <Users className="mr-4 h-6 w-6" />
+            マルチプレイ
           </Button>
         </div>
 

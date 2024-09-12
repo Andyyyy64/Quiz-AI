@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
 import { User, LogOut, Clock } from "lucide-react";
 import { AuthContext } from "../../context/AuthContext";
 
-import { Brain, Info, BarChart } from "lucide-react";
+import { Info, BarChart } from "lucide-react";
 
 export const Header: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -20,10 +19,6 @@ export const Header: React.FC = () => {
     navi("/profile");
   };
 
-  const handleHomeClick = () => {
-    navi("/");
-  };
-
   const handleHistoryClick = () => {
     navi("/history");
   };
@@ -36,7 +31,6 @@ export const Header: React.FC = () => {
     navi("/rankings");
   }
 
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
@@ -44,23 +38,15 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <div className="">
+    <div className=" relative">
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center">
-          <Button
-            variant="text"
-            color="inherit"
-            aria-label="home"
-            onClick={handleHomeClick}
-            sx={{
-              color: "black",
-              fontWeight: "bold",
-              fontSize: "1.2rem",
-              backgroundColor: "inherit",
-            }}
-          >
-            <Brain className="h-8 w-8 text-[#FF6B6B]" />
-          </Button>
+          <Link to="/">
+            <img
+              className="w-44 h-22 object-fill"
+              src="/favicon.png"
+            />
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           {user && (
