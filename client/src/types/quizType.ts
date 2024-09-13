@@ -22,6 +22,7 @@ export type QuizType = {
     choices: string[];
     explanation: string;
     correct_answer: string;
+    search_word: string;
 }
 
 export type QuizProps = {
@@ -88,5 +89,6 @@ export type JoinedQuizType = {
     user_choices: string;
     user_id: number;
     is_correct: boolean;
+    search_word: string;
     answered_at: Date;
 }

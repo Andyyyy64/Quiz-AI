@@ -17,6 +17,7 @@ export const Ranking: React.FC = () => {
 
     useEffect(() => {
         const fetchRankings = async () => {
+            // ソートされている順位を取得する
             const res = await getRanking()
             res.updatedUser.forEach((userWithRanking: any, index: number) => {
                 if (userWithRanking.user_id === user?.user_id) {
@@ -71,18 +72,24 @@ export const Ranking: React.FC = () => {
                         </table>
                     </div>
                 </div>
-
-                <div className="mt-12 mb-2 text-center">
-                    <h2 className="text-3xl font-bold mb-6 text-black">あなたの順位</h2>
-                    <div className="bg-white/20 backdrop-blur-md rounded-3xl shadow-2xl p-7 inline-block">
-                        <div className="flex items-center justify-center space-x-6">
-                            <Star className="h-12 w-12 text-[#FFD700]" />
-                            <div>
-                                <p className="text-3xl font-bold">{yourRank}位</p>
+                {
+                    // ユーザーがランキングにいる場合は表示しない
+                    rankings.some(ranking => ranking.user_id === user?.user_id) ? (
+                        <></>
+                    ) : (
+                        <div className="mt-12 mb-2 text-center">
+                            <h2 className="text-3xl font-bold mb-6 text-black">あなたの順位</h2>
+                            <div className="bg-white/20 backdrop-blur-md rounded-3xl shadow-2xl p-7 inline-block">
+                                <div className="flex items-center justify-center space-x-6">
+                                    <Star className="h-12 w-12 text-[#FFD700]" />
+                                    <div>
+                                        <p className="text-3xl font-bold">{yourRank}位</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    )
+                }
             </main>
             <Footer />
         </div>

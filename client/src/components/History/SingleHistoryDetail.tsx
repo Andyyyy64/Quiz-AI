@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { SinglePlayHistoryType } from '../../types/histroyType';
 import { JoinedQuizType } from '../../types/quizType';
 import { Clock, CheckCircle, XCircle, Book, BarChart2, Tag, Star } from "lucide-react"
+import { Link } from 'react-router-dom';
 
 import { getSingleQuizHistory, getSingleHistoryById } from '../../api/history';
 import { Header } from '../Common/Header';
@@ -38,7 +39,11 @@ export const SingleHistoryDetail: React.FC = () => {
                 <h1 className="text-4xl font-bold mb-8 text-center">シングルプレイ履歴詳細</h1>
                 {
                     history && (
-                        <div className="bg-white rounded-xl shadow-xl p-6 mb-8">
+                        <div className="bg-white rounded-xl p-6 mb-8"
+                            style={{
+                                boxShadow: '0 10px 20px 0px rgba(0, 0, 0, 0.1), 0 0px 20px 0px rgba(0, 0, 0, 0.1)'
+                            }}
+                        >
                             <h2 className="text-xl font-semibold mb-4">クイズサマリー</h2>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                                 <div className="flex flex-col items-center">
@@ -78,9 +83,14 @@ export const SingleHistoryDetail: React.FC = () => {
                 }
                 {
                     quizHistory.length !== 0 && quizHistory.map((quiz, index) => (
-                        <div key={quiz.quiz_id} className="bg-white rounded-xl shadow-xl p-6 mb-6">
+                        <div key={quiz.quiz_id}
+                            style={{
+                                boxShadow: '0 10px 20px 0px rgba(0, 0, 0, 0.1), 0 0px 20px 0px rgba(0, 0, 0, 0.1)'
+                            }}
+                            className="bg-white rounded-xl p-6 mb-8"
+                        >
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-xl font-semibold">問題 {index + 1}</h3>
+                                <h3 className={`text-2xl font-bold`}>問題 {index + 1}</h3>
                                 <span className={`text-sm ${quiz.is_correct ? 'text-green-500' : 'text-red-500'} flex items-center`}>
                                     {quiz.is_correct ? (
                                         <CheckCircle className="h-5 w-5 mr-1" />
@@ -113,6 +123,11 @@ export const SingleHistoryDetail: React.FC = () => {
                             <div className="bg-blue-100 text-blue-800 p-4 rounded-lg">
                                 <p className="font-medium">解説:</p>
                                 <p>{quiz.explanation}</p>
+                            </div>
+                            <div className=' mt-5 text-right'>                                
+                                <Link to={`https://www.google.co.jp/search?q=${quiz.search_word}`} className=' underline text-blue-500'>
+                                    {quiz.search_word}
+                                </Link>
                             </div>
                         </div>
                     ))

@@ -16,6 +16,9 @@ const isSimilarQuestion = (newQuestion: string, pastQuestions: string[] | undefi
     if (!pastQuestions) return false;
     for (const pastQuestion of pastQuestions) {
         const similarity = stringSimilarity.compareTwoStrings(newQuestion, pastQuestion);
+        if(similarity >= 3) {
+            console.log("similarity: " + similarity);
+        }
         if (similarity >= threshold) {
             console.log("履歴から: " + pastQuestion);
             console.log("生成された: " + newQuestion);
@@ -142,7 +145,7 @@ export const generateQuiz = async (
     // 指定されたカテゴリと難易度でユーザーが解いたクイズを取得
     if (!user_id) return ({ error: "ユーザーIDが指定されていません" });
     const pastQuizzes: QuizType[] | undefined | null = await db.all(
-        `SELECT correct_answer 
+        `SELECT question 
          FROM user_quiz_history 
          WHERE user_id = $1 AND category = $2 AND difficulty = $3
          ORDER BY quiz_id DESC
@@ -151,19 +154,19 @@ export const generateQuiz = async (
     );
 
     // 過去に解いたクイズのリストを作成 
-    const pastQuestions: string[] | undefined = pastQuizzes?.map((quiz) => quiz.correct_answer);
+    const pastQuestions: string[] | undefined = pastQuizzes?.map((quiz) => quiz.question);
 
     // 対戦相手がいる場合、対戦相手が解いたクイズも取得
     if (opponent_id) {
         const opponentQuizzes = await db.all(
-            `SELECT correct_answer 
+            `SELECT question 
              FROM user_quiz_history 
              WHERE user_id = $1 AND category = $2 AND difficulty = $3 
              ORDER BY quiz_id DESC 
              LIMIT 200`,
             [opponent_id, category, difficulty]
         );
-        const opponentQuestions = opponentQuizzes?.map((quiz) => quiz.correct_answer);
+        const opponentQuestions = opponentQuizzes?.map((quiz) => quiz.question);
         if (opponentQuestions) {
             pastQuestions?.push(...opponentQuestions);
         }
@@ -186,10 +189,10 @@ export const generateQuiz = async (
                         "最初の" や ”一番の"、"最も"がつくような問題は避けてください
                         **過去に生成した問題や類似の表現、または同じテーマを使わないように注意してください。**
                         同じジャンル内でも、異なるトピックや視点から問題を生成してください。
-                        指定されたジャンルと難易度に基づいたクイズ問題を生成してください。高校生レベルを[普通]としてください。                    
-                        以下の過去にあなたが生成した問題の**解答/correct_answer**の履歴をすべて確認して、絶対に生成する問題の解答/correct_answerが重複しないような問題を生成してください:
+                        指定されたジャンルと難易度に基づいたクイズ問題を生成してください。高校生レベルを[普通]としてください。
+                        下記の過去にあなたが生成した問題の履歴をすべて確認して、生成する問題が重複しないように生成してください:
                         ${JSON.stringify(pastQuestions, null, 2)},
-                        出力はJSONのみを返してください。
+                        出力はJSONのみを返してください。また、事実確認のために、検索用のワードも入れてください。
 
                         フォーマット:
                         {
@@ -203,7 +206,8 @@ export const generateQuiz = async (
                                 "<選択肢4>"
                             ],
                             "correct_answer": "<正解>",
-                            "explanation": "<解説>"
+                            "explanation": "<解説>",
+                            "search_word": "<検索用ワード>"
                         }
                         `
                     },
@@ -223,7 +227,7 @@ export const generateQuiz = async (
                 parsedQuiz = JSON.parse(generatedQuiz);
                 // 新しく生成されたクイズが過去のクイズと類似しているか確認
                 if (parsedQuiz !== undefined) {
-                    isDuplicate = isSimilarQuestion(parsedQuiz.correct_answer, pastQuestions);
+                    isDuplicate = isSimilarQuestion(parsedQuiz.question, pastQuestions);
 
                     if (isDuplicate) {
                         console.log("類似したクイズが生成されたため、再生成します。");

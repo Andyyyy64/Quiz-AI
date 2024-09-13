@@ -3,6 +3,8 @@ import { Clock } from "lucide-react";
 import { QuizProps } from "../../types/quizType";
 import { CheckCircle } from "lucide-react";
 
+import { useDots } from "../../hooks/useDots";
+
 export const QuizDisplay: React.FC<QuizProps> = ({
   quiz,
   countdown,
@@ -16,6 +18,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
   isDraw,
   opponentAnswer
 }) => {
+  const dots = useDots();
   return (
     <div className="w-full text-center mt-8 relative">
       {isCounting && (
@@ -80,8 +83,13 @@ export const QuizDisplay: React.FC<QuizProps> = ({
           <CheckCircle className="h-6 w-6 text-[#4ECDC4]" />
           <span className="text-lg font-bold">正解数: {correctCount}</span>
         </div>
-        <div className="flex items-center space-x-2">
-        </div>
+        {
+          isAnswerCorrect != null || isTimeUp && (
+            <div className="flex items-center space-x-2">
+              <h1 className=" text-[#FF6B6B]">AIがクイズを生成中です{dots}</h1>
+            </div>
+          )
+        }
       </div>
     </div>
   );

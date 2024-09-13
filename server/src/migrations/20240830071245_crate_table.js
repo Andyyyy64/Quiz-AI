@@ -30,7 +30,8 @@ exports.up = function (knex) {
       table.string("category").notNullable().defaultTo("カテゴリなし");
       table.string("subcategory").defaultTo("サブカテゴリなし");
       table.string("difficulty").notNullable().defaultTo("簡単");
-      table.string("explanation").notNullable().defaultTo("説明なし");            
+      table.string("explanation").notNullable().defaultTo("説明なし");
+      table.string("search_word").notNullable().defaultTo("検索ワードなし");
       table.boolean("is_correct")
       table.timestamp("answered_at").notNullable().defaultTo(knex.fn.now());
     })
