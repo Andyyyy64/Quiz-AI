@@ -1,5 +1,5 @@
 import React from "react";
-import { Clock, Loader2 } from "lucide-react";
+import { Clock } from "lucide-react";
 import { QuizProps } from "../../types/quizType";
 import { CheckCircle } from "lucide-react";
 
@@ -83,7 +83,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
           <CheckCircle className="h-6 w-6 text-[#4ECDC4]" />
           <span className="text-lg font-bold">正解数: {correctCount}</span>
         </div>
-        {
+        {        
           isAnswerCorrect != null && (
             <div className="flex items-center space-x-2">
               <h1 className=" text-[#FF6B6B]">AIがクイズを生成中です{dots}</h1>
