@@ -61,6 +61,7 @@ exports.seed = async function (knex) {
         user_choices: "4",
         is_correct: true,
         answered_at: knex.fn.now(),
+        search_word: "2+2",
       },
       {
         user_id: userId1,
@@ -74,6 +75,7 @@ exports.seed = async function (knex) {
         user_choices: "London",
         is_correct: false,
         answered_at: knex.fn.now(),
+        search_word: "フランスの首都",
       },
       {
         user_id: userId2,
@@ -87,6 +89,7 @@ exports.seed = async function (knex) {
         user_choices: "100°C",
         is_correct: true,
         answered_at: knex.fn.now(),
+        search_word: "水の沸点",
       },
     ]);
 

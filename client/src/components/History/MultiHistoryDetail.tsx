@@ -39,7 +39,11 @@ export const MultiHistoryDetail: React.FC = () => {
                 <h1 className="text-4xl font-bold mb-8 text-center">マルチプレイ履歴詳細</h1>
                 {
                     history && (
-                        <div className="bg-white rounded-xl shadow-xl p-6 mb-8">
+                        <div className="bg-white rounded-xl p-6 mb-8"
+                            style={{
+                                boxShadow: '0 10px 20px 0px rgba(0, 0, 0, 0.1), 0 0px 20px 0px rgba(0, 0, 0, 0.1)'
+                            }}
+                        >
                             <h2 className="text-xl font-semibold mb-4">マッチサマリー</h2>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                                 <div className="flex flex-col items-center">
@@ -74,7 +78,11 @@ export const MultiHistoryDetail: React.FC = () => {
                 }
                 {
                     quizHistory.length !== 0 && quizHistory.map((quiz, index) => (
-                        <div key={quiz.quiz_id} className="bg-white rounded-xl shadow-xl p-6 mb-6">
+                        <div key={quiz.quiz_id} className="bg-white rounded-xl p-6 mb-6"
+                            style={{
+                                boxShadow: '0 10px 20px 0px rgba(0, 0, 0, 0.1), 0 0px 20px 0px rgba(0, 0, 0, 0.1)'
+                            }}
+                        >
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-xl font-semibold">問題 {index + 1}</h3>
                                 <span className={`text-sm ${quiz.is_correct ? 'text-green-500' : 'text-red-500'} flex items-center`}>
