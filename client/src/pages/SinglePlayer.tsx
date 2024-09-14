@@ -29,9 +29,9 @@ export const SinglePlayer: React.FC = () => {
     const [category, setCategory] = useState("ランダム");
     const [difficulty, setDifficulty] = useState("ランダム");
     const [timeLimit, setTimeLimit] = useState(30);
-    const [questionCount, setQuestionCount] = useState(10);
-    const [correctCount, setCorrectCount] = useState(0);
-    const [currentQuizIndex, setCurrentQuizIndex] = useState(1);
+    const [questionCount, setQuestionCount] = useState(10); // 問題数
+    const [correctCount, setCorrectCount] = useState(0); // 正答数
+    const [currentQuizIndex, setCurrentQuizIndex] = useState(1); // 現在の問題数
     const [answeredQuizIds, setAnsweredQuizIds] = useState<number[]>([]); // 解答したクイズIDを配列で保存
     const [singleId, setSingleId] = useState<number | null>(null); // シングルプレイID
 

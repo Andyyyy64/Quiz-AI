@@ -99,7 +99,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
         {
           ((isAnswerCorrect != null) || isTimeUp) && (
             <div className="flex items-center space-x-2">
-              <h1 className="text-[#FF6B6B]">AIがクイズを生成中です{dots}</h1>
+              <h1 className="text-[#FF6B6B] font-bold">AIがクイズを生成中です{dots}</h1>
             </div>
           )
         }
