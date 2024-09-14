@@ -1,4 +1,4 @@
-import { Zap, Sparkles } from "lucide-react";
+import { Zap } from "lucide-react";
 import { MatchedUIProps } from "../../../types/quizType";
 import { useEffect, useState } from "react";
 
