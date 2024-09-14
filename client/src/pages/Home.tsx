@@ -44,7 +44,7 @@ export const Home: React.FC = () => {
             }}
             onClick={handleSinglePlayClick}
           >
-            <User className="mr-4 h-8 w-8" />
+            <User className="mr-2 h-8 w-8" />
             シングルプレイ
           </Button>
           <Button
@@ -59,7 +59,7 @@ export const Home: React.FC = () => {
             }}
             onClick={handleMultiPlayClick}
           >
-            <Users className="mr-4 h-6 w-6" />
+            <Users className="mr-2 h-6 w-6" />
             マルチプレイ
           </Button>
         </div>
