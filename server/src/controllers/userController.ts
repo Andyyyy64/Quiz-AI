@@ -283,3 +283,16 @@ export const getAllRanking = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Failed to get ranking" });
   }
 }
+
+export const getUserRankingById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const users: any = await db.all("SELECT user_id FROM users ORDER BY points DESC");
+    const WhereUserIndex = users.findIndex((user: any) => user.user_id === Number(id));
+    res.status(200).json({ userRanking: WhereUserIndex + 1 });
+  } catch (err) {
+    console.error("Failed to get user ranking:", err);
+    return res.status(500).json({ message: "Failed to get user ranking" });
+  }
+}

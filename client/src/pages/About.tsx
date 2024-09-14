@@ -7,7 +7,7 @@ export const About = () => {
     return (
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
             <Header />
-            <main className="container mx-auto mt-10 px-4">
+            <main className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-xl p-8">
                     <h1 className="text-4xl font-bold mb-6 text-center text-black">AIクイズ！ について</h1>
                     <section className="mb-8">
