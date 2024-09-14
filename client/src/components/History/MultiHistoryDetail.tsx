@@ -4,6 +4,7 @@ import { MultiPlayHistoryType } from '../../types/histroyType';
 import { getMultiHistoryById } from '../../api/history';
 import { getMultiQuizHistroy } from '../../api/history';
 import { Brain, Clock, Trophy, User, CheckCircle, Star, XCircle } from "lucide-react"
+import { Link } from 'react-router-dom';
 
 import { Header } from '../Common/Header';
 import { Footer } from '../Common/Footer';
@@ -117,6 +118,11 @@ export const MultiHistoryDetail: React.FC = () => {
                             <div className="bg-blue-100 text-blue-800 p-4 rounded-lg">
                                 <p className="font-medium">解説:</p>
                                 <p>{quiz.explanation}</p>
+                            </div>
+                            <div className=' mt-5 text-right'>
+                                <Link to={`https://www.google.co.jp/search?q=${quiz.search_word}`} className=' underline text-blue-500'>
+                                    {quiz.search_word}
+                                </Link>
                             </div>
                         </div>
                     ))}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { SinglePlayHistoryType } from '../../types/histroyType';
 import { JoinedQuizType } from '../../types/quizType';
-import { Clock, CheckCircle, XCircle, Book, BarChart2, Tag, Star } from "lucide-react"
+import { Clock, CheckCircle, XCircle, Book, BarChart2, Tag, Star, ExternalLink } from "lucide-react"
 import { Link } from 'react-router-dom';
 
 import { getSingleQuizHistory, getSingleHistoryById } from '../../api/history';
@@ -124,9 +124,15 @@ export const SingleHistoryDetail: React.FC = () => {
                                 <p className="font-medium">解説:</p>
                                 <p>{quiz.explanation}</p>
                             </div>
-                            <div className=' mt-5 text-right'>                                
-                                <Link to={`https://www.google.co.jp/search?q=${quiz.search_word}`} className=' underline text-blue-500'>
-                                    {quiz.search_word}
+                            <div className='mt-5 text-right'>
+                                <Link
+                                    to={`https://www.google.co.jp/search?q=${quiz.search_word}`}
+                                    className='inline-flex items-center text-blue-500 hover:text-blue-700 transition-colors duration-200'
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <ExternalLink className="h-4 w-4 mr-1 mt-[2px]" />
+                                    <span className="underline">{quiz.search_word}</span>
                                 </Link>
                             </div>
                         </div>

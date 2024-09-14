@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { AuthContext } from "../context/AuthContext";
-import { Users, User, Clock, BarChart } from "lucide-react"
+import { Users, User, History, Trophy } from "lucide-react"
 
 export const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -71,10 +71,10 @@ export const Home: React.FC = () => {
             <div className="bg-inherit p-4 rounded-full 
             group-hover:bg-[#FFD93D] transition-colors"
             >
-              <Clock className="h-10 w-10 text-[#FF6B6B]"
+              <History className="h-10 w-10 text-[#FF6B6B]"
               />
             </div>
-            <span className="mt-1 text-sm font-bold text-[#333333] 
+            <span className="text-sm font-extrabold text-[#333333] 
             group-hover:text-[#FF6B6B] transition-colors"
             >
               履歴
@@ -88,9 +88,9 @@ export const Home: React.FC = () => {
             <div className="bg-inherit p-4 rounded-full 
             group-hover:bg-[#FFD93D] transition-colors"
             >
-              <BarChart className="h-10 w-10 text-[#FF6B6B]" />
+              <Trophy className="h-10 w-10 text-[#FF6B6B]" />
             </div>
-            <span className="mt-1 text-sm font-bold text-[#333333] 
+            <span className="text-sm font-extrabold text-[#333333] 
             group-hover:text-[#FF6B6B] transition-colors"
             >
               ランキング
