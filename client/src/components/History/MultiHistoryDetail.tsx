@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { MultiPlayHistoryType } from '../../types/histroyType';
 import { getMultiHistoryById } from '../../api/history';
 import { getMultiQuizHistroy } from '../../api/history';
-import { Brain, Clock, Trophy, User, CheckCircle, Star, XCircle } from "lucide-react"
+import { Brain, Clock, Trophy, User, CheckCircle, Star, XCircle, ExternalLink } from "lucide-react"
 import { Link } from 'react-router-dom';
 
 import { Header } from '../Common/Header';
@@ -37,7 +37,7 @@ export const MultiHistoryDetail: React.FC = () => {
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
             <Header />
             <main className="container mx-auto px-4 py-12">
-                <h1 className="text-4xl font-bold mb-8 text-center">マルチプレイ履歴詳細</h1>
+                <h1 className="text-4xl font-bold mb-8 text-center hidden md:block">マルチプレイ履歴詳細</h1>
                 {
                     history && (
                         <div className="bg-white rounded-xl p-6 mb-8"
@@ -79,7 +79,7 @@ export const MultiHistoryDetail: React.FC = () => {
                 }
                 {
                     quizHistory.length !== 0 && quizHistory.map((quiz, index) => (
-                        <div key={quiz.quiz_id} className="bg-white rounded-xl p-6 mb-6"
+                        <div key={quiz.quiz_id} className="bg-white rounded-xl md:p-6 p-4 mb-6"
                             style={{
                                 boxShadow: '0 10px 20px 0px rgba(0, 0, 0, 0.1), 0 0px 20px 0px rgba(0, 0, 0, 0.1)'
                             }}
@@ -119,9 +119,16 @@ export const MultiHistoryDetail: React.FC = () => {
                                 <p className="font-medium">解説:</p>
                                 <p>{quiz.explanation}</p>
                             </div>
-                            <div className=' mt-5 text-right'>
-                                <Link to={`https://www.google.co.jp/search?q=${quiz.search_word}`} className=' underline text-blue-500'>
-                                    {quiz.search_word}
+                            <div className='md:mt-5 mt-2 text-right'>
+                                <Link
+                                    to={`https://www.google.co.jp/search?q=${quiz.search_word}`}
+                                    className='inline-flex items-center text-blue-500 hover:text-blue-700 transition-colors duration-200'
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <span className="md:hidden mr-2">検索</span>
+                                    <ExternalLink className="h-4 w-4 mr-1 md:mt-[2px]" />
+                                    <span className="underline hidden md:block">{quiz.search_word}</span>
                                 </Link>
                             </div>
                         </div>

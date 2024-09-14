@@ -31,7 +31,7 @@ export const Header: React.FC = () => {
         {/* 左側 */}
         <div className="flex items-center">
           {/* スマホ時の favicon */}
-          <Link to="/" className="md:hidden">
+          <Link to="/" className="md:hidden p-2">
             <img
               className="w-32 h-16 object-contain"
               src="/favicon.png"
@@ -104,7 +104,8 @@ export const Header: React.FC = () => {
 
       {/* スマホ時のボトムナビゲーション */}
       {user && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg flex justify-around items-center p-4">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white 
+        shadow-lg flex justify-around items-center p-4 z-10">
           <button
             className="text-[#333333] hover:text-[#4ECDC4]"
             onClick={handleHomeClick}
