@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Header } from "../components/Common/Header"
 import { AuthContext } from "../context/AuthContext"
-import { Medal, Star, Crown } from "lucide-react"
+import { Medal, Star, Crown, Trophy } from "lucide-react"
 import { getRanking } from "../api/user"
 import { Footer } from "../components/Common/Footer"
 
@@ -32,9 +32,11 @@ export const Ranking: React.FC = () => {
     return (
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
             <Header />
-            <main className="container mx-auto px-4 py-12">
-                <h1 className="text-5xl font-bold mb-12 text-center text-black drop-shadow-lg">ランキング</h1>
-
+            <main className="container mx-auto px-4 pb-12">
+                <h1 className="text-5xl font-bold mb-12 text-center text-black drop-shadow-lg">
+                    ランキング
+                    <Crown className="h-8 w-8 text-[#FFD700] animate-float" />
+                </h1>
                 <div className="bg-white/20 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto">
                     <div className="overflow-x-auto">
                         <table className="w-full">
@@ -52,7 +54,7 @@ export const Ranking: React.FC = () => {
                                     <tr key={index} className="border-b border-white/10 hover:bg-white/10 transition-colors duration-200">
                                         <td className="px-4 py-4">
                                             <div className="flex items-center">
-                                                {index + 1 === 1 && <Crown className="h-6 w-6 text-[#FFD700] mr-2" />}
+                                                {index + 1 === 1 && <Trophy className="h-6 w-6 text-[#FFD700] mr-2 animate-bounce" />}
                                                 {index + 1 === 2 && <Medal className="h-6 w-6 text-[#C0C0C0] mr-2" />}
                                                 {index + 1 === 3 && <Medal className="h-6 w-6 text-[#CD7F32] mr-2" />}
                                                 <span className={`${index + 1 <= 3 ? "font-bold text-lg" : ""} 
@@ -64,7 +66,7 @@ export const Ranking: React.FC = () => {
                                         <td className="px-4 py-4 text-right font-bold">{userWithRanking?.points.toLocaleString()}</td>
                                         <td className="px-4 py-4 text-right font-bold">{userWithRanking?.totalMatchPlay}</td>
                                         <td className="px-4 py-4 text-right font-bold">
-                                            {((userWithRanking?.totalWin / userWithRanking?.totalMatchPlay) * 100).toFixed(1)}%
+                                            {userWithRanking.totalWin != 0 ? ((userWithRanking?.totalWin / userWithRanking?.totalMatchPlay) * 100).toFixed(1) : '0'}%
                                         </td>
                                     </tr>
                                 ))}

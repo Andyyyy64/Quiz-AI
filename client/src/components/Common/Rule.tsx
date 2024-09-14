@@ -3,7 +3,7 @@ import { Users, Zap, Trophy } from "lucide-react";
 
 export const Rule: React.FC = () => {
   return (
-    <main className="container mx-auto px-4 py-12">
+    <main className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl p-8">
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           <div>
@@ -34,7 +34,7 @@ export const Rule: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-[#F0F0F0] rounded-lg p-6 mb-8">
+        <div className="bg-[#F0F0F0] rounded-lg p-6 mb-5">
           <h2 className="text-2xl font-bold mb-4 flex items-center">
             <Trophy className="h-6 w-6 mr-2 text-[#FF6B6B]" />
             報酬
@@ -47,7 +47,7 @@ export const Rule: React.FC = () => {
           </p>
         </div>
         <p className="text-sm text-gray-500 text-center">
-          当サイトではAIを活用してクイズをリアルタイム生成しているため、誤った解答や偏りのある問題が含まれる場合があります。あらかじめご了承ください。
+          ※当サイトではAIを活用してクイズを生成しているため、誤った解答や偏りのある問題が含まれる場合があります。あらかじめご了承ください。
         </p>
       </div>
     </main>

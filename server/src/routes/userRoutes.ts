@@ -7,7 +7,8 @@ import {
     uploadImage,
     saveAnsweredQuiz,
     updateUserPoints,
-    getAllRanking
+    getAllRanking,
+    getUserRankingById
 } from "../controllers/userController";
 import { authMiddleware } from "../middleware/middleware";
 import { JwtPayload } from "jsonwebtoken";
@@ -33,6 +34,7 @@ userRouter.post("/upload", authMiddleware, upload.single('file'), uploadImage);
 userRouter.post("/saveAnsweredQuiz", authMiddleware, saveAnsweredQuiz);
 userRouter.post("/updatePoints", authMiddleware, updateUserPoints);
 userRouter.get("/ranking", authMiddleware, getAllRanking);
+userRouter.get("/userRanking/:id", authMiddleware, getUserRankingById);
 
 // ログインユーザーの情報を取得
 userRouter.get("/me", authMiddleware, (req: DecodedRequest, res: Response) => {

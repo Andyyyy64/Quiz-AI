@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 
-import { updateUser } from "../api/user";
+import { updateUser, getUserRankingById } from "../api/user";
 
 import { AuthContext } from "../context/AuthContext";
 import { useLoading } from "../hooks/useLoading";
@@ -15,6 +15,7 @@ export const Profile: React.FC = () => {
   const [profImageUrl, setProfImageUrl] = useState<string>("");
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [ranking, setRanking] = useState<number>(0);
 
   const authcontext = useContext(AuthContext);
   if (authcontext === undefined) {
@@ -31,8 +32,15 @@ export const Profile: React.FC = () => {
         setUser(updatedUser.user); // コンテキストに保存
       }
     };
+    const fetchRanking = async () => {
+      if (user && user.user_id) {
+        const res = await getUserRankingById(user.user_id);
+        setRanking(res.userRanking);
+      }
+    }
 
     fetchUser();
+    fetchRanking();
   }, []); // 空の依存配列でリロード時のみ実行
 
   useEffect(() => {
@@ -141,7 +149,7 @@ export const Profile: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="space-y-4 mt-10">
+          <div className="space-y-4 mt-5">
             <div>
               <label className="block text-sm font-medium text-[#666666]">
                 メールアドレス
@@ -153,6 +161,7 @@ export const Profile: React.FC = () => {
                 ランキング
               </label>
               <p className="text-lg font-semibold text-[#FF6B6B]">
+                {ranking}位
               </p>
             </div>
             <div>

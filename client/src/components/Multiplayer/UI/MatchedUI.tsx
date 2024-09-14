@@ -8,51 +8,57 @@ export const MatchedUI: React.FC<MatchedUIProps> = ({
   countdown,
 }) => {
   const [showVs, setShowVs] = useState(false);
+  const [showPlayers, setShowPlayers] = useState(false);
 
   useEffect(() => {
+    const playersTimer = setTimeout(() => {
+      setShowPlayers(true);
+    }, 300);
+
     const vsTimer = setTimeout(() => {
       setShowVs(true);
-    }, 500)
+    }, 1000);
 
-    return () => clearTimeout(vsTimer)
-  }, [])
+    return () => {
+      clearTimeout(vsTimer);
+      clearTimeout(playersTimer);
+    };
+  }, []);
 
   return (
     <div className="w-full z-10 text-center">
-      <div className="bg-white rounded-xl shadow-xl p-8 max-w-2xl mx-auto">
-        <h2 className="text-3xl font-bold mb-6 text-[#4ECDC4]">
+      <div className="bg-white rounded-xl shadow-xl p-8 max-w-2xl mx-auto relative overflow-hidden">
+        <div className="absolute inset-0"></div>
+        <h2 className="text-3xl font-bold mb-6 text-[#black] relative">
           マッチしました！
         </h2>
-        <div className="flex justify-around mt-12">
-          <div className="text-center">
+        <div className="flex justify-around mt-12 relative">
+          <div className={`text-center transition-all duration-500 ${showPlayers ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'}`}>
             <img
-              className="w-32 h-32 rounded-full object-cover border-2 border-[#4ECDC4]"
+              className="w-32 h-32 rounded-full object-cover border-4 border-[#4ECDC4] shadow-lg transform transition-transform duration-300 hover:scale-110"
               src={user?.prof_image_url}
               alt={user?.name}
             />
-            <p className="font-bold">あなた</p>
+            <p className="font-bold mt-2">あなた</p>
           </div>
-          <div className={`text-6xl font-bold text-[#FFD93D] flex item-center transition-all duration-500 mt-12 
+          <div className={`text-6xl font-bold text-[#FFD93D] flex items-center transition-all duration-500
             ${showVs ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}
           >
-            <Zap className="h-12 w-12 mr-2 animate-pulse" />
+            <Zap className="h-12 w-12 mr-2 animate-pulse text-[#FF6B6B]" />
             <span className="animate-bounce">VS</span>
-            <Zap className="h-12 w-12 ml-2 animate-pulse" />
+            <Zap className="h-12 w-12 ml-2 animate-pulse text-[#4ECDC4]" />
           </div>
-          <div className="text-center">
+          <div className={`text-center transition-all duration-500 ${showPlayers ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}`}>
             <img
-              className="w-32 h-32 rounded-full object-cover border-2 border-[#FF6B6B]"
+              className="w-32 h-32 rounded-full object-cover border-4 border-[#FF6B6B] shadow-lg transform transition-transform duration-300 hover:scale-110"
               src={opponent?.prof_image_url}
               alt={opponent?.name}
             />
-            <p className="font-bold">{opponent?.name}</p>
-            <p className="text-[#666666]">ランク: {opponent?.rank}</p>
+            <p className="font-bold mt-2">{opponent?.name}</p>
           </div>
         </div>
-        <p className="text-xl mb-6">壮大な知識のバトルに備えよ！</p>
-        <div className="rounded-full w-24 h-24 flex items-center justify-center mx-auto">
-          <span className="text-4xl font-bold">{countdown - 27}</span>
-        </div>
+        <p className="text-xl mt-8 animate-pulse mb-5">壮大な知識のバトルに備えよ！</p>
+        <h1 className="text-lg font-bold">開始まで{countdown - 25}秒</h1>
       </div>
     </div>
   );

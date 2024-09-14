@@ -85,7 +85,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
           startCountDown();
           // マッチ時間の計測開始
           startCountUp();
-        }, 3000); // 3秒後に開始
+        }, 5000); // 5秒後に開始
 
         // 相手が正答した場合、
       } else if (data.message === "opponent_answerd" && data.is_correct === true) {

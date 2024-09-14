@@ -83,3 +83,12 @@ export const getRanking = async () => {
     });
     return res.data;
 }
+
+export const getUserRankingById = async (id: number) => {
+    const res = await axios.get(`${API_URL}/user/userRanking/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+    });
+    return res.data;
+}

@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { User, LogOut, Clock } from "lucide-react";
+import { User, LogOut, History } from "lucide-react";
 import { AuthContext } from "../../context/AuthContext";
 
-import { Info, BarChart } from "lucide-react";
+import { Info, Trophy } from "lucide-react";
 
 export const Header: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -63,13 +63,13 @@ export const Header: React.FC = () => {
                   className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"
                   onClick={handleHistoryClick}
                 >
-                  <Clock className="h-6 w-6" />
+                  <History className="h-6 w-6" />
                 </button>
                 <button
                   className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"
                   onClick={handleRankingClick}
                 >
-                  <BarChart className="h-6 w-6" />
+                  <Trophy className="h-6 w-6" />
                 </button>
                 <button
                   className="text-[#333333] hover:text-[#4ECDC4] hover:bg-inherit"

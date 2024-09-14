@@ -1,8 +1,6 @@
-import React from "react";
-import { Clock } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Clock, CheckCircle, XCircle } from "lucide-react";
 import { QuizProps } from "../../types/quizType";
-import { CheckCircle } from "lucide-react";
-
 import { useDots } from "../../hooks/useDots";
 
 export const QuizDisplay: React.FC<QuizProps> = ({
@@ -19,6 +17,16 @@ export const QuizDisplay: React.FC<QuizProps> = ({
   opponentAnswer
 }) => {
   const dots = useDots();
+  const [showAnimation, setShowAnimation] = useState(false);
+
+  useEffect(() => {
+    if (isAnswerCorrect !== null) {
+      setShowAnimation(true);
+      const timer = setTimeout(() => setShowAnimation(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAnswerCorrect]);
+
   return (
     <div className="w-full text-center mt-8 relative">
       {isCounting && (
@@ -30,7 +38,6 @@ export const QuizDisplay: React.FC<QuizProps> = ({
         </div>
       )}
       {
-        // 未回答 && 時間切れでない場合
         (isAnswerCorrect == null) && !isTimeUp && !isDraw ? (
           <div className="p-8 mb-8">
             <h2 className="text-2xl font-bold mb-16 text-center">
@@ -38,7 +45,6 @@ export const QuizDisplay: React.FC<QuizProps> = ({
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {quiz?.choices.map((item, index) => {
-                // 敵が選んだ選択肢が間違っていた場合にハイライト
                 const isOpponentWrong: boolean = Boolean(isMultiplayer && opponentAnswer && opponentAnswer === item && !isAnswerCorrect);
 
                 return (
@@ -61,19 +67,26 @@ export const QuizDisplay: React.FC<QuizProps> = ({
             </div>
           </div>
         ) : (
-          // 回答済み || 時間切れ || 引き分け
           <div className="text-2xl">
-            {
-              isTimeUp || isDraw ? (
-                <h1 className="mb-10 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
-              ) : (
-                isAnswerCorrect ? (
-                  <h1 className="mb-10 font-bold text-2xl">正解！</h1>
+            <div className={`text-2xl transition-all duration-500`}>
+              {
+                isTimeUp || isDraw ? (
+                  <h1 className="mb-10 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
                 ) : (
-                  <h1 className="mb-10 font-bold text-2xl">{isMultiplayer ? "相手が正解しました..." : "不正解"}</h1>
+                  isAnswerCorrect ? (
+                    <div className="flex items-center justify-center mb-10">
+                      <CheckCircle className={`h-8 w-8 text-green-500 mr-2 ${showAnimation ? 'animate-bounce' : ''}`} />
+                      <h1 className="font-bold text-2xl text-green-500">正解！</h1>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center mb-10">
+                      <XCircle className={`h-8 w-8 text-red-500 mr-2 ${showAnimation ? 'animate-shake' : ''}`} />
+                      <h1 className="font-bold text-2xl text-red-500">{isMultiplayer ? "相手が正解しました..." : "不正解"}</h1>
+                    </div>
+                  )
                 )
-              )
-            }
+              }
+            </div>
             {quiz?.explanation}
           </div>
         )
@@ -84,13 +97,24 @@ export const QuizDisplay: React.FC<QuizProps> = ({
           <span className="text-lg font-bold">正解数: {correctCount}</span>
         </div>
         {
-          isAnswerCorrect != null || isTimeUp && (
+          ((isAnswerCorrect != null) || isTimeUp) && (
             <div className="flex items-center space-x-2">
-              <h1 className=" text-[#FF6B6B]">AIがクイズを生成中です{dots}</h1>
+              <h1 className="text-[#FF6B6B]">AIがクイズを生成中です{dots}</h1>
             </div>
           )
         }
       </div>
+      {/* @ts-ignore */}
+      <style jsx global>{`
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+        .animate-shake {
+          animation: shake 0.5s ease-in-out;
+        }
+      `}</style>
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import stringSimilarity from 'string-similarity';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import db from '../database/database';
@@ -11,19 +10,59 @@ const client: any = new OpenAI({
 });
 export type GenerateQuizResponse = QuizType | { error: string; details?: any; response?: any; };
 
-// 過去のクイズとの類似度を確認する関数
-const isSimilarQuestion = (newQuestion: string, pastQuestions: string[] | undefined, threshold: number = 0.65) => {
-    if (!pastQuestions) return false;
-    for (const pastQuestion of pastQuestions) {
-        const similarity = stringSimilarity.compareTwoStrings(newQuestion, pastQuestion);
-        if(similarity >= 3) {
-            console.log("similarity: " + similarity);
+// テキストの配列を受け取り埋め込みの配列を返す
+const getEmbeddings = async (texts: string[]) => {
+    const response = await client.embeddings.create({
+        model: 'text-embedding-3-small',
+        input: texts,
+    });
+    // 埋め込みデータが正しく返されているかチェック
+    if (!response.data || !response.data.length || !response.data[0].embedding) {
+        throw new Error("埋め込みデータが取得できませんでした");
+    }
+
+    return response.data.map((item: any) => item.embedding);
+};
+
+// コサイン類似度を計算
+const cosineSimilarity = (vecA: number[], vecB: number[]) => {
+    if (!vecA || !vecB) {
+        throw new Error("ベクトルが undefined です");
+    }
+
+    const dotProduct = vecA.reduce((sum, a, idx) => sum + a * vecB[idx], 0);
+    const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
+    const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
+
+    if (magnitudeA === 0 || magnitudeB === 0) {
+        throw new Error("ベクトルの大きさがゼロです");
+    }
+
+    return dotProduct / (magnitudeA * magnitudeB);
+};
+
+// 新しい質問と過去の質問のリストを受け取り、新しい質問が過去の質問と類似しているかどうかをembedding apiで評価
+const isSimilarQuestion = async (newQuestion: string, pastQuestions: string[], threshold: number = 0.8) => {
+    try {
+        // 新しい質問と過去の質問の埋め込みを一度に取得
+        const texts = [newQuestion, ...pastQuestions];
+        const embeddings = await getEmbeddings(texts);
+
+        const newEmbedding = embeddings[0];
+        const pastEmbeddings = embeddings.slice(1);
+
+        for (let i = 0; i < pastEmbeddings.length; i++) {
+            const similarity = cosineSimilarity(newEmbedding, pastEmbeddings[i]);
+            console.log(`類似度: ${similarity}`);
+            if (similarity >= threshold) {
+                console.log(`類似度: ${similarity} - 重複した質問が見つかりました。`);
+                console.log(`新しい質問: ${newQuestion}`);
+                return true;
+            }
         }
-        if (similarity >= threshold) {
-            console.log("履歴から: " + pastQuestion);
-            console.log("生成された: " + newQuestion);
-            return true; // 類似している
-        }
+    } catch (error) {
+        console.error("類似度評価エラー:", error);
+        return false;
     }
     return false;
 };
@@ -147,10 +186,10 @@ export const generateQuiz = async (
     const pastQuizzes: QuizType[] | undefined | null = await db.all(
         `SELECT question 
          FROM user_quiz_history 
-         WHERE user_id = $1 AND category = $2 AND difficulty = $3
+         WHERE user_id = $1 AND category = $2 AND difficulty = $3 AND subcategory = $4
          ORDER BY quiz_id DESC
-         LIMIT 200`,
-        [user_id, category, difficulty]
+         LIMIT 100`,
+        [user_id, category, difficulty, subcategory]
     );
 
     // 過去に解いたクイズのリストを作成 
@@ -161,10 +200,10 @@ export const generateQuiz = async (
         const opponentQuizzes = await db.all(
             `SELECT question 
              FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND difficulty = $3 
+             WHERE user_id = $1 AND category = $2 AND difficulty = $3 AND subcategory = $4
              ORDER BY quiz_id DESC 
-             LIMIT 200`,
-            [opponent_id, category, difficulty]
+             LIMIT 100`,
+            [opponent_id, category, difficulty, subcategory]
         );
         const opponentQuestions = opponentQuizzes?.map((quiz) => quiz.question);
         if (opponentQuestions) {
@@ -186,13 +225,12 @@ export const generateQuiz = async (
                         role: "system",
                         content: `
                         あなたはクイズ作成者です。以下のJSON形式で、**4つの選択肢と1つの正解がある問題を生成してください**
-                        "最初の" や ”一番の"、"最も"がつくような問題は避けてください
                         **過去に生成した問題や類似の表現、または同じテーマを使わないように注意してください。**
                         同じジャンル内でも、異なるトピックや視点から問題を生成してください。
                         指定されたジャンルと難易度に基づいたクイズ問題を生成してください。高校生レベルを[普通]としてください。
-                        下記の過去にあなたが生成した問題の履歴をすべて確認して、生成する問題が重複しないように生成してください:
+                        下記の過去にあなたが生成した問題の履歴をすべて確認して、問題が重複しないように生成してください:
                         ${JSON.stringify(pastQuestions, null, 2)},
-                        出力はJSONのみを返してください。また、事実確認のために、検索用のワードも入れてください。
+                        出力はJSONのみを返してください。クイズの要約を検索用ワードとして入れてください。
 
                         フォーマット:
                         {
@@ -209,6 +247,7 @@ export const generateQuiz = async (
                             "explanation": "<解説>",
                             "search_word": "<検索用ワード>"
                         }
+                            また、**正しい事実に基づき、情報源が明確である問題** を作成してください。
                         `
                     },
                     {
@@ -221,13 +260,12 @@ export const generateQuiz = async (
             });
             console.log("totalToken: " + response.usage.total_tokens);
             let generatedQuiz = response.choices[0].message.content;
-            generatedQuiz = generatedQuiz.replace(/```json/g, '').replace(/```/g, '').trim();
 
             try {
                 parsedQuiz = JSON.parse(generatedQuiz);
                 // 新しく生成されたクイズが過去のクイズと類似しているか確認
-                if (parsedQuiz !== undefined) {
-                    isDuplicate = isSimilarQuestion(parsedQuiz.question, pastQuestions);
+                if (parsedQuiz !== undefined && pastQuestions !== undefined) {
+                    isDuplicate = await isSimilarQuestion(parsedQuiz.question, pastQuestions);
 
                     if (isDuplicate) {
                         console.log("類似したクイズが生成されたため、再生成します。");
@@ -261,20 +299,5 @@ export const GenerateQuiz = async (req: Request, res: Response) => {
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "クイズの生成に失敗しました" });
-    }
-}
-
-export const saveQuiz = async (req: Request, res: Response) => {
-    const { quiz_id, question, category, difficulty, choices, explanation, correct_answer } = req.body;
-
-    try {
-        // データベースにクイズを保存する処理
-        await db.run("INSET INT quiz (quiz_id, question, category, difficulty, choices, explanation, correct_answer, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)",
-            [quiz_id, question, category, difficulty, choices, explanation, correct_answer, new Date(), new Date()]
-        );
-        return res.status(200).json({ message: "クイズが正常に保存されました", quiz_id });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "クイズの保存に失敗しました" });
     }
 }

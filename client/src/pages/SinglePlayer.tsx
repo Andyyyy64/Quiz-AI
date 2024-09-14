@@ -39,7 +39,7 @@ export const SinglePlayer: React.FC = () => {
     // before game start
     const [is_settings, setIsSettings] = useState<boolean>(true); // 設定画面フラグ
     const [customCategory, setCustomCategory] = useState<string>(""); // カスタムカテゴリ
-    const [useCustomCategory, setUseCustomCategory] = useState<boolean>(false); // カスタムカテゴリフラグ
+    const [useCustomCategory, setUseCustomCategory] = useState<boolean>(true); // カスタムカテゴリフラグ
     const [is_loading, setIsLoading] = useState<boolean>(false); // ローディングフラグ
 
     // during game

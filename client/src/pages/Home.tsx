@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { AuthContext } from "../context/AuthContext";
-import { Users, User, Clock, BarChart } from "lucide-react"
+import { Users, User, History, Trophy } from "lucide-react"
 
 export const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -33,17 +33,18 @@ export const Home: React.FC = () => {
         <div className="text-center space-y-8 mb-16 w-full max-w-md">
           <Button
             className="w-full h-16 text-xl py-6 px-12 hover:bg-[#66e4db]
-            hover:scale-105 rounded-full transition-all"
+            hover:scale-105 rounded-full"
             sx={{
               backgroundColor: "#4ECDC4",
               color: "white",
               borderRadius: "9999px",
               fontWeight: "bold",
               fontSize: "1.2rem",
+              transition: "all 0.3s",
             }}
             onClick={handleSinglePlayClick}
           >
-            <User className="mr-4 h-8 w-8" />
+            <User className="mr-2 h-8 w-8" />
             シングルプレイ
           </Button>
           <Button
@@ -54,10 +55,11 @@ export const Home: React.FC = () => {
               color: "white",
               borderRadius: "9999px",
               fontWeight: "bold",
+              transition: "all 0.3s",
             }}
             onClick={handleMultiPlayClick}
           >
-            <Users className="mr-4 h-6 w-6" />
+            <Users className="mr-2 h-6 w-6" />
             マルチプレイ
           </Button>
         </div>
@@ -65,16 +67,16 @@ export const Home: React.FC = () => {
         <div className="flex justify-center space-x-12 mt-8">
           <Link
             to="/history"
-            className="group flex flex-col items-center transition-transform 
-            transform hover:scale-110"
+            className="group flex flex-col items-center transform transition-all 
+            duration-300 hover:scale-110"
           >
             <div className="bg-inherit p-4 rounded-full 
             group-hover:bg-[#FFD93D] transition-colors"
             >
-              <Clock className="h-10 w-10 text-[#FF6B6B]"
+              <History className="h-10 w-10 text-[#FF6B6B]"
               />
             </div>
-            <span className="mt-1 text-sm font-bold text-[#333333] 
+            <span className="text-sm font-extrabold text-[#333333] 
             group-hover:text-[#FF6B6B] transition-colors"
             >
               履歴
@@ -82,15 +84,15 @@ export const Home: React.FC = () => {
           </Link>
           <Link
             to="/rankings"
-            className="group flex flex-col items-center transition-transform 
-            transform hover:scale-110"
+            className="group flex flex-col items-center transform transition-all 
+            duration-300 hover:scale-110"
           >
             <div className="bg-inherit p-4 rounded-full 
             group-hover:bg-[#FFD93D] transition-colors"
             >
-              <BarChart className="h-10 w-10 text-[#FF6B6B]" />
+              <Trophy className="h-10 w-10 text-[#FF6B6B]" />
             </div>
-            <span className="mt-1 text-sm font-bold text-[#333333] 
+            <span className="text-sm font-extrabold text-[#333333] 
             group-hover:text-[#FF6B6B] transition-colors"
             >
               ランキング

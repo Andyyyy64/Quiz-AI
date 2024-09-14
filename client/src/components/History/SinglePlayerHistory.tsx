@@ -35,7 +35,7 @@ export const SinglePlayerHistory: React.FC<SinglePlayerHistoryProps> = ({ user_i
         const fetchSingleHistory = async () => {
             const singleRes = await getSingleHistory(user_id);
             if (Array.isArray(singleRes)) {
-                setSingleHistory(singleRes);
+                setSingleHistory(singleRes.reverse());
                 setTimeout(() => setIsLoaded(true), 100);
             }
         };

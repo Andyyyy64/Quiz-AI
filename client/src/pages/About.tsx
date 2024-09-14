@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom"
 import { Zap, Users, Trophy } from "lucide-react"
 import { Header } from "../components/Common/Header"
 import { Footer } from "../components/Common/Footer"
@@ -7,11 +6,11 @@ export const About = () => {
     return (
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
             <Header />
-            <main className="container mx-auto mt-10 px-4">
+            <main className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-xl p-8">
-                    <h1 className="text-4xl font-bold mb-6 text-center text-black">AIクイズ！ について</h1>
+                    <h1 className="text-2xl font-bold mb-6 text-center text-black">クイズ！AIが作った問題 について</h1>
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4 text-[#4ECDC4]">AIクイズ！ ってなに？</h2>
+                        <h2 className="text-2xl font-semibold mb-4 text-[#4ECDC4]">クイズ！AIが作った問題 ってなに？</h2>
                         <p className="text-gray-700 leading-relaxed">
                             AIクイズ！ は、幅広いトピックにわたってあなたの知識を試すために設計された革新的なオンラインクイズプラットフォームです。シングルプレイヤーとマルチプレイヤーの両方のモードを提供しており、AIが生成したクイズに挑戦したり、インターネットの誰かとリアルタイムで競い合うことができます。
                         </p>
@@ -52,22 +51,19 @@ export const About = () => {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4 text-[#FF6B6B]">AIクイズ！ に関する注意点</h2>
+                        <h2 className="text-2xl font-semibold mb-4 text-[#FF6B6B]">注意点</h2>
                         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
                             <p className="text-yellow-700">
-                                <strong>ご注意ください：</strong> AIクイズ！ のクイズはAIを使用して生成されています。私たちは正確さと品質を追求していますが、間違った回答や偏りのある質問が含まれる場合があります。ユーザーの皆様には、批判的な視点を持ってコンテンツに向き合い、不正確な点やバグなどがあれば報告して頂けると幸いです。
+                                クイズ！AIが作った問題 のクイズはAIを使用して生成されています。私たちは正確さと品質を追求していますが、間違った回答や偏りのある質問が含まれる場合があります。ユーザーの皆様には、批判的な視点を持ってコンテンツに向き合い、不正確な点やバグなどがあれば報告して頂けると幸いです。
                             </p>
                         </div>
                     </section>
 
                     <section>
                         <h2 className="text-2xl font-semibold mb-4 text-[#4ECDC4]">さあ始めよう！</h2>
-                        <p className="text-gray-700 leading-relaxed mb-4">
+                        <p className="text-gray-700 leading-relaxed">
                             あなたのクイズの冒険に出発する準備はできましたか？今すぐ飛び込んで、自分自身に挑戦するか、インターネットの誰かと競い合いましょう。成功の鍵は勝つことだけでなく、学びと発見の喜びを楽しむことにあります。
                         </p>
-                        <Link to="/" className="inline-block px-6 py-3 bg-[#FF6B6B] text-white font-semibold rounded-full hover:bg-[#FF8787] transition-colors duration-200">
-                            今すぐクイズを始めよう！
-                        </Link>
                     </section>
                 </div>
             </main>
