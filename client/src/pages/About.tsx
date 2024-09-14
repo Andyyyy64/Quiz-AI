@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom"
 import { Zap, Users, Trophy } from "lucide-react"
 import { Header } from "../components/Common/Header"
 import { Footer } from "../components/Common/Footer"
