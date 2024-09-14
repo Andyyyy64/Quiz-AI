@@ -33,13 +33,14 @@ export const Home: React.FC = () => {
         <div className="text-center space-y-8 mb-16 w-full max-w-md">
           <Button
             className="w-full h-16 text-xl py-6 px-12 hover:bg-[#66e4db]
-            hover:scale-105 rounded-full transition-all"
+            hover:scale-105 rounded-full"
             sx={{
               backgroundColor: "#4ECDC4",
               color: "white",
               borderRadius: "9999px",
               fontWeight: "bold",
               fontSize: "1.2rem",
+              transition: "all 0.3s",
             }}
             onClick={handleSinglePlayClick}
           >
@@ -54,6 +55,7 @@ export const Home: React.FC = () => {
               color: "white",
               borderRadius: "9999px",
               fontWeight: "bold",
+              transition: "all 0.3s",
             }}
             onClick={handleMultiPlayClick}
           >
@@ -65,8 +67,8 @@ export const Home: React.FC = () => {
         <div className="flex justify-center space-x-12 mt-8">
           <Link
             to="/history"
-            className="group flex flex-col items-center transition-transform 
-            transform hover:scale-110"
+            className="group flex flex-col items-center transform transition-all 
+            duration-300 hover:scale-110"
           >
             <div className="bg-inherit p-4 rounded-full 
             group-hover:bg-[#FFD93D] transition-colors"
@@ -82,8 +84,8 @@ export const Home: React.FC = () => {
           </Link>
           <Link
             to="/rankings"
-            className="group flex flex-col items-center transition-transform 
-            transform hover:scale-110"
+            className="group flex flex-col items-center transform transition-all 
+            duration-300 hover:scale-110"
           >
             <div className="bg-inherit p-4 rounded-full 
             group-hover:bg-[#FFD93D] transition-colors"

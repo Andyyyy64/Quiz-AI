@@ -30,7 +30,7 @@ export const MultiPlayerHistory: React.FC<MultiPlayerHistoryProps> = ({ user_id 
         const fetchMultiHistory = async () => {
             const multiRes = await getMultiHistory(user_id);
             if (Array.isArray(multiRes)) {
-                setMultiHistory(multiRes);
+                setMultiHistory(multiRes.reverse());
                 setTimeout(() => setIsLoaded(true), 100);
             }
         };
