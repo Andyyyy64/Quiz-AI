@@ -68,7 +68,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
           </div>
         ) : (
           <div className="text-2xl">
-            <div className={`text-2xl transition-all duration-500`}>
+            <div className="">
               {
                 isTimeUp || isDraw ? (
                   <h1 className="mb-10 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
