@@ -18,7 +18,7 @@ export const PreMatchLoading: React.FC<PreMatchLoadingProps> = ({ status }) => {
             {status}
             {dots}
           </h2>
-          <p className="text-[#666666] mb-6 md:text-md text-sm">
+          <p className="text-[#666666] mb-6 md:text-lg text-sm">
             壮大な頭脳バトルの準備を整えています。
             あなたの知識を披露する準備はできていますか？
           </p>
