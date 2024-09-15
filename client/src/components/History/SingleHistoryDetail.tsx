@@ -36,7 +36,7 @@ export const SingleHistoryDetail: React.FC = () => {
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
             <Header />
             <main className="container mx-auto px-4 py-12">
-                <h1 className="text-4xl font-bold mb-8 text-center">シングルプレイ履歴詳細</h1>
+                <h1 className="text-4xl font-bold mb-8 text-center hidden md:block">シングルプレイ履歴詳細</h1>
                 {
                     history && (
                         <div className="bg-white rounded-xl p-6 mb-8"
@@ -64,7 +64,7 @@ export const SingleHistoryDetail: React.FC = () => {
                                 <div className="flex flex-col items-center">
                                     <Tag className="h-8 w-8 text-[#4ECDC4] mb-2" />
                                     <p className="text-sm font-medium">カテゴリ</p>
-                                    <p className="text-lg font-bold">{history.category == "" ? "ランダム" : history.category}</p>
+                                    <p className="text-lg font-bold md:text-wrap text-nowrap">{history.category == "" ? "ランダム" : history.category}</p>
                                 </div>
                                 <div className="flex flex-col items-center">
                                     <Star className="h-8 w-8 text-[#FFD93D] mb-2" />
@@ -124,15 +124,16 @@ export const SingleHistoryDetail: React.FC = () => {
                                 <p className="font-medium">解説:</p>
                                 <p>{quiz.explanation}</p>
                             </div>
-                            <div className='mt-5 text-right'>
+                            <div className='md:mt-5 mt-2 text-right'>
                                 <Link
                                     to={`https://www.google.co.jp/search?q=${quiz.search_word}`}
                                     className='inline-flex items-center text-blue-500 hover:text-blue-700 transition-colors duration-200'
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    <ExternalLink className="h-4 w-4 mr-1 mt-[2px]" />
-                                    <span className="underline">{quiz.search_word}</span>
+                                    <span className="md:hidden mr-2">検索</span>
+                                    <ExternalLink className="h-4 w-4 mr-1 md:mt-[2px]" />
+                                    <span className="underline hidden md:block">{quiz.search_word}</span>
                                 </Link>
                             </div>
                         </div>

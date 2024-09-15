@@ -42,7 +42,7 @@ export const PreSingleLoading: React.FC = () => {
     }, [])
 
     return (
-        <div className="relative z-10 w-full max-w-md px-4">
+        <div className="relative z-10 w-full max-w-md px-4 md:mt-32 mt-32">
             <div className="text-center mb-8">
                 <p className="text-2xl text-[#4ECDC4] font-bold animate-pulse">もうすぐクイズが始まります!</p>
             </div>

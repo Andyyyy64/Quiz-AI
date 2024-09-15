@@ -55,14 +55,14 @@ export const SinglePlayerHistory: React.FC<SinglePlayerHistoryProps> = ({ user_i
                         <div className="flex items-center space-x-4">
                             <Star className={`h-8 w-8 ${categories.includes(history.category) ? 'text-[#4ECDC4]' : 'text-[#FF6B6B]'}`} />
                             <div>
-                                <p className="font-semibold">{history.category == "" ? "ランダム" : history.category}</p>
+                                <p className="font-bold md:text-wrap text-nowrap">{history.category == "" ? "ランダム" : history.category}</p>
                                 <p className="text-sm text-gray-600">{formatDateToMonthDay(history.created_at)}</p>
                             </div>
                         </div>
                         <div className="flex items-center space-x-4">
                             <div className="text-right">
                                 <p className="font-semibold">{history.correct_num}/{history.question_num}</p>
-                                <p className="text-sm text-gray-600">{history.difficulty == "" ? "ランダム" : history.difficulty} • {history.duration}秒</p>
+                                <p className="text-sm text-gray-600 hidden md:block">{history.difficulty == "" ? "ランダム" : history.difficulty} • {history.duration}秒</p>
                             </div>
                             <ChevronRight className="h-5 w-5 text-gray-400" />
                         </div>

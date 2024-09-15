@@ -27,8 +27,8 @@ export const Home: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-inherit text-[#333333] relative overflow-hidden">
       <Header />
-      <main className="container mx-auto mt-20 px-4 flex flex-col items-center 
-      absolute sm:top-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      <main className="container mx-auto xl:mt-20 px-4 flex flex-col items-center 
+      absolute md:top-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
         <div className="text-center space-y-8 mb-16 w-full max-w-md">
           <Button
@@ -64,7 +64,7 @@ export const Home: React.FC = () => {
           </Button>
         </div>
 
-        <div className="flex justify-center space-x-12 mt-8">
+        <div className="justify-center space-x-12 mt-8 md:flex hidden">
           <Link
             to="/history"
             className="group flex flex-col items-center transform transition-all 

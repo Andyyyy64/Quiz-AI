@@ -231,13 +231,13 @@ export const SinglePlayer: React.FC = () => {
         navi(`/history/singleplay/${singleId}`);
     }
     return (
-        <div className="min-h-screen flex flex-col relative bg-inherit">
+        <div className="min-h-screen flex flex-col relative pb-20 md:pb-0 bg-inherit">
             {/* 通知 */}
             {notification && (
                 <Notification message={notification.message} type={notification.type} />
             )}
             <Header />
-            <main className="flex-grow flex flex-col justify-center items-center">
+            <main className="flex flex-col justify-center items-center">
 
                 {
                     // 設定画面

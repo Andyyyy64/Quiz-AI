@@ -59,7 +59,7 @@ export const MultiPlayerHistory: React.FC<MultiPlayerHistoryProps> = ({ user_id 
                         </div>
                         <div className="flex items-center space-x-4">
                             <div className="text-right">
-                                <p className="font-semibold">+{battle.points_awarded}ポイント</p>
+                                <p className="font-semibold hidden md:block">+{battle.points_awarded}ポイント</p>
                                 <p className="text-sm text-gray-600">{battle.who_win === user_id ? '勝利' : '敗北'}</p>
                             </div>
                             <ChevronRight className="h-5 w-5 text-gray-400" />
