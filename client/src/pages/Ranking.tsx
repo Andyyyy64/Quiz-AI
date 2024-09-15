@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Header } from "../components/Common/Header"
 import { AuthContext } from "../context/AuthContext"
-import { Medal, Star, Crown, Trophy } from "lucide-react"
+import { Medal, Star, Trophy } from "lucide-react"
 import { getRanking } from "../api/user"
 import { Footer } from "../components/Common/Footer"
 
