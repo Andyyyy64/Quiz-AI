@@ -27,14 +27,12 @@ export const SingleGame: React.FC<SingleGameProps> = ({
 
     return (
         <div
-            className={`w-full flex flex-col items-center max-w-4xl mx-auto 
-            bg-white/10 backdrop-blur-3xl rounded-lg shadow-lg p-6 transition-all duration-500
+            className={`md:w-full w-[85%] flex flex-col flex-grow items-center max-w-4xl mx-auto 
+            bg-white rounded-lg transition-all duration-500 shadow-lg mt-10
             ${showAnimation ? 'scale-110' : 'scale-100'}
             `}
         >
-            <div className='mb-10'>
-                <QuizProgressUI currentQuizIndex={currentQuizIndex} questionCount={questionCount} />
-            </div>
+            <QuizProgressUI currentQuizIndex={currentQuizIndex} questionCount={questionCount} />
             <QuizDisplay
                 quiz={quiz}
                 questionCount={questionCount}

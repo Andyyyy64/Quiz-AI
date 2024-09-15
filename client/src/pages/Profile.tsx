@@ -93,7 +93,7 @@ export const Profile: React.FC = () => {
     <div className="min-h-screen flex flex-col relative bg-inherit">
       <Header />
       <div
-        className="md:w-full flex-grow flex flex-col items-center justify-center bg-white rounded-xl 
+        className="md:w-full w-[80%] flex-grow flex flex-col items-center justify-center bg-white rounded-xl 
       shadow-xl p-8 max-w-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
         <h1 className="text-3xl font-bold mb-4 hidden md:block">プロフィール</h1>

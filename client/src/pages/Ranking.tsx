@@ -35,7 +35,6 @@ export const Ranking: React.FC = () => {
             <main className="container mx-auto px-4 pb-12">
                 <h1 className="text-5xl font-bold mb-12 text-center text-black drop-shadow-lg">
                     ランキング
-                    <Crown className="h-8 w-8 text-[#FFD700] animate-float" />
                 </h1>
                 <div className="bg-white/20 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto">
                     <div className="overflow-x-auto">

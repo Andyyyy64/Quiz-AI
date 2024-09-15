@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
   return (
     <div className="relative">
       {/* 上部バー */}
-      <div className="flex justify-between items-center md:p-4">
+      <div className="flex justify-between items-center md:px-4 md:pt-4">
         {/* 左側 */}
         <div className="flex items-center">
           {/* スマホ時の favicon */}
