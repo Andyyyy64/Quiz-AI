@@ -3,7 +3,7 @@ import bcypt from 'bcrypt';
 import db from '../database/database';
 import dotenv from 'dotenv';
 import validator from 'validator';
-import nodemailer from 'nodemailer';
+//import nodemailer from 'nodemailer';
 
 import { Storage } from '@google-cloud/storage';
 import multer from 'multer';
@@ -64,6 +64,7 @@ export const registerUser = async (req: Request, res: Response) => {
       return res.status(500).json({ message: "ユーザーの登録に失敗しました" });
     }
 
+    /*
     // nodemailerを使って認証コードをユーザーに送信
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -80,6 +81,7 @@ export const registerUser = async (req: Request, res: Response) => {
       subject: "メールアドレス確認のための認証コードです",
       text: `認証コードは ${verificationCode} です。`,
     });
+    */
 
     // 登録したユーザーを取得
     const user: UserType = await db.get(

@@ -8,7 +8,7 @@ export const About = () => {
             <Header />
             <main className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-xl p-8">
-                    <h1 className="md:text-3xl text-2xl font-bold mb-6 text-center text-black">クイズ！AIが作った問題 について</h1>
+                    <h1 className="md:text-3xl text-2xl font-bold md:mb-10 mb-6 text-center text-black">クイズ！AIが作った問題 について</h1>
                     <section className="mb-8">
                         <h2 className="md:text-2xl text-xl font-semibold mb-4 text-[#4ECDC4]">クイズ！AIが作った問題 ってなに？</h2>
                         <p className="text-gray-700 leading-relaxed md:text-base text-xs">
