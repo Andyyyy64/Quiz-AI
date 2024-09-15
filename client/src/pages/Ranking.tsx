@@ -30,13 +30,13 @@ export const Ranking: React.FC = () => {
     }, [user, rankings])
 
     return (
-        <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
+        <div className="min-h-screen flex flex-col relative bg-inherit">
             <Header />
             <main className="container mx-auto px-4 pb-12">
-                <h1 className="text-5xl font-bold mb-12 text-center text-black drop-shadow-lg">
+                <h1 className="text-5xl font-bold mb-12 md:mt-0 mt-10 text-center text-black">
                     ランキング
                 </h1>
-                <div className="bg-white/20 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto">
+                <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto">
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
@@ -44,8 +44,8 @@ export const Ranking: React.FC = () => {
                                     <th className="px-4 py-3 text-left text-sm font-semibold uppercase tracking-wider">順位</th>
                                     <th className="px-4 py-3 text-left text-sm font-semibold uppercase tracking-wider">名前</th>
                                     <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider">ポイント</th>
-                                    <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider">マッチ数</th>
-                                    <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider">勝率</th>
+                                    <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider hidden md:block">マッチ数</th>
+                                    <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider hidden md:block">勝率</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,8 +63,8 @@ export const Ranking: React.FC = () => {
                                         </td>
                                         <td className="px-4 py-4 font-bold">{userWithRanking?.name}</td>
                                         <td className="px-4 py-4 text-right font-bold">{userWithRanking?.points.toLocaleString()}</td>
-                                        <td className="px-4 py-4 text-right font-bold">{userWithRanking?.totalMatchPlay}</td>
-                                        <td className="px-4 py-4 text-right font-bold">
+                                        <td className="px-4 py-4 text-right font-bold hidden md:block">{userWithRanking?.totalMatchPlay}</td>
+                                        <td className="px-4 py-4 text-right font-bold hidden md:block">
                                             {userWithRanking.totalWin != 0 ? ((userWithRanking?.totalWin / userWithRanking?.totalMatchPlay) * 100).toFixed(1) : '0'}%
                                         </td>
                                     </tr>
