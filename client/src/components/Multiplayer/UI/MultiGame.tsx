@@ -35,7 +35,7 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
   return (
     <div
       className={`md:w-full w-[85%] flex flex-col items-center max-w-4xl mx-auto 
-              bg-white rounded-lg shadow-lg md:p-6 border-2
+              bg-white rounded-lg shadow-lg border-2
                 transition-all duration-500
                 ${showAnimation ? 'scale-110' : 'scale-100'}`}
     >
@@ -54,9 +54,9 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
         isTimeUp={isTimeUp}
         correctCount={correctCount}
         isMultiplayer={true}
-          isDraw={isDraw}
-          opponentAnswer={opponentAnswer}
-        />
+        isDraw={isDraw}
+        opponentAnswer={opponentAnswer}
+      />
     </div>
   );
 };

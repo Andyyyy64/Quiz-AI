@@ -88,7 +88,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
       <div className="flex justify-between items-center p-5">
         <div className="flex items-center space-x-2">
           <CheckCircle className="h-6 w-6 text-[#4ECDC4]" />
-          <span className="text-lg font-bold">正解数: {correctCount}</span>
+          <span className="md:text-lg text-base font-bold">正解数: {correctCount}</span>
         </div>
         {isCounting && (
           <div className="flex items-center space-x-2 text-center">
@@ -97,9 +97,9 @@ export const QuizDisplay: React.FC<QuizProps> = ({
           </div>
         )}
         {
-          ((isAnswerCorrect != null) || isTimeUp) && (
+          ((isAnswerCorrect != null) || isTimeUp || isDraw) && (
             <div className="flex items-center space-x-2">
-              <h1 className="text-[#FF6B6B] font-bold">AIがクイズを生成中です{dots}</h1>
+              <h1 className="text-[#FF6B6B] font-bold md:text-base text-sm">AIがクイズを生成中です{dots}</h1>
             </div>
           )
         }

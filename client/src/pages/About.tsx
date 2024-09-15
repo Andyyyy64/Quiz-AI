@@ -21,7 +21,7 @@ export const About = () => {
                         <p className="text-gray-700 leading-relaxed mb-4 md:text-base text-sm">
                             AIクイズ！ では、生成AIを通じて学びを楽しく、魅力的で、誰にでもアクセスできるものにすることを目指しています。私たちは次のことを目標としています
                         </p>
-                        <ul className="list-disc list-inside text-gray-700 space-y-2 md:text-base text-xs text-nowrap">
+                        <ul className="list-disc list-inside text-gray-700 space-y-2 md:text-base text-xs">
                             <li>好奇心を刺激し、生涯学習を促進すること</li>
                             <li>フレンドリーな競争と知識共有の場を提供すること</li>
                             <li>多様な興味に応えるため、幅広いトピックを提供すること</li>
