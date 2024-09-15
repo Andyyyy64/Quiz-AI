@@ -9,6 +9,7 @@ import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 
 import { getUserById, handleFileUpload } from "../api/user";
+import { Loader2 } from "lucide-react";
 
 export const Profile: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -33,9 +34,16 @@ export const Profile: React.FC = () => {
       }
     };
     const fetchRanking = async () => {
+      startLoading();
       if (user && user.user_id) {
-        const res = await getUserRankingById(user.user_id);
-        setRanking(res.userRanking);
+        try {
+          const res = await getUserRankingById(user.user_id);
+          setRanking(res.userRanking);
+        } catch (err) {
+          console.log(err);
+        } finally {
+          stopLoading();
+        }
       }
     }
 
@@ -98,9 +106,7 @@ export const Profile: React.FC = () => {
       >
         <h1 className="text-3xl font-bold mb-4 hidden md:block">プロフィール</h1>
         {loading ? (
-          <div className="flex items-center justify-center h-32 w-32">
-            <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-          </div>
+          <Loader2 className="animate-spin text-[#FF6B6B]" />
         ) : (
           <div className="relative">
             <img
@@ -153,20 +159,29 @@ export const Profile: React.FC = () => {
             <div>
               <label className="block text-sm font-medium text-[#666666]">
                 メールアドレス
-              </label>
-              <p className="text-lg">{user?.email}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#666666]">
-                ランキング
-              </label>
-              <p className="text-lg font-semibold text-[#FF6B6B]">
-                {ranking}位
-              </p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#666666]">
-                ポイント
+                </label>
+                <p className="text-lg">{user?.email}</p>
+              </div>
+              <div>
+
+                {
+                  loading ? (
+                    <Loader2 className="animate-spin text-[#FF6B6B]" />
+                  ) : (
+                    <div>
+                      <label className="block text-sm font-medium text-[#666666]">
+                        ランキング
+                        <p className="text-lg font-semibold text-[#FF6B6B]">
+                          {ranking}位
+                        </p>
+                      </label>
+                    </div>
+                  )
+                }
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[#666666]">
+                  ポイント
               </label>
               <p className="text-lg font-semibold text-[#4ECDC4]">
                 {user?.points}

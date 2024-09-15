@@ -77,7 +77,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">難易度</label>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 mb-8">
                             {difficulties.map((diff) => (
                                 <button
                                     key={diff}
@@ -94,7 +94,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                         </div>
                     </div>
                     {/* 時間制限 */}
-                    <div>
+                    <div className=''>
                         <InputLabel htmlFor="timeLimit" sx={{ fontWeight: "bold" }}>
                             時間制限: {timeLimit}s
                         </InputLabel>
@@ -129,7 +129,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                 </div>
 
                 {/* 開始 */}
-                <div className="md:mt-8">
+                <div className="mt-5">
                     <Button
                         className="w-full h-12 text-black shadow-lg hover:shadow-xl hover:scale-105 
                             hover:cursor-pointer hover:bg-[#FF8787] transition-all"

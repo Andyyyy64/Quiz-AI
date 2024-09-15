@@ -30,10 +30,12 @@ export const login = async (req: Request, res: Response) => {
         }
 
         // メールアドレスが認証されていない場合はエラーを返す
+        /*
         if (!user.email_verified) {
             console.log("Email not verified" + " " + email);
             return res.status(400).json({ message: "メールアドレスが認証されていません" });
         }
+        */
 
         // パスワードの照合
         const isPasswordMatch = await bcrypt.compare(password, user.password);

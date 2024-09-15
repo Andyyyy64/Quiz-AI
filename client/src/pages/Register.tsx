@@ -17,7 +17,7 @@ export const Register: React.FC = () => {
     setLoading(true);
     setError(null);
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError("パスワードが一致しません。");
       setLoading(false);
       return;
     }
@@ -25,7 +25,7 @@ export const Register: React.FC = () => {
       const res = await register(name, email, password);
       console.log(res);
       localStorage.setItem("email", res.user.email);
-      navigate("/verify-email");
+      navigate("/login");
     } catch (err) {
       setError("Failed to register. Please try again.");
     } finally {

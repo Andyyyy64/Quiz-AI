@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import { QuizDisplay } from "../../Quiz/QuizDisplay";
 import { PlayerUI } from "./PlayerUI";
 import { OpponentUI } from "./OpponentUI";
-import { QuizProgressUI } from "../../Quiz/QuizProgressUI";
-
+import { QuizProgressUI } from "../../Quiz/QuizProgressUI"; 
 
 import { QuizDisplayProps } from "../../../types/quizType";
 
