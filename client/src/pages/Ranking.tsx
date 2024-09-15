@@ -44,8 +44,8 @@ export const Ranking: React.FC = () => {
                                     <th className="px-4 py-3 text-left text-sm font-semibold uppercase tracking-wider">順位</th>
                                     <th className="px-4 py-3 text-left text-sm font-semibold uppercase tracking-wider">名前</th>
                                     <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider">ポイント</th>
-                                    <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider hidden md:block">マッチ数</th>
-                                    <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider hidden md:block">勝率</th>
+                                    <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider md:table-cell hidden">マッチ数</th>
+                                    <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider md:table-cell hidden">勝率</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,8 +63,8 @@ export const Ranking: React.FC = () => {
                                         </td>
                                         <td className="px-4 py-4 font-bold">{userWithRanking?.name}</td>
                                         <td className="px-4 py-4 text-right font-bold">{userWithRanking?.points.toLocaleString()}</td>
-                                        <td className="px-4 py-4 text-right font-bold hidden md:block">{userWithRanking?.totalMatchPlay}</td>
-                                        <td className="px-4 py-4 text-right font-bold hidden md:block">
+                                        <td className="px-4 py-4 text-right font-bold md:table-cell hidden">{userWithRanking?.totalMatchPlay}</td>
+                                        <td className="px-4 py-4 text-right font-bold md:table-cell hidden">
                                             {userWithRanking.totalWin != 0 ? ((userWithRanking?.totalWin / userWithRanking?.totalMatchPlay) * 100).toFixed(1) : '0'}%
                                         </td>
                                     </tr>
