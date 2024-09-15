@@ -7,7 +7,8 @@ export const PreMatchLoading: React.FC<PreMatchLoadingProps> = ({ status }) => {
   const dots = useDots();
   return (
     <div
-      className="sm:w-auto w-[80%] bg-white text-[#333333] overflow-hidden flex items-center justify-center 
+      className="sm:w-auto w-[80%] bg-white text-[#333333]
+        overflow-hidden flex items-center justify-center shadow-xl
         absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-xl"
     >
       <div className="z-10 text-center">
