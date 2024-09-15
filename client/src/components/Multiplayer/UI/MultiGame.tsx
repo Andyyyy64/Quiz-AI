@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { QuizDisplay } from "../../Quiz/QuizDisplay";
 import { PlayerUI } from "./PlayerUI";
@@ -23,12 +23,23 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
   isDraw,
   opponentAnswer
 }) => {
+  const [showAnimation, setShowAnimation] = useState(false);
+
+  useEffect(() => {
+    if (isAnswerCorrect !== null) {
+      setShowAnimation(true);
+      const timer = setTimeout(() => setShowAnimation(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAnswerCorrect]);
   return (
     <div
-      className="w-full flex flex-col items-center max-w-4xl mx-auto 
-    bg-white/10 backdrop-blur-2xl rounded-lg shadow-lg p-6"
+      className={`md:w-full w-[85%] flex flex-col items-center max-w-4xl mx-auto 
+              bg-white rounded-lg shadow-lg border-2
+                transition-all duration-500
+                ${showAnimation ? 'scale-110' : 'scale-100'}`}
     >
-      <div className="w-full flex justify-between items-center">
+      <div className="w-full flex justify-between items-center px-2">
         <PlayerUI user={user} />
         <QuizProgressUI currentQuizIndex={currentQuizIndex ?? 0} />
         <OpponentUI opponent={opponent} />

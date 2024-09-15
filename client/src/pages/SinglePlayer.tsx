@@ -29,9 +29,9 @@ export const SinglePlayer: React.FC = () => {
     const [category, setCategory] = useState("ランダム");
     const [difficulty, setDifficulty] = useState("ランダム");
     const [timeLimit, setTimeLimit] = useState(30);
-    const [questionCount, setQuestionCount] = useState(10);
-    const [correctCount, setCorrectCount] = useState(0);
-    const [currentQuizIndex, setCurrentQuizIndex] = useState(1);
+    const [questionCount, setQuestionCount] = useState(10); // 問題数
+    const [correctCount, setCorrectCount] = useState(0); // 正答数
+    const [currentQuizIndex, setCurrentQuizIndex] = useState(1); // 現在の問題数
     const [answeredQuizIds, setAnsweredQuizIds] = useState<number[]>([]); // 解答したクイズIDを配列で保存
     const [singleId, setSingleId] = useState<number | null>(null); // シングルプレイID
 
@@ -231,13 +231,13 @@ export const SinglePlayer: React.FC = () => {
         navi(`/history/singleplay/${singleId}`);
     }
     return (
-        <div className="min-h-screen flex flex-col relative bg-inherit">
+        <div className="min-h-screen flex flex-col relative pb-20 md:pb-0 bg-inherit">
             {/* 通知 */}
             {notification && (
                 <Notification message={notification.message} type={notification.type} />
             )}
             <Header />
-            <main className="flex-grow flex flex-col justify-center items-center">
+            <main className="flex flex-col justify-center items-center">
 
                 {
                     // 設定画面

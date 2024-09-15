@@ -28,25 +28,17 @@ export const QuizDisplay: React.FC<QuizProps> = ({
   }, [isAnswerCorrect]);
 
   return (
-    <div className="w-full text-center mt-8 relative">
-      {isCounting && (
-        <div className="flex items-center space-x-2 text-center mt-5
-                absolute -top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        >
-          <Clock className="h-10 w-10 text-[#4ECDC4]" />
-          <span className="text-2xl font-bold">{countdown}s</span>
-        </div>
-      )}
+    <div className="w-full text-center mt-3 relative h-full">
       {
+        // クイズ表示
         (isAnswerCorrect == null) && !isTimeUp && !isDraw ? (
-          <div className="p-8 mb-8">
-            <h2 className="text-2xl font-bold mb-16 text-center">
+          <div className="md:p-8 p-5">
+            <h2 className="md:text-2xl text-xl font-bold md:mb-16 mb-5 text-center">
               {quiz?.question}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {quiz?.choices.map((item, index) => {
                 const isOpponentWrong: boolean = Boolean(isMultiplayer && opponentAnswer && opponentAnswer === item && !isAnswerCorrect);
-
                 return (
                   <button
                     key={index}
@@ -67,11 +59,12 @@ export const QuizDisplay: React.FC<QuizProps> = ({
             </div>
           </div>
         ) : (
-          <div className="text-2xl">
-            <div className={`text-2xl transition-all duration-500`}>
+          // 結果表示
+          <div className="md:text-2xl text-xl p-5">
+            <div className="">
               {
                 isTimeUp || isDraw ? (
-                  <h1 className="mb-10 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
+                  <h1 className="md:mb-10 mb-5 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
                 ) : (
                   isAnswerCorrect ? (
                     <div className="flex items-center justify-center mb-10">
@@ -91,15 +84,22 @@ export const QuizDisplay: React.FC<QuizProps> = ({
           </div>
         )
       }
-      <div className="flex justify-between items-center mt-10">
+      {/* 正解数と時間制限と結果時のローディング */}
+      <div className="flex justify-between items-center p-5">
         <div className="flex items-center space-x-2">
           <CheckCircle className="h-6 w-6 text-[#4ECDC4]" />
-          <span className="text-lg font-bold">正解数: {correctCount}</span>
+          <span className="md:text-lg text-base font-bold">正解数: {correctCount}</span>
         </div>
+        {isCounting && (
+          <div className="flex items-center space-x-2 text-center">
+            <Clock className="md:h-9 md:w-9 w-7 h-7 text-[#FF6B6B]" />
+            <span className="md:text-2xl text-xl font-bold">{countdown}秒</span>
+          </div>
+        )}
         {
-          ((isAnswerCorrect != null) || isTimeUp) && (
+          ((isAnswerCorrect != null) || isTimeUp || isDraw) && (
             <div className="flex items-center space-x-2">
-              <h1 className="text-[#FF6B6B]">AIがクイズを生成中です{dots}</h1>
+              <h1 className="text-[#FF6B6B] font-bold md:text-base text-sm">AIがクイズを生成中です{dots}</h1>
             </div>
           )
         }

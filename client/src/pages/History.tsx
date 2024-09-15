@@ -30,7 +30,7 @@ export const History: React.FC = () => {
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
             <Header />
             <main className="container mx-auto px-4 pb-12">
-                <h1 className="text-4xl font-bold mb-8 text-center">クイズの履歴</h1>
+                <h1 className="text-4xl font-bold mb-8 text-center hidden md:block">クイズの履歴</h1>
 
                 <div className="bg-white rounded-xl shadow-xl p-6 max-w-3xl mx-auto">
                     <div className="flex mb-6 gap-2">
@@ -42,8 +42,8 @@ export const History: React.FC = () => {
                                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                         >
-                            <User className="mr-2 h-4 w-4" />
-                            シングルプレイ
+                            <User className="md:mr-2 md:h-4 md:w-4 w-10 h-10" />
+                            <p className='hidden md:block'>シングルプレイ</p>
                         </button>
                         <button
                             onClick={() => handleTabChange('multiplayer')}
@@ -53,8 +53,8 @@ export const History: React.FC = () => {
                                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                         >
-                            <Users className="mr-2 h-4 w-4" />
-                            マルチプレイ
+                            <Users className=",d:mr-2 md:h-4 md:w-4 w-10 h-10" />
+                            <p className='hidden md:block'>マルチプレイ</p>
                         </button>
                     </div>
 

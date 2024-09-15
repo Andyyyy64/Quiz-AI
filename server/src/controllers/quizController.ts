@@ -182,15 +182,29 @@ export const generateQuiz = async (
     console.log("Category: " + category + "subCategory: " + subcategory + ", Difficulty: " + difficulty);
 
     // 指定されたカテゴリと難易度でユーザーが解いたクイズを取得
-    if (!user_id) return ({ error: "ユーザーIDが指定されていません" });
-    const pastQuizzes: QuizType[] | undefined | null = await db.all(
-        `SELECT question 
-         FROM user_quiz_history 
-         WHERE user_id = $1 AND category = $2 AND difficulty = $3 AND subcategory = $4
-         ORDER BY quiz_id DESC
-         LIMIT 100`,
-        [user_id, category, difficulty, subcategory]
-    );
+    if (!user_id) return ({ error: "ユーザーIDが指定されていません" });    
+    let pastQuizzes: QuizType[] | undefined | null;
+    // サブカテゴリが指定されていない指定はカテゴリのみで検索
+    if (subcategory === null) {
+        pastQuizzes = await db.all(
+            `SELECT question 
+             FROM user_quiz_history 
+             WHERE user_id = $1 AND category = $2 AND difficulty = $3
+             ORDER BY quiz_id DESC
+             LIMIT 100`,
+            [user_id, category, difficulty]
+        );
+    } else {
+        pastQuizzes = await db.all(
+            `SELECT question 
+             FROM user_quiz_history 
+             WHERE user_id = $1 AND category = $2 AND difficulty = $3 AND subcategory = $4
+             ORDER BY quiz_id DESC
+             LIMIT 100`,
+            [user_id, category, difficulty, subcategory]
+        );
+    }
+
 
     // 過去に解いたクイズのリストを作成 
     const pastQuestions: string[] | undefined = pastQuizzes?.map((quiz) => quiz.question);

@@ -16,7 +16,7 @@ export const AfterSingleResult: React.FC<AfterSingleResultProps> = ({
     handleGoHistory
 }) => {
     return (
-        <main className="container mx-auto mt-10 px-4">
+        <main className="container mx-auto md:mt-10 px-4">
             <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-xl p-8">
                 <h1 className="text-3xl font-bold mb-6 text-center">クイズの結果！</h1>
                 <div className="mb-8">
