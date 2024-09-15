@@ -4,7 +4,7 @@ import { Footer } from "../components/Common/Footer"
 
 export const About = () => {
     return (
-        <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden pb-20">
+        <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden md:pb-0 pb-20">
             <Header />
             <main className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-xl p-8">
