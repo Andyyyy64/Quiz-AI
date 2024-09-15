@@ -43,8 +43,6 @@ export const MultiHistoryDetail: React.FC = () => {
         fetchQuizHistory();
     }, [id]);
 
-    console.log(quizHistory);
-
     return (
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
             <Header />
@@ -83,7 +81,7 @@ export const MultiHistoryDetail: React.FC = () => {
                     </div>
                 ) : (
                     <>
-                        {history && (
+                        {history && quizHistory && (
                             <div className="bg-white rounded-xl p-6 mb-8"
                                 style={{
                                     boxShadow: '0 10px 20px 0px rgba(0, 0, 0, 0.1), 0 0px 20px 0px rgba(0, 0, 0, 0.1)'
