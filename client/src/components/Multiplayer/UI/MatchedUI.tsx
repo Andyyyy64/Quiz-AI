@@ -35,22 +35,22 @@ export const MatchedUI: React.FC<MatchedUIProps> = ({
         <div className="flex justify-around mt-12 relative">
           <div className={`text-center transition-all duration-500 ${showPlayers ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'}`}>
             <img
-              className="w-32 h-32 rounded-full object-cover border-4 border-[#4ECDC4] shadow-lg transform transition-transform duration-300 hover:scale-110"
+              className="md:w-32 md:h-32 w-12 h-12 rounded-full object-cover border-4 border-[#4ECDC4] shadow-lg transform transition-transform duration-300 hover:scale-110"
               src={user?.prof_image_url}
               alt={user?.name}
             />
             <p className="font-bold mt-2">あなた</p>
           </div>
-          <div className={`text-6xl font-bold text-[#FFD93D] flex items-center transition-all duration-500
+          <div className={`md:text-6xl text-3xl font-bold text-[#FFD93D] flex items-center transition-all duration-500
             ${showVs ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}
           >
-            <Zap className="h-12 w-12 mr-2 animate-pulse text-[#FF6B6B]" />
+            <Zap className="md:h-12 md:w-12 h-6 w-6 mr-2 animate-pulse text-[#FF6B6B]" />
             <span className="animate-bounce">VS</span>
-            <Zap className="h-12 w-12 ml-2 animate-pulse text-[#4ECDC4]" />
+            <Zap className="md:h-12 md:w-12 h-6 w-6 ml-2 animate-pulse text-[#4ECDC4]" />
           </div>
           <div className={`text-center transition-all duration-500 ${showPlayers ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}`}>
             <img
-              className="w-32 h-32 rounded-full object-cover border-4 border-[#FF6B6B] shadow-lg transform transition-transform duration-300 hover:scale-110"
+              className="md:w-32 md:h-32 w-12 h-12 rounded-full object-cover border-4 border-[#FF6B6B] shadow-lg transform transition-transform duration-300 hover:scale-110"
               src={opponent?.prof_image_url}
               alt={opponent?.name}
             />
@@ -58,7 +58,7 @@ export const MatchedUI: React.FC<MatchedUIProps> = ({
           </div>
         </div>
         <p className="text-xl mt-8 animate-pulse mb-5">壮大な知識のバトルに備えよ！</p>
-        <h1 className="text-lg font-bold">開始まで{countdown - 25}秒</h1>
+        <h1 className="text-lg font-bold">開始まで{countdown - 20}秒</h1>
       </div>
     </div>
   );

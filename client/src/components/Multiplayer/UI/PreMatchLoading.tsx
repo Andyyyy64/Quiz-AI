@@ -7,17 +7,17 @@ export const PreMatchLoading: React.FC<PreMatchLoadingProps> = ({ status }) => {
   const dots = useDots();
   return (
     <div
-      className="p-5 bg-white text-[#333333] overflow-hidden 
-        flex items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      className="md:p-5 w-[100%] bg-white text-[#333333] overflow-hidden flex items-center justify-center 
+        absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
     >
       <div className="z-10 text-center">
         <div className="bg-white rounded-xl shadow-md p-8 max-w-md mx-auto">
-          <Users className="h-20 w-20 text-[#4ECDC4] mx-auto mb-6 animate-pulse" />
-          <h2 className="text-2xl font-bold mb-4">
+          <Users className="md:h-20 md:w-20 w-16 h-16 text-[#4ECDC4] mx-auto mb-6 animate-pulse" />
+          <h2 className="md:text-2xl text-xl font-bold mb-4">
             {status}
             {dots}
           </h2>
-          <p className="text-[#666666] mb-6">
+          <p className="text-[#666666] mb-6 md:text-md text-sm">
             壮大な頭脳バトルの準備を整えています。
             あなたの知識を披露する準備はできていますか？
           </p>

@@ -85,7 +85,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
           startCountDown();
           // マッチ時間の計測開始
           startCountUp();
-        }, 5000); // 5秒後に開始
+        }, 10000); // 5秒後に開始
 
         // 相手が正答した場合、
       } else if (data.message === "opponent_answerd" && data.is_correct === true) {
@@ -288,7 +288,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   }
 
   return (
-    <div className="w-full h-full flex justify-center items-center relative">
+    <div className="w-full h-full flex justify-center items-center relative pb-20">
       {/* 通知 */}
       {notification && (
         <Notification message={notification.message} type={notification.type} />

@@ -24,7 +24,7 @@ export const Multiplayer: React.FC = () => {
       <main className="flex-grow flex flex-col justify-center relative items-center">
         <div className="w-full flex flex-col items-center">
           {!showMatchmaking && (
-            <div>
+            <div className="md:px-0 px-4 pb-10">
               <Rule />
               <Button
                 variant="text"
@@ -43,6 +43,7 @@ export const Multiplayer: React.FC = () => {
                   borderRadius: 9999,
                   fontWeight: "bold",
                   fontSize: "1.2rem",
+                  marginTop: 3,
                 }}
               >
                 マッチメイキング開始
