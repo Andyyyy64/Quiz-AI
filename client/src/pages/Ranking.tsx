@@ -5,7 +5,6 @@ import { Medal, Star, Trophy } from "lucide-react"
 import { getRanking } from "../api/user"
 import { Footer } from "../components/Common/Footer"
 import { useLoading } from "../hooks/useLoading"
-import { unstable_createMuiStrictModeTheme } from "@mui/material"
 
 export const Ranking: React.FC = () => {
     const [rankings, setRankings] = useState<Array<any>>([])
