@@ -11,7 +11,7 @@ export const Rule: React.FC = () => {
               <Users className="h-6 w-6 mr-2 text-[#4ECDC4]" />
               遊び方
             </h2>
-            <ul className="list-disc list-inside space-y-2 text-[#333333] font-medium text-sm md:text-lg">
+            <ul className="list-disc list-inside space-y-2 text-[#333333] font-medium text-sm md:text-base">
               <li>他のプレイヤーとリアルタイムで競い合う！</li>
               <li>様々なカテゴリの問題が出題！</li>
               <li>正解するとポイントを獲得！</li>
@@ -24,7 +24,7 @@ export const Rule: React.FC = () => {
               <Zap className="h-6 w-6 mr-2 text-[#FFD93D]" />
               マッチルール
             </h2>
-            <ul className="list-disc list-inside space-y-2 text-[#333333] font-medium text-sm md:text-lg">
+            <ul className="list-disc list-inside space-y-2 text-[#333333] font-medium text-sm md:text-base">
               <li>1マッチにつき10問</li>
               <li>各質問に答える時間は30秒</li>
               <li>10問解いて得点が多いほうが勝利</li>
@@ -39,10 +39,10 @@ export const Rule: React.FC = () => {
             <Trophy className="h-6 w-6 mr-2 text-[#FF6B6B]" />
             報酬
           </h2>
-          <p className="text-[#333333] mb-2 font-medium text-sm md:text-lg">
+          <p className="text-[#333333] mb-2 font-medium text-sm md:text-base">
             ポイントを獲得し、ランキングを上り詰めましょう。毎週トップのプレイヤーには特別なバッジとボーナスポイントが贈られます！
           </p>
-          <p className="text-[#333333] font-medium text-sm md:text-lg">
+          <p className="text-[#333333] font-medium text-sm md:text-base">
             友達に挑戦して、誰が究極のクイズマスターかを確かめよう！
           </p>
         </div>
