@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Circle, X } from "lucide-react"
+import { Capacitor } from "@capacitor/core";
 
 import { Login } from "./pages/Login";
 import { Home } from "./pages/Home";
@@ -33,6 +34,9 @@ type Bubble = {
   oscillationSpeed: number;
 }
 
+const bubbleNum: number = Capacitor.getPlatform() === "web" ? 25 : 15
+const FPS: number = Capacitor.getPlatform() === "web" ? 60 : 20
+
 export const App: React.FC = () => {
   const bubblesRef = useRef<Bubble[]>([]);
   const animationRef = useRef<number>();
@@ -42,7 +46,7 @@ export const App: React.FC = () => {
   const createBubbles = useCallback(() => {
     const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D'];
     const icons = ['❓', '🧠', '🏆', '⚡', '📚', 'circle', 'x'];
-    return Array.from({ length: 25 }, (_, i) => ({
+    return Array.from({ length: bubbleNum }, (_, i) => ({
       id: i,
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
@@ -117,7 +121,7 @@ export const App: React.FC = () => {
   const [, forceUpdate] = useState({});
 
   useEffect(() => {
-    const intervalId = setInterval(() => forceUpdate({}), 1000 / 60); // 60 FPS
+    const intervalId = setInterval(() => forceUpdate({}), 1000 / FPS);
     return () => clearInterval(intervalId);
   }, []);
 
