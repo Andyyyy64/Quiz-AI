@@ -67,7 +67,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
                   <h1 className="md:mb-10 mb-5 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
                 ) : (
                   isAnswerCorrect ? (
-                    <div className="flex items-center justify-center mb-10">
+                    <div className="flex items-center justify-center mb-5">
                       <CheckCircle className={`h-8 w-8 text-green-500 mr-2 ${showAnimation ? 'animate-bounce' : ''}`} />
                       <h1 className="font-bold text-2xl text-green-500">正解！</h1>
                     </div>
@@ -80,6 +80,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
                 )
               }
             </div>
+            <h1 className="font-bold text-green-500 mb-5 md:text-2xl text-xl">{quiz?.correct_answer}</h1>
             {quiz?.explanation}
           </div>
         )
@@ -90,12 +91,14 @@ export const QuizDisplay: React.FC<QuizProps> = ({
           <CheckCircle className="h-6 w-6 text-[#4ECDC4]" />
           <span className="md:text-lg text-base font-bold">正解数: {correctCount}</span>
         </div>
-        {isCounting && (
-          <div className="flex items-center space-x-2 text-center">
-            <Clock className="md:h-9 md:w-9 w-7 h-7 text-[#FF6B6B]" />
-            <span className="md:text-2xl text-xl font-bold">{countdown}秒</span>
-          </div>
-        )}
+        {
+          isCounting && (
+            <div className="flex items-center space-x-2 text-center">
+              <Clock className="md:h-9 md:w-9 w-7 h-7 text-[#FF6B6B]" />
+              <span className="md:text-2xl text-xl font-bold">{countdown}秒</span>
+            </div>
+          )
+        }
         {
           ((isAnswerCorrect != null) || isTimeUp || isDraw) && (
             <div className="flex items-center space-x-2">

@@ -58,5 +58,5 @@ export type SingleGameProps = {
     isAnswerCorrect: boolean | null;
     correctCount: number;
     isTimeUp: boolean;
-    handleAnswerSelect: (selectAnswer: string) => void;
+    handleAnswerSelect: (selectAnswer: string) => void;    
 }
