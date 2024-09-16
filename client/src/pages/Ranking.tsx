@@ -34,14 +34,14 @@ export const Ranking: React.FC = () => {
             } finally {
                 stopLoading()
             }
-        }        
+        }
         fetchRankings()
     }, [user])
 
     return (
         <div className="min-h-screen flex flex-col relative bg-inherit">
             <Header />
-            <main className="container mx-auto px-4 pb-12">
+            <main className="container mx-auto px-4 pb-20">
                 <h1 className="text-5xl font-bold mb-12 md:mt-0 mt-10 text-center text-black">
                     ランキング
                 </h1>
@@ -73,9 +73,9 @@ export const Ranking: React.FC = () => {
                                     <table className="w-full">
                                         <thead>
                                             <tr className="border-b border-black/20">
-                                                <th className="px-4 py-3 text-left text-sm font-semibold uppercase tracking-wider">順位</th>
-                                                <th className="px-4 py-3 text-left text-sm font-semibold uppercase tracking-wider">名前</th>
-                                                <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider">ポイント</th>
+                                                <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider text-nowrap">順位</th>
+                                                <th className="px-10 py-3 text-left text-sm font-semibold uppercase tracking-wider text-nowrap">名前</th>
+                                                <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider text-nowrap">ポイント</th>
                                                 <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider md:table-cell hidden">マッチ数</th>
                                                 <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wider md:table-cell hidden">勝率</th>
                                             </tr>
@@ -83,17 +83,24 @@ export const Ranking: React.FC = () => {
                                         <tbody>
                                             {rankings.map((userWithRanking: any, index: number) => (
                                                 <tr key={index} className="border-b border-white/10 hover:bg-white/10 transition-colors duration-200">
-                                                    <td className="px-4 py-4">
+                                                    <td className="px-2 py-4">
                                                         <div className="flex items-center">
                                                             {index + 1 === 1 && <Trophy className="h-6 w-6 text-[#FFD700] mr-2 animate-bounce" />}
                                                             {index + 1 === 2 && <Medal className="h-6 w-6 text-[#C0C0C0] mr-2" />}
                                                             {index + 1 === 3 && <Medal className="h-6 w-6 text-[#CD7F32] mr-2" />}
-                                                            <span className={`${index + 1 <= 3 ? "font-bold text-lg" : ""} 
+                                                            <span className={` font-bold text-lg ${index + 1 <= 3 ? "" : "ml-5"} 
                                                         ${index + 1 === 1 ? "text-[#FFD700]" : index + 1 === 2 ? "text-[#C0C0C0]" : index + 1 === 3 ? "text-[#CD7F32]" : ""}
-                                                        `}>{index + 1}</span>
+                                                        `}>{index + 1}位</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-4 py-4 font-bold">{userWithRanking?.name}</td>
+                                                    <td className="px-4 py-4 font-bold flex flex-cols">
+                                                        <img
+                                                            className="md:w-10 md:h-10 w-8 h-8 mr-4 rounded-full object-cover border-[1px] border-[#4ECDC4]"
+                                                            src={userWithRanking?.prof_image_url}
+                                                            alt={userWithRanking?.name}
+                                                        />
+                                                        <h2 className="mt-1">{userWithRanking?.name}</h2>
+                                                    </td>
                                                     <td className="px-4 py-4 text-right font-bold">{userWithRanking?.points.toLocaleString()}</td>
                                                     <td className="px-4 py-4 text-right font-bold md:table-cell hidden">{userWithRanking?.totalMatchPlay}</td>
                                                     <td className="px-4 py-4 text-right font-bold md:table-cell hidden">

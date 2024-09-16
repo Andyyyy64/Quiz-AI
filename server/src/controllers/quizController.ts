@@ -42,7 +42,7 @@ const cosineSimilarity = (vecA: number[], vecB: number[]) => {
 };
 
 // 新しい質問と過去の質問のリストを受け取り、新しい質問が過去の質問と類似しているかどうかをembedding apiで評価
-const isSimilarQuestion = async (newQuestion: string, pastQuestions: string[], threshold: number = 0.8) => {
+const isSimilarQuestion = async (newQuestion: string, pastQuestions: string[], threshold: number = 0.75) => {
     try {
         // 新しい質問と過去の質問の埋め込みを一度に取得
         const texts = [newQuestion, ...pastQuestions];
@@ -73,8 +73,8 @@ export const generateQuiz = async (
     user_id?: number,
     opponent_id?: number
 ): Promise<any> => {
-    const categories = ["科学", "文学", "地理", "歴史", "情報", "一般常識", "工学", "心理学", "環境"];
-    const difficulties = ["普通", "難しい", "超難しい", "難しい"];
+    const categories = ["科学", "文学", "地理", "歴史", "情報", "一般常識", "工学", "環境"];
+    const difficulties = ["簡単", "普通", "難しい", "超難しい"];
 
     let subcategory: string | null = null; // サブカテゴリ
 
@@ -83,35 +83,49 @@ export const generateQuiz = async (
         "生物",        // 生物学
         "物理",        // 物理学
         "化学",        // 化学
-        "天文学"       // 天文学
+        "天文学",       // 天文学
+        "地学",         // 地質学や地球科学
+        "気象学",        // 気象学
     ];
 
     // 地理のサブカテゴリ
     const geographyCategories = [
-        "自然地理学",   // 自然の地形や気候
-        "人文地理学",   // 人間活動と地理の関係
-        "地図学"        // 地図や地理情報システム
+        "自然地理学",      // 自然の地形や気候
+        "人文地理学",      // 人間活動と地理の関係
+        "都市地理学",      // 都市の形成や都市計画
+        "経済地理学",      // 経済活動と地理の関係
+        "観光地理学",      // 旅行や観光地に関する地理
     ];
 
     // 歴史のサブカテゴリ
     const historyCategories = [
-        "日本史",       // 日本の歴史
-        "世界史",       // 世界の歴史
-        "文化史"        // 文化や芸術の歴史
+        "日本史",          // 日本の歴史
+        "世界史",          // 世界の歴史
+        "文化史",          // 文化や芸術の歴史
+        "政治史",          // 政治の発展や歴史
+        "宗教史",          // 宗教と歴史の関係
+        "戦争史",          // 戦争や軍事に関する歴史
     ];
 
     // 情報のサブカテゴリ
     const informationCategories = [
-        "プログラミング",   // プログラミング言語
-        "ネットワーク",     // コンピュータネットワーク
-        "AI・機械学習"      // 人工知能と機械学習
+        "プログラミング",    // プログラミング言語と技術
+        "ネットワーク",      // コンピュータネットワークと通信
+        "AI・機械学習",       // 人工知能と機械学習
+        "サイバーセキュリティ", // 情報セキュリティとその対策
+        "データベース",      // データの管理と操作
+        "クラウドコンピューティング", // クラウド技術とサービス
     ];
 
     // 一般常識のサブカテゴリ
     const generalKnowledgeCategories = [
-        "法律",        // 法律や規則
-        "経済",        // 経済の基礎知識
-        "文化"         // 文化や風習
+        "文化",     // 社会構造、文化、習慣に関する知識
+        "スポーツ",       // スポーツのルールや歴史、有名選手
+        "芸能・エンタメ", // 映画、音楽、テレビなどのエンタメ
+        "ビジネスマナー", // 仕事上のマナーやエチケット
+        "政治",          // 政治制度、政党、選挙に関する知識
+        "法律",     // 交通規則や労働法、消費者保護など
+        "環境問題"        // 気候変動や持続可能性に関する知識
     ];
 
     // 文学のサブカテゴリ
@@ -128,18 +142,13 @@ export const generateQuiz = async (
         "バイオエンジニアリング"  // バイオテクノロジー
     ];
 
-    // 心理学のサブカテゴリ
-    const psychologyCategories = [
-        "認知心理学",   // 認知に関する心理学
-        "社会心理学",   // 社会における心理学
-        "発達心理学"    // 発達に関する心理学
-    ];
-
     // 環境のサブカテゴリ
     const environmentCategories = [
-        "気候変動",     // 気候変動
-        "エネルギー科学", // エネルギー問題
-        "資源管理"      // 天然資源の管理と保全
+        "気候変動",        // 気候変動の影響と対応策
+        "エネルギー科学",   // エネルギー問題と代替エネルギー
+        "資源管理",        // 天然資源の管理と保全
+        "生物多様性",      // 生物多様性とその保護
+        "廃棄物管理",      // 廃棄物処理やリサイクル
     ];
 
     // カテゴリと難易度が指定されていない場合、ランダムに選択
@@ -172,9 +181,6 @@ export const generateQuiz = async (
     if (category && category === "工学") {
         subcategory = engineeringCategories[Math.floor(Math.random() * engineeringCategories.length)];
     }
-    if (category && category === "心理学") {
-        subcategory = psychologyCategories[Math.floor(Math.random() * psychologyCategories.length)];
-    }
     if (category && category === "環境") {
         subcategory = environmentCategories[Math.floor(Math.random() * environmentCategories.length)];
     }
@@ -182,7 +188,7 @@ export const generateQuiz = async (
     console.log("Category: " + category + "subCategory: " + subcategory + ", Difficulty: " + difficulty);
 
     // 指定されたカテゴリと難易度でユーザーが解いたクイズを取得
-    if (!user_id) return ({ error: "ユーザーIDが指定されていません" });    
+    if (!user_id) return ({ error: "ユーザーIDが指定されていません" });
     let pastQuizzes: QuizType[] | undefined | null;
     // サブカテゴリが指定されていない指定はカテゴリのみで検索
     if (subcategory === null) {
@@ -239,12 +245,10 @@ export const generateQuiz = async (
                         role: "system",
                         content: `
                         あなたはクイズ作成者です。以下のJSON形式で、**4つの選択肢と1つの正解がある問題を生成してください**
-                        **過去に生成した問題や類似の表現、または同じテーマを使わないように注意してください。**
-                        同じジャンル内でも、異なるトピックや視点から問題を生成してください。
                         指定されたジャンルと難易度に基づいたクイズ問題を生成してください。高校生レベルを[普通]としてください。
-                        下記の過去にあなたが生成した問題の履歴をすべて確認して、問題が重複しないように生成してください:
+                        以下のの過去にあなたが生成した問題の履歴をすべて確認して、問題が重複しないように生成してください:
                         ${JSON.stringify(pastQuestions, null, 2)},
-                        出力はJSONのみを返してください。クイズの要約を検索用ワードとして入れてください。
+                        出力はJSONのみを返してください。また、問題文の要約を検索用ワードとして入れてください。
 
                         フォーマット:
                         {
