@@ -38,7 +38,7 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
                 transition-all duration-500
                 ${showAnimation ? 'scale-110' : 'scale-100'}`}
     >
-      <div className="w-full flex justify-between items-center px-2">
+      <div className="w-full flex justify-between items-center px-2 md:p-4">
         <PlayerUI user={user} />
         <QuizProgressUI currentQuizIndex={currentQuizIndex ?? 0} />
         <OpponentUI opponent={opponent} />

@@ -71,7 +71,6 @@ export const Profile: React.FC = () => {
 
       if (user) {
         const res = await updateUser(user.user_id, name, updatedImageUrl); // データベースの更新
-        console.log(res);
         const updatedUser = {
           ...user,
           name: res.user.name,
@@ -86,7 +85,6 @@ export const Profile: React.FC = () => {
       alert("プロフィールの更新に失敗しました");
     } finally {
       stopLoading();
-      console.log(user);
     }
   };
 
@@ -159,29 +157,29 @@ export const Profile: React.FC = () => {
             <div>
               <label className="block text-sm font-medium text-[#666666]">
                 メールアドレス
-                </label>
-                <p className="text-lg">{user?.email}</p>
-              </div>
-              <div>
+              </label>
+              <p className="text-lg">{user?.email}</p>
+            </div>
+            <div>
 
-                {
-                  loading ? (
-                    <Loader2 className="animate-spin text-[#FF6B6B]" />
-                  ) : (
-                    <div>
-                      <label className="block text-sm font-medium text-[#666666]">
-                        ランキング
-                        <p className="text-lg font-semibold text-[#FF6B6B]">
-                          {ranking}位
-                        </p>
-                      </label>
-                    </div>
-                  )
-                }
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#666666]">
-                  ポイント
+              {
+                loading ? (
+                  <Loader2 className="animate-spin text-[#FF6B6B]" />
+                ) : (
+                  <div>
+                    <label className="block text-sm font-medium text-[#666666]">
+                      ランキング
+                      <p className="text-lg font-semibold text-[#FF6B6B]">
+                        {ranking}位
+                      </p>
+                    </label>
+                  </div>
+                )
+              }
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#666666]">
+                ポイント
               </label>
               <p className="text-lg font-semibold text-[#4ECDC4]">
                 {user?.points}

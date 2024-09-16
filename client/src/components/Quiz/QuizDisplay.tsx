@@ -64,7 +64,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
             <div className="">
               {
                 isTimeUp || isDraw ? (
-                  <h1 className="md:mb-10 mb-5 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
+                  <h1 className="mb-5 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
                 ) : (
                   isAnswerCorrect ? (
                     <div className="flex items-center justify-center mb-5">
@@ -72,7 +72,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
                       <h1 className="font-bold text-2xl text-green-500">正解！</h1>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center mb-10">
+                    <div className="flex items-center justify-center mb-5">
                       <XCircle className={`h-8 w-8 text-red-500 mr-2 ${showAnimation ? 'animate-shake' : ''}`} />
                       <h1 className="font-bold text-2xl text-red-500">{isMultiplayer ? "相手が正解しました..." : "不正解"}</h1>
                     </div>

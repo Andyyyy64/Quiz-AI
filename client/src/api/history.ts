@@ -69,7 +69,6 @@ export const saveMultiHistory = async (
     match_duration: number,
     question_num: number
 ) => {
-    console.log(opponent);
     const res = await axios.post(`${API_URL}/history/multiplay`,
         {
             user_id,

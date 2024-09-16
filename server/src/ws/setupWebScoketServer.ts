@@ -10,6 +10,7 @@ interface Player {
     ws: WebSocket;
     opponent?: Player; // マッチング相手を保持
     correctCount: number;
+    matchEnded?: boolean; // マッチが終了したかどうか
 }
 
 // 待機中のプレイヤーを格納するキュー
@@ -105,6 +106,7 @@ export const setupWebSocketServer = (server: any) => {
                         opponent_selected_answer: selectedAnswer
                     }));
                 }
+
             } else if (action === 'wrong_answer' && currentPlayer.opponent) {
                 currentPlayer.opponent.ws.send(
                     JSON.stringify({ message: 'opponent_wrong_answer' })
@@ -129,8 +131,15 @@ export const setupWebSocketServer = (server: any) => {
                 currentPlayer.ws.send(
                     JSON.stringify({ message: 'time_up_refetch' })
                 )
+
+                // 勝利通知が来たら相手にも送信
             } else if (action === 'victory' && currentPlayer.opponent) {
                 console.log('Victory:', winner);
+
+
+                // マッチ終了フラグを設定
+                currentPlayer.matchEnded = true;
+                currentPlayer.opponent.matchEnded = true
 
                 currentPlayer.ws.send(
                     JSON.stringify({
@@ -153,6 +162,10 @@ export const setupWebSocketServer = (server: any) => {
                         }
                     })
                 )
+
+                // 双方のWebSocket接続を閉じる
+                currentPlayer.ws.close();
+                currentPlayer.opponent.ws.close();
             }
         });
 
@@ -160,25 +173,30 @@ export const setupWebSocketServer = (server: any) => {
             console.log('A player has disconnected.');
 
             // 現在のプレイヤーが接続を切った場合
-            if (currentPlayer?.opponent) {
-                const opponent = currentPlayer.opponent;
+            if (currentPlayer) {
+                if (currentPlayer.matchEnded) {
+                    // マッチが終了している場合は何もしない
+                    console.log('Match has already ended. No action needed.');
+                } else if (currentPlayer.opponent) {
+                    const opponent = currentPlayer.opponent;
 
-                // 相手プレイヤーに「接続が切れました」という通知を送信
-                opponent.ws.send(
-                    JSON.stringify({
-                        success: false,
-                        message: 'Opponent has disconnected.',
-                    })
-                );
+                    // 相手プレイヤーに「接続が切れました」という通知を送信
+                    opponent.ws.send(
+                        JSON.stringify({
+                            success: false,
+                            message: 'Opponent has disconnected.',
+                        })
+                    );
 
-                // 相手プレイヤーの相手をクリア
-                opponent.opponent = undefined;
-            }
+                    // 相手プレイヤーの相手をクリア
+                    opponent.opponent = undefined;
+                }
 
-            // 待機中のプレイヤーが接続を切った場合、キューから削除
-            const index = waitingPlayers.indexOf(currentPlayer as Player);
-            if (index > -1) {
-                waitingPlayers.splice(index, 1); // プレイヤーをキューから削除
+                // 待機中のプレイヤーが接続を切った場合、キューから削除
+                const index = waitingPlayers.indexOf(currentPlayer as Player);
+                if (index > -1) {
+                    waitingPlayers.splice(index, 1); // プレイヤーをキューから削除
+                }
             }
         });
     });
