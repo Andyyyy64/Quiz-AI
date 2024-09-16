@@ -88,12 +88,19 @@ export const Ranking: React.FC = () => {
                                                             {index + 1 === 1 && <Trophy className="h-6 w-6 text-[#FFD700] mr-2 animate-bounce" />}
                                                             {index + 1 === 2 && <Medal className="h-6 w-6 text-[#C0C0C0] mr-2" />}
                                                             {index + 1 === 3 && <Medal className="h-6 w-6 text-[#CD7F32] mr-2" />}
-                                                            <span className={`${index + 1 <= 3 ? "font-bold text-lg" : ""} 
+                                                            <span className={` font-bold text-lg ${index + 1 <= 3 ? "" : "ml-5"} 
                                                         ${index + 1 === 1 ? "text-[#FFD700]" : index + 1 === 2 ? "text-[#C0C0C0]" : index + 1 === 3 ? "text-[#CD7F32]" : ""}
-                                                        `}>{index + 1}</span>
+                                                        `}>{index + 1}位</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-4 py-4 font-bold">{userWithRanking?.name}</td>
+                                                    <td className="px-4 py-4 font-bold flex flex-cols">
+                                                        <img
+                                                            className="md:w-10 md:h-10 w-8 h-8 mr-4 rounded-full object-cover border-[1px] border-[#4ECDC4]"
+                                                            src={userWithRanking?.prof_image_url}
+                                                            alt={userWithRanking?.name}
+                                                        />
+                                                        <h2 className="mt-1">{userWithRanking?.name}</h2>
+                                                    </td>
                                                     <td className="px-4 py-4 text-right font-bold">{userWithRanking?.points.toLocaleString()}</td>
                                                     <td className="px-4 py-4 text-right font-bold md:table-cell hidden">{userWithRanking?.totalMatchPlay}</td>
                                                     <td className="px-4 py-4 text-right font-bold md:table-cell hidden">
