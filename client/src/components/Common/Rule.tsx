@@ -4,7 +4,7 @@ import { Users, Zap, Trophy } from "lucide-react";
 export const Rule: React.FC = () => {
   return (
     <main className="container md:mx-auto md:px-4 md:py-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl p-8">
+      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl md:p-8 p-4">
         <div className="grid md:grid-cols-2 justify-center gap-8 md:mb-8 mb-4">
           <div>
             <h2 className="md:text-2xl text-lg font-bold mb-4 flex items-center">
