@@ -221,19 +221,19 @@ export const generateQuiz = async (
             opponentQuizzes = await db.all(
                 `SELECT question 
              FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND difficulty = $3
+             WHERE user_id = $1 AND category = $2
              ORDER BY quiz_id DESC 
              LIMIT 100`,
-                [opponent_id, category, difficulty]
+                [opponent_id, category]
             );
         } else {
             opponentQuizzes = await db.all(
                 `SELECT question 
              FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND difficulty = $3 AND subcategory = $4
+             WHERE user_id = $1 AND category = $2 AND subcategory = $
              ORDER BY quiz_id DESC 
              LIMIT 100`,
-                [opponent_id, category, difficulty, subcategory]
+                [opponent_id, category, subcategory]
             );
         }
 
@@ -249,11 +249,10 @@ export const generateQuiz = async (
 
     try {
         let isDuplicate = true;
-
         // 類似しないクイズが生成されるまで再生成
         while (isDuplicate) {
             const response = await client.chat.completions.create({
-                model: "gpt-4o-mini",
+                model: "gpt-4o",
                 messages: [
                     {
                         role: "system",
