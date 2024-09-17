@@ -45,7 +45,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                 id="customCategory"
                 checked={useCustomCategory}
                 onChange={(e) => setUseCustomCategory(e.target.checked)}
-                className="rounded border-gray-300 text-[#4ECDC4] focus:ring-[#4ECDC4]"
+                className="w-3 h-3 rounded border-gray-300 text-[#4ECDC4] focus:ring-[#4ECDC4]"
               />
               <label
                 htmlFor="customCategory"

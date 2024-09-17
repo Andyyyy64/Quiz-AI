@@ -14,6 +14,7 @@ export const SingleGame: React.FC<SingleGameProps> = ({
   correctCount,
   isTimeUp,
   handleAnswerSelect,
+  canAnswer,
 }) => {
   const [showAnimation, setShowAnimation] = useState(false);
 
@@ -43,7 +44,7 @@ export const SingleGame: React.FC<SingleGameProps> = ({
         isCounting={isCounting}
         handleAnswerSelect={handleAnswerSelect}
         isAnswerCorrect={isAnswerCorrect}
-        canAnswer={true}
+        canAnswer={canAnswer}
         isMultiplayer={false}
         correctCount={correctCount}
         isTimeUp={isTimeUp}

@@ -44,6 +44,7 @@ export const SinglePlayer: React.FC = () => {
 
     // during game
     const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null); // 回答正誤フラグ
+    const [canAnswer, setCanAnswer] = useState<boolean>(true); // 回答可能フラグ
     const [gameStart, setGameStart] = useState<boolean>(false); // ゲームスタートフラグ
     const [isTimeUp, setIsTimeUp] = useState<boolean>(false); // 時間切れフラグ
 
@@ -151,6 +152,7 @@ export const SinglePlayer: React.FC = () => {
 
     // 回答送信時の処理
     const handleAnswerSelect = async (selectAnswer: string) => {
+        setCanAnswer(false);
         if (selectAnswer === quiz?.correct_answer) {
             // 正解時の処理
             resetCountDown();
@@ -178,6 +180,7 @@ export const SinglePlayer: React.FC = () => {
 
     // 次の問題へ
     const handleNextQuestion = async () => {
+        setCanAnswer(true);
         // 最後の問題の場合
         if (currentQuizIndex >= questionCount) {
             showNotification("クイズが終了しました。", "info")
@@ -280,6 +283,7 @@ export const SinglePlayer: React.FC = () => {
                             isAnswerCorrect={isAnswerCorrect}
                             correctCount={correctCount}
                             isTimeUp={isTimeUp}
+                            canAnswer={canAnswer}
                         />
                     )
                 }
