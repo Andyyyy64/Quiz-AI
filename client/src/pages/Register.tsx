@@ -34,7 +34,7 @@ export const Register: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative bg-inherit">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+      <div className="bg-white p-8 rounded-lg shadow-lg md:w-96 w-[95%]">
         <h2 className="text-2xl font-semibold text-center mb-6">登録</h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleRegister} className="space-y-6">
@@ -132,8 +132,8 @@ export const Register: React.FC = () => {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            すでにアカウントをもっていますか?{" "}
+          <p className="md:text-sm text-xs text-gray-600">
+            すでにアカウントをもっていますか?{" "}<br />
             <Link
               to="/login"
               className="font-medium text-[#FF6B6B] hover:text-[#FF8787]"

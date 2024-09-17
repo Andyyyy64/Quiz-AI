@@ -8,7 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState<string>(
-    localStorage.getItem("email") ?? ""
+    localStorage.getItem("email") ?? "",
   );
   const [pwd, setPwd] = useState<string>("");
   const { loading, startLoading, stopLoading } = useLoading();
@@ -44,7 +44,7 @@ export const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative bg-inherit">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+      <div className="bg-white p-8 rounded-lg shadow-lg md:w-96 w-[95%]">
         <h2 className="text-2xl font-semibold text-center mb-6">ログイン</h2>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
@@ -83,14 +83,6 @@ export const Login: React.FC = () => {
               focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
             />
           </div>
-          <div className="text-sm">
-            <Link
-              to="/forgot-password"
-              className="font-medium text-[#FF6B6B] focus:ring-[#FF8787] focus:border-[#FF8787] text-center"
-            >
-              パスワードをお忘れですか？
-            </Link>
-          </div>
           <div>
             <button
               type="submit"
@@ -108,8 +100,8 @@ export const Login: React.FC = () => {
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            アカウントを登録していないですか?{" "}
+          <p className="md:text-sm text-xs text-gray-600">
+            アカウントを登録していないですか?{" "}<br />
             <Link
               to="/register"
               className="font-medium text-[#FF6B6B] focus:ring-[#FF8787] focus:border-[#FF8787]"
