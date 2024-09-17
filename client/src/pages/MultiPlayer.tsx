@@ -33,7 +33,7 @@ export const Multiplayer: React.FC = () => {
                 className="hover:bg-[#FF8787] hover:shadow-xl hover:scale-105 hover:text-white"
                 sx={{
                   width: "100%",
-                  maxWidth: 900,
+                  maxWidth: 1200,
                   textAlign: "center",
                   mb: 6,
                   display: "flex",

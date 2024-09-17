@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { QuizDisplay } from "../../Quiz/QuizDisplay";
 import { PlayerUI } from "./PlayerUI";
 import { OpponentUI } from "./OpponentUI";
-import { QuizProgressUI } from "../../Quiz/QuizProgressUI"; 
+import { QuizProgressUI } from "../../Quiz/QuizProgressUI";
 
 import { QuizDisplayProps } from "../../../types/quizType";
 
@@ -20,7 +20,7 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
   currentQuizIndex,
   correctCount,
   isDraw,
-  opponentAnswer
+  opponentAnswer,
 }) => {
   const [showAnimation, setShowAnimation] = useState(false);
 
@@ -34,9 +34,9 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
   return (
     <div
       className={`md:w-full w-[85%] flex flex-col items-center max-w-4xl mx-auto 
-              bg-white rounded-lg shadow-lg border-2
+                bg-white rounded-xl shadow-lg
                 transition-all duration-500
-                ${showAnimation ? 'scale-110' : 'scale-100'}`}
+                ${showAnimation ? "scale-110" : "scale-100"}`}
     >
       <div className="w-full flex justify-between items-center px-2 md:p-4">
         <PlayerUI user={user} />

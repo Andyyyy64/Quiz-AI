@@ -28,7 +28,7 @@ export const Header: React.FC = () => {
   return (
     <div className="relative">
       {/* 上部バー */}
-      <div className="flex justify-between items-center md:px-4 md:pt-4">
+      <div className="flex justify-between items-center md:px-4 md:pt-1">
         {/* 左側 */}
         <div className="flex items-center">
           {/* スマホ時の favicon */}
@@ -59,16 +59,14 @@ export const Header: React.FC = () => {
           >
             <Info className="h-6 w-6" />
           </button>
-          {
-            location.pathname === "/profile" && (
-              <button
-                className="text-[#333333] hover:text-[#4ECDC4] md:hidden mr-4"
-                onClick={handleLogout}
-              >
-                <LogOut className="h-6 w-6" />
-              </button>
-            )
-          }
+          {location.pathname === "/profile" && (
+            <button
+              className="text-[#333333] hover:text-[#4ECDC4] md:hidden mr-4"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-6 w-6" />
+            </button>
+          )}
           {/* デスクトップ時のヘッダー */}
           {user && (
             <div className="hidden md:flex items-center space-x-10 mb-5">
@@ -109,8 +107,10 @@ export const Header: React.FC = () => {
 
       {/* スマホ時のボトムナビゲーション */}
       {user && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white 
-        flex justify-around items-center p-4 z-10">
+        <div
+          className="md:hidden fixed bottom-0 left-0 right-0 bg-white
+        flex justify-around items-center p-4 z-10"
+        >
           <button
             className="text-[#333333] hover:text-[#4ECDC4]"
             onClick={handleHomeClick}

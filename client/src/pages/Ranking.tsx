@@ -42,7 +42,7 @@ export const Ranking: React.FC = () => {
         <div className="min-h-screen flex flex-col relative bg-inherit">
             <Header />
             <main className="container mx-auto px-4 pb-20">
-                <h1 className="text-5xl font-bold mb-12 md:mt-0 mt-10 text-center text-black">
+                <h1 className="md:text-5xl text-2xl font-bold mb-12 md:mt-0 mt-10 text-center text-black">
                     ランキング
                 </h1>
                 {

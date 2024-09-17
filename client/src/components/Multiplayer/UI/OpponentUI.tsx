@@ -6,7 +6,7 @@ export const OpponentUI: React.FC<OpponentUIProps> = ({ opponent }) => {
     <div>
       <div className="text-center">
         <img
-          className="md:w-24 md:h-24 w-10 h-10 rounded-full object-cover border-2 border-[#FF6B6B]"
+          className="md:w-24 md:h-24 w-8 h-8 rounded-full object-cover border-2 border-[#FF6B6B]"
           src={opponent?.prof_image_url}
           alt={opponent?.name}
         />
