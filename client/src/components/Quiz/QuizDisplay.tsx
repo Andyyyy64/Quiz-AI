@@ -33,7 +33,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
         // クイズ表示
         (isAnswerCorrect == null) && !isTimeUp && !isDraw ? (
           <div className="md:p-8 p-5">
-            <h2 className="md:text-2xl text-xl font-bold md:mb-16 mb-5 text-center">
+            <h2 className="md:text-2xl text-lg font-bold md:mb-16 mb-5 text-center">
               {quiz?.question}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -43,7 +43,7 @@ export const QuizDisplay: React.FC<QuizProps> = ({
                   <button
                     key={index}
                     disabled={!canAnswer || isOpponentWrong}
-                    className={`text-lg py-4 border-2 rounded-lg transition-all flex items-center justify-center
+                    className={`md:text-lg text-base py-4 border-2 rounded-lg transition-all flex items-center justify-center
                       ${canAnswer
                         ? 'border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white hover:cursor-pointer bg-white'
                         : 'bg-[#FF6B6B] border-[#FF6B6B] text-white hover:cursor-not-allowed'
@@ -60,27 +60,27 @@ export const QuizDisplay: React.FC<QuizProps> = ({
           </div>
         ) : (
           // 結果表示
-          <div className="md:text-2xl text-xl p-5">
+          <div className="md:text-2xl text-lg p-5">
             <div className="">
               {
                 isTimeUp || isDraw ? (
-                  <h1 className="md:mb-10 mb-5 font-bold text-2xl">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
+                  <h1 className="mb-5 font-bold md:text-2xl text-lg">{isTimeUp ? "時間切れ！" : "引き分け！"}</h1>
                 ) : (
                   isAnswerCorrect ? (
                     <div className="flex items-center justify-center mb-5">
                       <CheckCircle className={`h-8 w-8 text-green-500 mr-2 ${showAnimation ? 'animate-bounce' : ''}`} />
-                      <h1 className="font-bold text-2xl text-green-500">正解！</h1>
+                      <h1 className="font-bold md:text-2xl text-xl text-green-500">正解！</h1>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center mb-10">
+                    <div className="flex items-center justify-center mb-5">
                       <XCircle className={`h-8 w-8 text-red-500 mr-2 ${showAnimation ? 'animate-shake' : ''}`} />
-                      <h1 className="font-bold text-2xl text-red-500">{isMultiplayer ? "相手が正解しました..." : "不正解"}</h1>
+                      <h1 className="font-bold md:text-2xl text-xl text-red-500">{isMultiplayer ? "相手が正解しました..." : "不正解"}</h1>
                     </div>
                   )
                 )
               }
             </div>
-            <h1 className="font-bold text-green-500 mb-5 md:text-2xl text-xl">{quiz?.correct_answer}</h1>
+            <h1 className="font-bold text-green-500 mb-5 md:text-2xl text-lg">{quiz?.correct_answer}</h1>
             {quiz?.explanation}
           </div>
         )
@@ -89,20 +89,20 @@ export const QuizDisplay: React.FC<QuizProps> = ({
       <div className="flex justify-between items-center p-5">
         <div className="flex items-center space-x-2">
           <CheckCircle className="h-6 w-6 text-[#4ECDC4]" />
-          <span className="md:text-lg text-base font-bold">正解数: {correctCount}</span>
+          <span className="md:text-2xl text-base font-bold">正解数: {correctCount}</span>
         </div>
         {
           isCounting && (
             <div className="flex items-center space-x-2 text-center">
               <Clock className="md:h-9 md:w-9 w-7 h-7 text-[#FF6B6B]" />
-              <span className="md:text-2xl text-xl font-bold">{countdown}秒</span>
+              <span className="md:text-2xl text-lg font-bold">{countdown}秒</span>
             </div>
           )
         }
         {
           ((isAnswerCorrect != null) || isTimeUp || isDraw) && (
             <div className="flex items-center space-x-2">
-              <h1 className="text-[#FF6B6B] font-bold md:text-base text-sm">AIがクイズを生成中です{dots}</h1>
+              <h1 className="text-[#FF6B6B] font-bold md:text-base text-xs">AIがクイズを生成中{dots}</h1>
             </div>
           )
         }

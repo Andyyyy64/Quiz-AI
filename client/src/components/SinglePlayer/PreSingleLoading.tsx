@@ -44,14 +44,14 @@ export const PreSingleLoading: React.FC = () => {
     return (
         <div className="relative z-10 w-full max-w-md px-4 md:mt-32 mt-32">
             <div className="text-center mb-8">
-                <p className="text-2xl text-[#4ECDC4] font-bold animate-pulse">もうすぐクイズが始まります!</p>
+                <p className="md:text-2xl text-xl text-[#4ECDC4] font-bold animate-pulse">もうすぐクイズが始まります!</p>
             </div>
 
             <div className="bg-white rounded-xl shadow-xl p-6 mb-8">
                 <div className="flex items-center justify-center mb-4">
                     <Loader2 className="h-8 w-8 text-[#FF6B6B] animate-spin" />
                 </div>
-                <p className="text-center text-lg mb-4">{currentPhrase}</p>
+                <p className="text-center md:text-lg text-base mb-4">{currentPhrase}</p>
                 <LinearProgress value={progress} className="w-full h-2" color='warning' />
             </div>
         </div>

@@ -23,7 +23,6 @@ export const Register: React.FC = () => {
     }
     try {
       const res = await register(name, email, password);
-      console.log(res);
       localStorage.setItem("email", res.user.email);
       navigate("/login");
     } catch (err) {

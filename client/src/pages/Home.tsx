@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { AuthContext } from "../context/AuthContext";
-import { Users, User, History, Trophy } from "lucide-react"
+import { Users, User, History, Trophy } from "lucide-react";
 
 export const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
@@ -27,8 +27,9 @@ export const Home: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-inherit text-[#333333] relative overflow-hidden">
       <Header />
-      <main className="container mx-auto xl:mt-20 px-4 flex flex-col items-center 
-      absolute md:top-96 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      <main
+        className="container mx-auto  px-4 flex flex-col items-center
+      absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
         <div className="text-center space-y-8 mb-16 w-full max-w-md">
           <Button
@@ -70,13 +71,14 @@ export const Home: React.FC = () => {
             className="group flex flex-col items-center transform transition-all 
             duration-300 hover:scale-110"
           >
-            <div className="bg-inherit p-4 rounded-full 
+            <div
+              className="bg-inherit p-4 rounded-full 
             group-hover:bg-[#FFD93D] transition-colors"
             >
-              <History className="h-10 w-10 text-[#FF6B6B]"
-              />
+              <History className="h-10 w-10 text-[#FF6B6B]" />
             </div>
-            <span className="text-sm font-extrabold text-[#333333] 
+            <span
+              className="text-sm font-extrabold text-[#333333] 
             group-hover:text-[#FF6B6B] transition-colors"
             >
               履歴
@@ -87,12 +89,14 @@ export const Home: React.FC = () => {
             className="group flex flex-col items-center transform transition-all 
             duration-300 hover:scale-110"
           >
-            <div className="bg-inherit p-4 rounded-full 
+            <div
+              className="bg-inherit p-4 rounded-full 
             group-hover:bg-[#FFD93D] transition-colors"
             >
               <Trophy className="h-10 w-10 text-[#FF6B6B]" />
             </div>
-            <span className="text-sm font-extrabold text-[#333333] 
+            <span
+              className="text-sm font-extrabold text-[#333333] 
             group-hover:text-[#FF6B6B] transition-colors"
             >
               ランキング

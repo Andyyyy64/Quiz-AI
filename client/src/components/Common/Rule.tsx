@@ -5,13 +5,13 @@ export const Rule: React.FC = () => {
   return (
     <main className="container md:mx-auto md:px-4 md:py-8">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl p-8">
-        <div className="grid md:grid-cols-2 justify-center gap-8 mb-8">
+        <div className="grid md:grid-cols-2 justify-center gap-8 md:mb-8 mb-4">
           <div>
-            <h2 className="md:text-2xl text-xl font-bold mb-4 flex items-center">
+            <h2 className="md:text-2xl text-lg font-bold mb-4 flex items-center">
               <Users className="h-6 w-6 mr-2 text-[#4ECDC4]" />
               遊び方
             </h2>
-            <ul className="list-disc list-inside space-y-2 text-[#333333] font-medium text-sm md:text-base">
+            <ul className="list-disc list-inside space-y-2 text-[#333333] font-medium text-xs md:text-base">
               <li>他のプレイヤーとリアルタイムで競い合う！</li>
               <li>様々なカテゴリの問題が出題！</li>
               <li>正解するとポイントを獲得！</li>
@@ -20,11 +20,11 @@ export const Rule: React.FC = () => {
             </ul>
           </div>
           <div>
-            <h2 className="md:text-2xl text-xl font-bold mb-4 flex items-center">
+            <h2 className="md:text-2xl text-lg font-bold mb-4 flex items-center">
               <Zap className="h-6 w-6 mr-2 text-[#FFD93D]" />
               マッチルール
             </h2>
-            <ul className="list-disc list-inside space-y-2 text-[#333333] font-medium text-sm md:text-base">
+            <ul className="list-disc list-inside space-y-2 text-[#333333] font-medium text-xs md:text-base">
               <li>1マッチにつき10問</li>
               <li>各質問に答える時間は30秒</li>
               <li>10問解いて得点が多いほうが勝利</li>
@@ -34,7 +34,7 @@ export const Rule: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-[#F0F0F0] rounded-lg p-6 mb-5">
+        <div className="bg-[#F0F0F0] rounded-lg p-6 mb-5 hidden md:block">
           <h2 className="md:text-2xl text-xl font-bold mb-4 flex items-center">
             <Trophy className="h-6 w-6 mr-2 text-[#FF6B6B]" />
             報酬

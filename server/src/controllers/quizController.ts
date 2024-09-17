@@ -111,7 +111,7 @@ export const generateQuiz = async (
     const informationCategories = [
         "プログラミング",    // プログラミング言語と技術
         "ネットワーク",      // コンピュータネットワークと通信
-        "AI・機械学習",       // 人工知能と機械学習
+        "機械学習",       // 人工知能と機械学習
         "サイバーセキュリティ", // 情報セキュリティとその対策
         "データベース",      // データの管理と操作
         "クラウドコンピューティング", // クラウド技術とサービス
@@ -120,12 +120,8 @@ export const generateQuiz = async (
     // 一般常識のサブカテゴリ
     const generalKnowledgeCategories = [
         "文化",     // 社会構造、文化、習慣に関する知識
-        "スポーツ",       // スポーツのルールや歴史、有名選手
-        "芸能・エンタメ", // 映画、音楽、テレビなどのエンタメ
-        "ビジネスマナー", // 仕事上のマナーやエチケット
         "政治",          // 政治制度、政党、選挙に関する知識
         "法律",     // 交通規則や労働法、消費者保護など
-        "環境問題"        // 気候変動や持続可能性に関する知識
     ];
 
     // 文学のサブカテゴリ
@@ -144,7 +140,6 @@ export const generateQuiz = async (
 
     // 環境のサブカテゴリ
     const environmentCategories = [
-        "気候変動",        // 気候変動の影響と対応策
         "エネルギー科学",   // エネルギー問題と代替エネルギー
         "資源管理",        // 天然資源の管理と保全
         "生物多様性",      // 生物多様性とその保護
@@ -189,48 +184,67 @@ export const generateQuiz = async (
 
     // 指定されたカテゴリと難易度でユーザーが解いたクイズを取得
     if (!user_id) return ({ error: "ユーザーIDが指定されていません" });
-    let pastQuizzes: QuizType[] | undefined | null;
-    // サブカテゴリが指定されていない指定はカテゴリのみで検索
+
+    let pastQuizzes: QuizType[] | undefined | null = []; // 初期化を空の配列に変更
+
+    // サブカテゴリが指定されていない場合はカテゴリのみで検索
     if (subcategory === null) {
         pastQuizzes = await db.all(
             `SELECT question 
-             FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND difficulty = $3
-             ORDER BY quiz_id DESC
-             LIMIT 100`,
-            [user_id, category, difficulty]
+         FROM user_quiz_history 
+         WHERE user_id = $1 AND category = $2
+         ORDER BY quiz_id DESC
+         LIMIT 100`,
+            [user_id, category]
         );
     } else {
         pastQuizzes = await db.all(
             `SELECT question 
-             FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND difficulty = $3 AND subcategory = $4
-             ORDER BY quiz_id DESC
-             LIMIT 100`,
-            [user_id, category, difficulty, subcategory]
+         FROM user_quiz_history 
+         WHERE user_id = $1 AND category = $2 AND subcategory = $3
+         ORDER BY quiz_id DESC
+         LIMIT 100`,
+            [user_id, category, subcategory]
         );
     }
 
-
-    // 過去に解いたクイズのリストを作成 
-    const pastQuestions: string[] | undefined = pastQuizzes?.map((quiz) => quiz.question);
+    // 過去に解いたクイズの質問をセットに追加
+    const pastQuestionsSet = new Set<string>();
+    if (pastQuizzes) {
+        pastQuizzes.forEach((quiz) => pastQuestionsSet.add(quiz.question));
+    }
 
     // 対戦相手がいる場合、対戦相手が解いたクイズも取得
     if (opponent_id) {
-        const opponentQuizzes = await db.all(
-            `SELECT question 
+        let opponentQuizzes: QuizType[] | undefined | null = [];
+        if (subcategory === null) {
+            opponentQuizzes = await db.all(
+                `SELECT question 
+             FROM user_quiz_history 
+             WHERE user_id = $1 AND category = $2 AND difficulty = $3
+             ORDER BY quiz_id DESC 
+             LIMIT 100`,
+                [opponent_id, category, difficulty]
+            );
+        } else {
+            opponentQuizzes = await db.all(
+                `SELECT question 
              FROM user_quiz_history 
              WHERE user_id = $1 AND category = $2 AND difficulty = $3 AND subcategory = $4
              ORDER BY quiz_id DESC 
              LIMIT 100`,
-            [opponent_id, category, difficulty, subcategory]
-        );
-        const opponentQuestions = opponentQuizzes?.map((quiz) => quiz.question);
-        if (opponentQuestions) {
-            pastQuestions?.push(...opponentQuestions);
+                [opponent_id, category, difficulty, subcategory]
+            );
+        }
+
+        // 対戦相手の過去に解いたクイズの質問をセットに追加
+        if (opponentQuizzes) {
+            opponentQuizzes.forEach((quiz) => pastQuestionsSet.add(quiz.question));
         }
     }
-    console.log(pastQuestions);
+
+    console.log([...pastQuestionsSet].join(",")); // セットを配列に変換してログに出力
+
     let parsedQuiz: QuizType | undefined;
 
     try {
@@ -247,7 +261,7 @@ export const generateQuiz = async (
                         あなたはクイズ作成者です。以下のJSON形式で、**4つの選択肢と1つの正解がある問題を生成してください**
                         指定されたジャンルと難易度に基づいたクイズ問題を生成してください。高校生レベルを[普通]としてください。
                         以下のの過去にあなたが生成した問題の履歴をすべて確認して、問題が重複しないように生成してください:
-                        ${JSON.stringify(pastQuestions, null, 2)},
+                        ${[...pastQuestionsSet].join(", ")},
                         出力はJSONのみを返してください。また、問題文の要約を検索用ワードとして入れてください。
 
                         フォーマット:
@@ -282,9 +296,8 @@ export const generateQuiz = async (
             try {
                 parsedQuiz = JSON.parse(generatedQuiz);
                 // 新しく生成されたクイズが過去のクイズと類似しているか確認
-                if (parsedQuiz !== undefined && pastQuestions !== undefined) {
-                    isDuplicate = await isSimilarQuestion(parsedQuiz.question, pastQuestions);
-
+                if (parsedQuiz !== undefined && pastQuestionsSet !== undefined) {
+                    isDuplicate = await isSimilarQuestion(parsedQuiz.question, [...pastQuestionsSet]);
                     if (isDuplicate) {
                         console.log("類似したクイズが生成されたため、再生成します。");
                     }

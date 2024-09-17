@@ -16,6 +16,7 @@ const saltRounds = 10;
 
 const storage = new Storage({
   projectId: process.env.GCP_PROJECT_ID,
+  keyFilename: path.join(__dirname, "../../gcpkey.json"),
 });
 
 const bucket = storage.bucket(String(process.env.GCP_BUCKET_NAME));

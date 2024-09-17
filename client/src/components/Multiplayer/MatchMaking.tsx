@@ -24,8 +24,6 @@ import { Notification } from "../Common/Notification";
 
 export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchReset }) => {
   const MATCH_QUESTION_NUM = 10; // マッチング時の問題数
-  const MATCH_POINT = 5; // マッチング時のポイント数
-
   // datas
   const [quiz, setQuiz] = useState<QuizType>(); // 現在のクイズ
   const [nextQuiz, setNextQuiz] = useState<QuizType>(); // 次のクイズ 
@@ -34,6 +32,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const [opponentAnswer, setOpponentAnswer] = useState<string>(""); // 相手の回答
   const [currentQuizIndex, setCurrentQuizIndex] = useState(1); // 現在のクイズのインデックス
   const [correctCount, setCorrectCount] = useState(0); // 正解数
+  const [opponentCorrectCount, setOpponentCorrectCount] = useState(0); // 相手の正解数
   const [answerdQuizIds, setAnsweredQuizIds] = useState<number[]>([]); // 解答済みクイズID
   const [sessionId, setSessionId] = useState<number | null>(null); // セッションID
 
@@ -55,7 +54,7 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   const [matchEnd, setMatchEnd] = useState(false); // マッチ終了フラグ
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
-    useCountDown(30);
+    useCountDown(30); // 制限時間
   const { duration, startCountUp, stopCountUp, resetCountUp } = useCalcDuration();
 
   const { notification, showNotification } = useNotification();
@@ -73,7 +72,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
     (data) => {
       // 接続が確立されたときの処理
       if (data.success && data.opponent && data.quiz) {
-        console.log(data.quiz.correct_answer)
         setOpponent(data.opponent);
         setQuiz(data.quiz);
         setMatchedNotification(true);
@@ -85,13 +83,18 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
           startCountDown();
           // マッチ時間の計測開始
           startCountUp();
-        }, 10000); // 5秒後に開始
+        }, 10000); // 10秒後に開始
 
         // 相手が正答した場合、
       } else if (data.message === "opponent_answerd" && data.is_correct === true) {
+        // カウントダウンをリセット
         resetCountDown();
         console.log("opponent_correct_answer");
+        // 相手の正解数を更新
+        setOpponentCorrectCount((prev) => prev + 1);
+        // クイズをユーザーの履歴に保存
         handleAnswerSaved(false, data.quiz, userAnswer);
+        // 自分は不正解として処理
         setIsAnswerCorrect(false);
 
         // 相手が誤答した場合、
@@ -105,6 +108,20 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       } else if (data.message === "Opponent has disconnected.") {
         if (!matchEnd && !winner) {
           showNotification("相手の接続が切れました。topに戻ります", "error");
+
+          // flagをリセット
+          setQuiz(undefined);
+          setOpponent(null);
+          setAnsweredQuizIds([]);
+          setCorrectCount(0);
+          setCurrentQuizIndex(1);
+          setOpponentCorrectCount(0);
+          setIsAnswerCorrect(null);
+          setIsTimeUp(false);
+          setCanAnswer(true);
+          setEveryOneWrong(0);
+          setIsDraw(false);
+
           setTimeout(() => {
             setIsMatched(false);
             onMatchReset();
@@ -121,7 +138,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
         console.log("winner:", data.winner);
         setWinner(data.winner);
         setOpponent(data.opponent);
-
         setMatchEnd(true);
       } else if (data.message === "time_up_refetch") {
         send({ action: "fetch_next_quiz" });
@@ -130,22 +146,25 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
   );
 
   // どちらかが現在の問題に正解で次の問題のfetchを申請する
+  // 最後の問題の時はfetchしない
   useEffect(() => {
     const fetchNextQuiz = async () => {
-      if (isAnswerCorrect) {
+      if (isAnswerCorrect && !(currentQuizIndex >= MATCH_QUESTION_NUM)) {
         send({ action: "fetch_next_quiz" });
+      } else if (currentQuizIndex >= MATCH_QUESTION_NUM) {
+        handleNextQuestion();
       }
     };
     fetchNextQuiz();
   }, [isAnswerCorrect]);
 
-  // 次の問題がfetchされたら、5秒後に次の問題を表示
+  // 次の問題がfetchされたら、3秒後に次の問題を表示
   useEffect(() => {
     // nextQuizが存在し、勝者が決まっていない場合
-    if (nextQuiz != undefined && !winner) {
+    if ((nextQuiz != undefined && !winner)) {
       setTimeout(() => {
         handleNextQuestion();
-      }, 5000);
+      }, 2000);
     }
   }, [nextQuiz]);
 
@@ -157,10 +176,13 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       resetCountDown();
       // クイズをユーザーの履歴に保存
       handleAnswerSaved(false, quiz, userAnswer);
-      // お互いのcountdonwは同期しているので2回送信してしまう
       // 一方のみに送信するようにidを比較
-      if (((user?.user_id ?? 0) > (opponent?.id ?? 1))) {
-        send({ action: "fetch_next_quiz" });
+      if (currentQuizIndex < MATCH_QUESTION_NUM) {
+        if (((user?.user_id ?? 0) > (opponent?.id ?? 1))) {
+          send({ action: "fetch_next_quiz" });
+        }
+      } else if (currentQuizIndex >= MATCH_QUESTION_NUM && countdown === 0) {
+        handleNextQuestion();
       }
     }
   }, [countdown]);
@@ -171,9 +193,13 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       setCanAnswer(false);
       resetCountDown();
       handleAnswerSaved(false, quiz, userAnswer);
-      // 一方のみに送信するようにidを比較
-      if (((user?.user_id ?? 0) > (opponent?.id ?? 1))) {
-        send({ action: "fetch_next_quiz" });
+      if (currentQuizIndex < MATCH_QUESTION_NUM) {
+        // 一方のみに送信するようにidを比較
+        if (((user?.user_id ?? 0) > (opponent?.id ?? 1))) {
+          send({ action: "fetch_next_quiz" });
+        }
+      } else {
+        handleNextQuestion();
       }
     }
   }, [isDraw])
@@ -184,30 +210,6 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       setIsDraw(true);
     }
   }, [isEveryOneWrong]);
-
-  // 回答送信時の処理
-  const handleAnswerSelect = async (selectAnswer: string) => {
-    setCanAnswer(false);
-    setUserAnswer(selectAnswer);
-    if (selectAnswer === quiz?.correct_answer) {
-      // 正解時の処理
-      resetCountDown(); // カウントダウンをリセット
-      setCorrectCount((prev) => prev + 1); // 正解数を更新
-      handleAnswerSaved(true, quiz, selectAnswer); // クイズと回答/正答をユーザーの履歴に保存
-      send({ action: "answerd", selectedAnswer: selectAnswer });
-
-      // MATCH_POINT点先取した場合
-      if (correctCount + 1 === MATCH_POINT) {
-        send({ action: "victory", winner: user?.name });
-        return;
-      }
-      setIsAnswerCorrect(true); // 正解フラグを立てる
-    } else {
-      // 不正解時の処理
-      setEveryOneWrong((prev) => prev + 1);
-      send({ action: "answerd", selectedAnswer: selectAnswer });
-    }
-  };
 
   useEffect(() => {
     if (
@@ -222,26 +224,44 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
     }
   }, [matchEnd, answerdQuizIds, currentQuizIndex]);
 
+  // 回答送信時の処理
+  const handleAnswerSelect = async (selectAnswer: string) => {
+    setCanAnswer(false);
+    setUserAnswer(selectAnswer);
+    if (selectAnswer === quiz?.correct_answer) {
+      // 正解時の処理
+      resetCountDown(); // カウントダウンをリセット
+      setCorrectCount((prev) => prev + 1); // 正解数を更新
+      handleAnswerSaved(true, quiz, selectAnswer); // クイズと回答/正答をユーザーの履歴に保存
+      send({ action: "answerd", selectedAnswer: selectAnswer });
+      setIsAnswerCorrect(true); // 正解フラグを立てる
+    } else {
+      // 不正解時の処理
+      setEveryOneWrong((prev) => prev + 1);
+      send({ action: "answerd", selectedAnswer: selectAnswer });
+    }
+  };
+
   // 次の問題に進む処理
   const handleNextQuestion = () => {
-    // 10問終わって引き分けの場合
+    // 10問終わって勝者が決まった場合
     if (currentQuizIndex >= MATCH_QUESTION_NUM) {
-      setWinner("引き分け");
-      console.log("マッチ引き分け");
-      console.log("correctCount:", correctCount);
-      console.log("winner:", winner);
-      console.log("user:", user);
-
-      // マッチング履歴を保存
-      handleSaveHistory(opponent);
+      if (correctCount > opponentCorrectCount) {
+        send({ action: "victory", winner: user?.name });
+        return;
+      } else if (correctCount === opponentCorrectCount) {
+        send({ action: "victory", winner: "引き分け" });
+        return;
+      }
     } else {
       // 問題数とstateを更新
       setIsAnswerCorrect(null);
       setIsDraw(false);
       setEveryOneWrong(0);
+      // インデックスを更新
       setCurrentQuizIndex((prev) => prev + 1);
       setIsTimeUp(false);
-      // 次の問題をfetch
+      // fetchされた次の問題をセット
       setQuiz(nextQuiz);
       setCanAnswer(true);
       startCountDown();
@@ -321,12 +341,12 @@ export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({ onMatchRes
       )}
       {/* 勝者が決まったら表示　*/}
       {winner && (
-        <div className="w-full text-center">
+        <div className="w-full text-center p-2">
           {
             winner === user?.name ? (
-              <WinUI 
-              handleGoHistory={handleGoHistory} 
-              correctCount={correctCount}
+              <WinUI
+                handleGoHistory={handleGoHistory}
+                correctCount={correctCount}
               />
             ) : (
               <LoseUI

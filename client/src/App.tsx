@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Circle, X } from "lucide-react"
+import { Circle, X } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
 
 import { Login } from "./pages/Login";
@@ -32,10 +32,10 @@ type Bubble = {
   oscillationCenter: number;
   oscillationAmplitude: number;
   oscillationSpeed: number;
-}
+};
 
-const bubbleNum: number = Capacitor.getPlatform() === "web" ? 25 : 15
-const FPS: number = Capacitor.getPlatform() === "web" ? 60 : 20
+const bubbleNum: number = Capacitor.getPlatform() === "web" ? 25 : 15;
+const FPS: number = Capacitor.getPlatform() === "web" ? 30 : 20;
 
 export const App: React.FC = () => {
   const bubblesRef = useRef<Bubble[]>([]);
@@ -44,8 +44,8 @@ export const App: React.FC = () => {
   const startTimeRef = useRef<number>(0);
 
   const createBubbles = useCallback(() => {
-    const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D'];
-    const icons = ['❓', '🧠', '🏆', '⚡', '📚', 'circle', 'x'];
+    const colors = ["#FF6B6B", "#4ECDC4", "#FFD93D"];
+    const icons = ["❓", "🧠", "🏆", "⚡", "📚", "circle", "x"];
     return Array.from({ length: bubbleNum }, (_, i) => ({
       id: i,
       x: Math.random() * window.innerWidth,
@@ -56,7 +56,7 @@ export const App: React.FC = () => {
       icon: icons[Math.floor(Math.random() * icons.length)],
       oscillationCenter: 0,
       oscillationAmplitude: Math.random() * 100 + 50,
-      oscillationSpeed: Math.random() * 2 + 1
+      oscillationSpeed: Math.random() * 2 + 1,
     }));
   }, []);
 
@@ -74,7 +74,7 @@ export const App: React.FC = () => {
     const elapsedTime = (currentTime - startTimeRef.current) / 1000;
     lastUpdateTimeRef.current = currentTime;
 
-    bubblesRef.current = bubblesRef.current.map(bubble => {
+    bubblesRef.current = bubblesRef.current.map((bubble) => {
       let newY = bubble.y - bubble.speed * deltaTime;
 
       if (newY < -bubble.size) {
@@ -85,13 +85,15 @@ export const App: React.FC = () => {
         if (bubble.oscillationCenter === 0) {
           bubble.oscillationCenter = newY;
         }
-        const oscillationOffset = Math.sin((elapsedTime - 10) * bubble.oscillationSpeed) * bubble.oscillationAmplitude;
+        const oscillationOffset =
+          Math.sin((elapsedTime - 10) * bubble.oscillationSpeed) *
+          bubble.oscillationAmplitude;
         newY = bubble.oscillationCenter + oscillationOffset;
       }
 
       return {
         ...bubble,
-        y: newY
+        y: newY,
       };
     });
 
@@ -109,9 +111,9 @@ export const App: React.FC = () => {
 
   const renderIcon = (icon: string, _size: number) => {
     switch (icon) {
-      case 'circle':
+      case "circle":
         return <Circle className="w-full h-full" />;
-      case 'x':
+      case "x":
         return <X className="w-full h-full" />;
       default:
         return icon;
@@ -127,7 +129,10 @@ export const App: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="absolute inset-0 z-0 pointer-events-none" style={{ pointerEvents: 'none' }}>
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{ pointerEvents: "none" }}
+      >
         {bubblesRef.current.map((bubble) => (
           <div
             key={bubble.id}
@@ -168,8 +173,14 @@ export const App: React.FC = () => {
           <Route path="/about" element={<About />} />
           <Route path="/history" element={<History />} />
           <Route path="/rankings" element={<Ranking />} />
-          <Route path="/history/singleplay/:id" element={<SingleHistoryDetail />} />
-          <Route path="/history/multiplay/:id" element={<MultiHistoryDetail />} />
+          <Route
+            path="/history/singleplay/:id"
+            element={<SingleHistoryDetail />}
+          />
+          <Route
+            path="/history/multiplay/:id"
+            element={<MultiHistoryDetail />}
+          />
           <Route path="*" element={<h2>404 - Page not found</h2>} />
         </Routes>
       </Router>
