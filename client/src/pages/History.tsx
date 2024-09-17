@@ -29,8 +29,8 @@ export const History: React.FC = () => {
     return (
         <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
             <Header />
-            <main className="container mx-auto px-4 pb-12">
-                <h1 className="text-4xl font-bold mb-8 text-center hidden md:block">クイズの履歴</h1>
+            <main className="container mx-auto px-4 pb-20">
+                <h1 className="text-4xl font-bold mb-5 text-center hidden md:block">クイズの履歴</h1>
 
                 <div className="bg-white rounded-xl shadow-xl p-6 max-w-3xl mx-auto">
                     <div className="flex mb-6 gap-2">
