@@ -130,7 +130,7 @@ export const SinglePlayer: React.FC = () => {
     if (nextQuiz != undefined) {
       setTimeout(() => {
         handleNextQuestion();
-      }, 5000);
+      }, 1000);
     }
   }, [nextQuiz]);
 
