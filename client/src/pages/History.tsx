@@ -6,6 +6,8 @@ import { SinglePlayerHistory } from "../components/History/SinglePlayerHistory";
 import { MultiPlayerHistory } from "../components/History/MultiPlayerHistory";
 import { Users, User } from "lucide-react";
 import { useSound } from "../hooks/useSound";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const History: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"singleplayer" | "multiplayer">(
@@ -15,6 +17,7 @@ export const History: React.FC = () => {
 
   const intaractSound = useSound("intaract");
 
+  const navi = useNavigate();
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
@@ -32,14 +35,27 @@ export const History: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    intaractSound.play();
+    navi("/");
+  };
+
   return (
     <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden">
       <Header />
       <main className="container mx-auto px-4 pb-20">
-        <h1 className="text-4xl font-bold mb-5 text-center hidden md:block">
-          クイズの履歴
-        </h1>
-
+        <div className="flex items-center justify-center md:mb-5">
+          <button
+            onClick={handleBack}
+            className="mr-1 p-2 rounded-full hover:bg-gray-200 transition-colors duration-200"
+            aria-label="戻る"
+          >
+            <ArrowLeft className="h-8 w-8 text-black hidden md:block" />
+          </button>
+          <h1 className="md:text-3xl text-2xl font-bold text-center hidden md:block">
+            クイズの履歴
+          </h1>
+        </div>
         <div className="bg-white rounded-xl shadow-xl p-6 max-w-3xl mx-auto">
           <div className="flex mb-6 gap-2">
             <button

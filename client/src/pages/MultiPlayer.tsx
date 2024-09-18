@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button } from "@mui/material";
 
@@ -17,7 +17,20 @@ export const Multiplayer: React.FC = () => {
   const handleMatchReset = () => {
     setShowMatchmaking(false); // マッチがリセットされたときに再度表示
   };
+  // エンターキーでmatch開始
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        handleMatchmakeClick();
+      }
+    };
 
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleMatchmakeClick]);
   return (
     <div className="min-h-screen flex flex-col bg-inherit">
       <Header />

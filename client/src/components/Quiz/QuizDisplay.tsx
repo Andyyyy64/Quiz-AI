@@ -33,7 +33,12 @@ export const QuizDisplay: React.FC<QuizProps> = ({
         // クイズ表示
         isAnswerCorrect == null && !isTimeUp && !isDraw ? (
           <div className="md:px-8 md:py-4 p-5">
-            <h2 className="md:text-2xl text-lg font-bold md:mb-12 mb-5 text-center">
+            {(isAnswerCorrect == null || !isTimeUp || !isDraw) && (
+              <h1 className="md:text-xl text-base font-bold text-[#FF6B6B] mb-5">
+                難易度: {quiz?.difficulty}
+              </h1>
+            )}
+            <h2 className="md:text-2xl text-lg font-bold mb-10 text-center">
               {quiz?.question}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -49,17 +54,17 @@ export const QuizDisplay: React.FC<QuizProps> = ({
                     key={index}
                     disabled={!canAnswer || isOpponentWrong}
                     className={`md:text-lg text-base py-4 border-2 rounded-lg transition-all flex items-center justify-center
-                      ${
-                        canAnswer
-                          ? "border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white hover:cursor-pointer bg-white"
-                          : "bg-[#FF6B6B] border-[#FF6B6B] text-white hover:cursor-not-allowed"
-                      }
-                      ${
-                        isOpponentWrong
-                          ? "bg-[#FF6B6B] border-[#FF6B6B] hover:cursor-not-allowed hover:bg-[#FF6B6B]"
-                          : ""
-                      }
-                    `}
+                ${
+                  canAnswer
+                    ? "border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white hover:cursor-pointer bg-white"
+                    : "bg-[#FF6B6B] border-[#FF6B6B] text-white hover:cursor-not-allowed"
+                }
+                ${
+                  isOpponentWrong
+                    ? "bg-[#FF6B6B] border-[#FF6B6B] hover:cursor-not-allowed hover:bg-[#FF6B6B]"
+                    : ""
+                }
+                `}
                     onClick={() => handleAnswerSelect(item)}
                   >
                     {item}

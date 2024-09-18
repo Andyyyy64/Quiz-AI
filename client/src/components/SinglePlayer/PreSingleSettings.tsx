@@ -1,6 +1,7 @@
 import { Button, Slider, InputLabel } from "@mui/material";
 import { Zap } from "lucide-react";
 import { PreSingleSettingsProps } from "../../types/playType";
+import { useEffect } from "react";
 
 const categories = [
   "ランダム",
@@ -31,6 +32,21 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
   useCustomCategory,
   setUseCustomCategory,
 }) => {
+  // エンターキーでクイズ開始
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        handleStartQuiz();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleStartQuiz]);
+
   return (
     <main className="md:w-1/2 w-full md:px-0 px-10 md:mb-16">
       <div className=" bg-white rounded-xl shadow-xl md:px-8 md:py-6 p-5">
@@ -61,7 +77,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                 value={customCategory}
                 onChange={(e) => setCustomCategory(e.target.value)}
                 className="mb-1 w-full px-3 py-2 border border-gray-300 rounded-md
-                                shadow-sm focus:outline-none focus:ring-1 focus:ring-[#4ECDC4] focus:border-[#4ECDC4]"
+                      shadow-sm focus:outline-none focus:ring-1 focus:ring-[#4ECDC4] focus:border-[#4ECDC4]"
               />
             ) : (
               <div>
@@ -150,7 +166,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
         <div className="mt-5">
           <Button
             className="w-full h-12 text-black shadow-lg hover:shadow-xl hover:scale-105
-                            hover:cursor-pointer hover:bg-[#FF8787] transition-all"
+                       hover:cursor-pointer hover:bg-[#FF8787] transition-all"
             sx={{
               backgroundColor: "#FF6B6B",
               color: "white",
@@ -160,6 +176,11 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
             }}
             onClick={handleStartQuiz}
             startIcon={<Zap className="h-8 w-8" />}
+            onKeyDown={(e) => {
+              if (e.key === "enter") {
+                handleStartQuiz();
+              }
+            }}
           >
             開始
           </Button>
