@@ -10,64 +10,6 @@ const client: any = new OpenAI({
 });
 export type GenerateQuizResponse = QuizType | { error: string; details?: any; response?: any; };
 
-// テキストの配列を受け取り埋め込みの配列を返す
-const getEmbeddings = async (texts: string[]) => {
-    const response = await client.embeddings.create({
-        model: 'text-embedding-3-small',
-        input: texts,
-    });
-    // 埋め込みデータが正しく返されているかチェック
-    if (!response.data || !response.data.length || !response.data[0].embedding) {
-        throw new Error("埋め込みデータが取得できませんでした");
-    }
-
-    return response.data.map((item: any) => item.embedding);
-};
-
-// コサイン類似度を計算
-const cosineSimilarity = (vecA: number[], vecB: number[]) => {
-    if (!vecA || !vecB) {
-        throw new Error("ベクトルが undefined です");
-    }
-
-    const dotProduct = vecA.reduce((sum, a, idx) => sum + a * vecB[idx], 0);
-    const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
-    const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
-
-    if (magnitudeA === 0 || magnitudeB === 0) {
-        throw new Error("ベクトルの大きさがゼロです");
-    }
-
-    return dotProduct / (magnitudeA * magnitudeB);
-};
-
-// 新しい質問と過去の質問のリストを受け取り、新しい質問が過去の質問と類似しているかどうかをembedding apiで評価
-const isSimilarQuestion = async (newQuestion: string, pastQuestions: string[], threshold: number = 0.8) => {
-    try {
-        // 新しい質問と過去の質問の埋め込みを一度に取得
-        const texts = [newQuestion, ...pastQuestions];
-        const embeddings = await getEmbeddings(texts);
-
-        const newEmbedding = embeddings[0];
-        const pastEmbeddings = embeddings.slice(1);
-
-        for (let i = 0; i < pastEmbeddings.length; i++) {
-            const similarity = cosineSimilarity(newEmbedding, pastEmbeddings[i]);
-            console.log(`類似度: ${similarity}`);
-            if (similarity >= threshold) {
-                console.log(`類似度が高い質問が見つかりました: ${similarity}`);
-                console.log(`過去の質問: ${pastQuestions[i]}`);
-                console.log(`新しい質問: ${newQuestion}`);
-                return true;
-            }
-        }
-    } catch (error) {
-        console.error("類似度評価エラー:", error);
-        return false;
-    }
-    return false;
-};
-
 export const generateQuiz = async (
     category?: string,
     difficulty?: string,
@@ -332,3 +274,61 @@ export const GenerateQuiz = async (req: Request, res: Response) => {
         return res.status(500).json({ message: "クイズの生成に失敗しました" });
     }
 }
+
+// テキストの配列を受け取り埋め込みの配列を返す
+const getEmbeddings = async (texts: string[]) => {
+    const response = await client.embeddings.create({
+        model: 'text-embedding-3-small',
+        input: texts,
+    });
+    // 埋め込みデータが正しく返されているかチェック
+    if (!response.data || !response.data.length || !response.data[0].embedding) {
+        throw new Error("埋め込みデータが取得できませんでした");
+    }
+
+    return response.data.map((item: any) => item.embedding);
+};
+
+// コサイン類似度を計算
+const cosineSimilarity = (vecA: number[], vecB: number[]) => {
+    if (!vecA || !vecB) {
+        throw new Error("ベクトルが undefined です");
+    }
+
+    const dotProduct = vecA.reduce((sum, a, idx) => sum + a * vecB[idx], 0);
+    const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
+    const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
+
+    if (magnitudeA === 0 || magnitudeB === 0) {
+        throw new Error("ベクトルの大きさがゼロです");
+    }
+
+    return dotProduct / (magnitudeA * magnitudeB);
+};
+
+// 新しい質問と過去の質問のリストを受け取り、新しい質問が過去の質問と類似しているかどうかをembedding apiで評価
+const isSimilarQuestion = async (newQuestion: string, pastQuestions: string[], threshold: number = 0.8) => {
+    try {
+        // 新しい質問と過去の質問の埋め込みを一度に取得
+        const texts = [newQuestion, ...pastQuestions];
+        const embeddings = await getEmbeddings(texts);
+
+        const newEmbedding = embeddings[0];
+        const pastEmbeddings = embeddings.slice(1);
+
+        for (let i = 0; i < pastEmbeddings.length; i++) {
+            const similarity = cosineSimilarity(newEmbedding, pastEmbeddings[i]);
+            console.log(`類似度: ${similarity}`);
+            if (similarity >= threshold) {
+                console.log(`類似度が高い質問が見つかりました: ${similarity}`);
+                console.log(`過去の質問: ${pastQuestions[i]}`);
+                console.log(`新しい質問: ${newQuestion}`);
+                return true;
+            }
+        }
+    } catch (error) {
+        console.error("類似度評価エラー:", error);
+        return false;
+    }
+    return false;
+};
