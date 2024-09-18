@@ -32,8 +32,8 @@ export const QuizDisplay: React.FC<QuizProps> = ({
       {
         // クイズ表示
         isAnswerCorrect == null && !isTimeUp && !isDraw ? (
-          <div className="md:p-8 p-5">
-            <h2 className="md:text-2xl text-lg font-bold md:mb-16 mb-5 text-center">
+          <div className="md:px-8 md:py-4 p-5">
+            <h2 className="md:text-2xl text-lg font-bold md:mb-12 mb-5 text-center">
               {quiz?.question}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

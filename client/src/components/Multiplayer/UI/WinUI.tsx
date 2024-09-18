@@ -54,7 +54,7 @@ export const WinUI: React.FC<MultiResultUIProps> = ({
     navi("/");
   };
   return (
-    <div className="bg-inherit text-[#333333] relative overflow-hidden flex items-center justify-center">
+    <div className="bg-inherit text-[#333333] relative overflow-hidden flex items-center justify-center md:mb-5">
       <div className="bg-white rounded-xl shadow-lg p-8 max-w-md mx-auto mb-5">
         <Trophy className="h-24 w-24 text-[#FFD93D] mx-auto mb-6 animate-bounce" />
         <h2 className="text-3xl font-bold mb-4 text-[#4ECDC4]">

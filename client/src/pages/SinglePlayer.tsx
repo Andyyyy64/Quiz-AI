@@ -326,7 +326,6 @@ export const SinglePlayer: React.FC = () => {
               category={category}
               difficulty={difficulty}
               handleRestart={handleRestart}
-              handleRestartWithSettings={handleRestartWithSettings}
               handleGoHistory={handleGoHistory}
             />
           )

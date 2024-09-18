@@ -26,7 +26,7 @@ import { Notification } from "../Common/Notification";
 export const Matchmaking: React.FC<{ onMatchReset: () => void }> = ({
   onMatchReset,
 }) => {
-  const MATCH_QUESTION_NUM = 3; // マッチング時の問題数
+  const MATCH_QUESTION_NUM = 10; // マッチング時の問題数
   // datas
   const [quiz, setQuiz] = useState<QuizType>(); // 現在のクイズ
   const [nextQuiz, setNextQuiz] = useState<QuizType>(); // 次のクイズ
