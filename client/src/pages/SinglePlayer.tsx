@@ -248,22 +248,6 @@ export const SinglePlayer: React.FC = () => {
     setIsSettings(true);
   };
 
-  // 設定そのままでリスタート
-  const handleRestartWithSettings = () => {
-    resetCountDown();
-    resetCountUp();
-    setIsAnswerCorrect(null);
-    setQuiz(undefined);
-    setNextQuiz(undefined);
-    setCorrectCount(0);
-    setCurrentQuizIndex(1);
-    setIsTimeUp(false);
-    setIsEnded(false);
-    setGameStart(false);
-
-    setIsLoading(true);
-  };
-
   const handleGoHistory = () => {
     navi(`/history/singleplay/${singleId}`);
   };

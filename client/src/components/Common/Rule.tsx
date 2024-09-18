@@ -1,5 +1,5 @@
 import React from "react";
-import { Users, Zap, Trophy } from "lucide-react";
+import { Users, Zap } from "lucide-react";
 
 export const Rule: React.FC = () => {
   return (
