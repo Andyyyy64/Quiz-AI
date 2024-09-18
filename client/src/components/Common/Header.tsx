@@ -37,6 +37,7 @@ export const Header: React.FC = () => {
   };
 
   const handleLogout = () => {
+    intaractSound.play();
     localStorage.removeItem("token");
     setUser(null);
     navi("/login");

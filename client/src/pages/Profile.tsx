@@ -9,7 +9,9 @@ import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 
 import { getUserById, handleFileUpload } from "../api/user";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
+import { useSound } from "../hooks/useSound";
+import { useNavigate } from "react-router-dom";
 
 export const Profile: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -24,7 +26,9 @@ export const Profile: React.FC = () => {
   }
   const { user, setUser } = authcontext;
 
+  const navi = useNavigate();
   const { loading, startLoading, stopLoading } = useLoading();
+  const intaractSound = useSound("intaract");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -45,7 +49,7 @@ export const Profile: React.FC = () => {
           stopLoading();
         }
       }
-    }
+    };
 
     fetchUser();
     fetchRanking();
@@ -59,6 +63,7 @@ export const Profile: React.FC = () => {
   }, [user]);
 
   const handleUpdateProfile = async () => {
+    intaractSound.play();
     try {
       startLoading();
       let updatedImageUrl = profImageUrl;
@@ -89,20 +94,37 @@ export const Profile: React.FC = () => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    intaractSound.play();
     if (e.target.files && e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
       setProfImageUrl(URL.createObjectURL(e.target.files[0])); // 選択した画像をプレビュー
     }
   };
 
+  const handleBack = () => {
+    intaractSound.play();
+    navi("/");
+  };
+
   return (
     <div className="min-h-screen flex flex-col relative bg-inherit">
       <Header />
       <div
-        className="md:w-full w-[80%] flex-grow flex flex-col items-center justify-center bg-white rounded-xl
-      shadow-xl p-5 max-w-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        className="w-[80%] flex-grow flex flex-col items-center justify-center bg-white rounded-xl
+                   shadow-xl p-5 max-w-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
-        <h1 className="text-3xl font-bold mb-4 hidden md:block">プロフィール</h1>
+        <div className="flex items-center justify-center md:mb-4">
+          <button
+            onClick={handleBack}
+            className="mr-1 p-2 rounded-full hover:bg-gray-200 transition-colors duration-200"
+            aria-label="戻る"
+          >
+            <ArrowLeft className="h-8 w-8 text-black hidden md:block" />
+          </button>
+          <h1 className="text-3xl font-bold hidden md:block">
+            プロフィール
+          </h1>
+        </div>
         {loading ? (
           <Loader2 className="animate-spin text-[#FF6B6B]" />
         ) : (
@@ -145,7 +167,10 @@ export const Profile: React.FC = () => {
                 保存
               </button>
               <button
-                onClick={() => setIsEditing(false)}
+                onClick={() => {
+                  intaractSound.play();
+                  setIsEditing(false);
+                }}
                 className="bg-gray-500 text-white px-4 py-2 rounded"
               >
                 キャンセル
@@ -161,21 +186,18 @@ export const Profile: React.FC = () => {
               <p className="text-lg">{user?.email}</p>
             </div>
             <div>
-
-              {
-                loading ? (
-                  <Loader2 className="animate-spin text-[#FF6B6B]" />
-                ) : (
-                  <div>
-                    <label className="block text-sm font-medium text-[#666666]">
-                      ランキング
-                      <p className="text-lg font-semibold text-[#FF6B6B]">
-                        {ranking}位
-                      </p>
-                    </label>
-                  </div>
-                )
-              }
+              {loading ? (
+                <Loader2 className="animate-spin text-[#FF6B6B]" />
+              ) : (
+                <div>
+                  <label className="block text-sm font-medium text-[#666666]">
+                    ランキング
+                    <p className="text-lg font-semibold text-[#FF6B6B]">
+                      {ranking}位
+                    </p>
+                  </label>
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-[#666666]">
@@ -186,7 +208,10 @@ export const Profile: React.FC = () => {
               </p>
             </div>
             <button
-              onClick={() => setIsEditing(true)}
+              onClick={() => {
+                intaractSound.play();
+                setIsEditing(true);
+              }}
               className="w-full mt-4 bg-[#FF6B6B] hover:bg-[#FF8787] text-white px-4 py-2 rounded"
             >
               プロフィール編集

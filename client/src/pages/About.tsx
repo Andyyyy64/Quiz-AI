@@ -1,16 +1,36 @@
-import { Zap, Users, Trophy } from "lucide-react";
+import { Zap, Users, Trophy, ArrowLeft } from "lucide-react";
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
+import { useNavigate } from "react-router-dom";
+import { useSound } from "../hooks/useSound";
 
 export const About = () => {
+  const navi = useNavigate();
+  const intaractSound = useSound("intaract");
+
+  const handleBack = () => {
+    intaractSound.play();
+    navi("/");
+  };
+
   return (
     <div className="min-h-screen flex flex-col relative bg-inherit overflow-hidden pb-20">
       <Header />
       <main className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-xl p-8">
-          <h1 className="md:text-2xl text-xl font-bold md:mb-10 mb-6 text-center text-black">
-            クイズ！AIが作った問題 について
-          </h1>
+          <div className="flex items-center justify-center md:mb-10 mb-6">
+            <button
+              onClick={handleBack}
+              className="mr-1 p-2 rounded-full hover:bg-gray-200 transition-colors duration-200"
+              aria-label="戻る"
+            >
+              <ArrowLeft className="h-7 w-7 text-black hidden md:block" />
+            </button>
+            <h1 className="md:text-2xl text-xl font-bold text-center text-black">
+              クイズ！AIが作った問題 について
+            </h1>
+          </div>
+
           <section className="mb-8">
             <h2 className="md:text-2xl text-xl font-semibold mb-4 text-[#4ECDC4]">
               クイズ！AIが作った問題 ってなに？
