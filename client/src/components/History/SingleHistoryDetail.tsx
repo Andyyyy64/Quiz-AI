@@ -78,7 +78,7 @@ export const SingleHistoryDetail: React.FC = () => {
           >
             <ArrowLeft className="h-8 w-8 text-black hidden md:block" />
           </button>
-          <h1 className="text-4xl font-bold text-center hidden md:block">
+          <h1 className="text-3xl font-bold text-center hidden md:block">
             シングルプレイ履歴詳細
           </h1>
         </div>
