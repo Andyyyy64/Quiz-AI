@@ -11,7 +11,6 @@ export const AfterSingleResult: React.FC<AfterSingleResultProps> = ({
   category,
   difficulty,
   handleRestart,
-  handleRestartWithSettings,
   handleGoHistory,
 }) => {
   return (
@@ -100,21 +99,6 @@ export const AfterSingleResult: React.FC<AfterSingleResultProps> = ({
             startIcon={<RefreshCcw className="h-5 w-5" />}
           >
             もう一度プレイ！
-          </Button>
-          <Button
-            className="w-full h-15 text-black
-                         hover:cursor-pointer hover:bg-[#FF8787] transition-all"
-            sx={{
-              backgroundColor: "#FF6B6B",
-              color: "white",
-              borderRadius: "10px",
-              fontWeight: "bold",
-              fontSize: "1.2rem",
-              md: { fontSize: "1.2rem" },
-            }}
-            onClick={handleRestartWithSettings}
-          >
-            設定をそのままで再プレイ！
           </Button>
         </div>
       </div>

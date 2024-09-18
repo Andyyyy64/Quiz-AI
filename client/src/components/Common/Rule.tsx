@@ -1,5 +1,5 @@
 import React from "react";
-import { Users, Zap, Trophy } from "lucide-react";
+import { Users, Zap } from "lucide-react";
 
 export const Rule: React.FC = () => {
   return (
@@ -32,19 +32,6 @@ export const Rule: React.FC = () => {
               <li>他のプレイヤーへの敬意を忘れずに</li>
             </ul>
           </div>
-        </div>
-
-        <div className="bg-[#F0F0F0] rounded-lg p-6 mb-5 hidden md:block">
-          <h2 className="md:text-2xl text-xl font-bold mb-4 flex items-center">
-            <Trophy className="h-6 w-6 mr-2 text-[#FF6B6B]" />
-            報酬
-          </h2>
-          <p className="text-[#333333] mb-2 font-medium text-sm md:text-base">
-            ポイントを獲得し、ランキングを上り詰めましょう。毎週トップのプレイヤーには特別なバッジとボーナスポイントが贈られます！
-          </p>
-          <p className="text-[#333333] font-medium text-sm md:text-base">
-            友達に挑戦して、誰が究極のクイズマスターかを確かめよう！
-          </p>
         </div>
         <p className="md:text-sm text-[10px] text-gray-500 text-center">
           ※当サイトではAIを活用してクイズを生成しているため、誤った解答や偏りのある問題が含まれる場合があります。あらかじめご了承ください。

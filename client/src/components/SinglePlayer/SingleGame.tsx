@@ -29,7 +29,7 @@ export const SingleGame: React.FC<SingleGameProps> = ({
   return (
     <div
       className={`md:w-full w-[85%] flex flex-col flex-grow items-center max-w-4xl mx-auto
-            bg-white rounded-lg transition-all duration-500 shadow-lg md:mt-10
+            bg-white rounded-lg transition-all duration-500 shadow-lg md:mt-10 md:mb-20
             ${showAnimation ? "scale-110" : "scale-100"}
             `}
     >

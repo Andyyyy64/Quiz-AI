@@ -45,7 +45,6 @@ export type AfterSingleResultProps = {
     category: string;
     difficulty: string;
     handleRestart: () => void;
-    handleRestartWithSettings: () => void;
     handleGoHistory: () => void;
 }
 

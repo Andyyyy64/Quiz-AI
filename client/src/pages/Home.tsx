@@ -5,9 +5,11 @@ import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { AuthContext } from "../context/AuthContext";
 import { Users, User, History, Trophy } from "lucide-react";
+import { useSound } from "../hooks/useSound";
 
 export const Home: React.FC = () => {
   const authContext = useContext(AuthContext);
+  const intaractSound = useSound("intaract");
   const navi = useNavigate();
 
   if (authContext === undefined) {
@@ -70,6 +72,7 @@ export const Home: React.FC = () => {
             to="/history"
             className="group flex flex-col items-center transform transition-all 
             duration-300 hover:scale-110"
+            onClick={() => intaractSound.play()}
           >
             <div
               className="bg-inherit p-4 rounded-full 
@@ -88,6 +91,7 @@ export const Home: React.FC = () => {
             to="/rankings"
             className="group flex flex-col items-center transform transition-all 
             duration-300 hover:scale-110"
+            onClick={() => intaractSound.play()}
           >
             <div
               className="bg-inherit p-4 rounded-full 
