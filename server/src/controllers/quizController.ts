@@ -253,7 +253,7 @@ export const generateQuiz = async (
         // 類似しないクイズが生成されるまで再生成
         while (isDuplicate) {
             const response = await client.chat.completions.create({
-                model: "gpt-4o",
+                model: "gpt-4o-2024-08-06",
                 messages: [
                     {
                         role: "system",
