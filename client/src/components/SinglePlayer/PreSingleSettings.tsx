@@ -32,9 +32,9 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
   setUseCustomCategory,
 }) => {
   return (
-    <main className="md:w-1/2 w-full md:px-0 px-10">
+    <main className="md:w-1/2 w-full md:px-0 px-10 md:mb-16">
       <div className=" bg-white rounded-xl shadow-xl md:px-8 md:py-6 p-5">
-        <h1 className="font-bold md:text-2xl md:mb-10 mb-5 text-center text-sm text-nowrap">
+        <h1 className="font-bold md:text-2xl md:mb-10 mb-5 text-center text-sm">
           クイズをカスタマイズしよう！
         </h1>
         <div className="space-y-3">
