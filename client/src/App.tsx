@@ -34,7 +34,9 @@ type Bubble = {
   oscillationSpeed: number;
 };
 
+// background bubbles number
 const bubbleNum: number = Capacitor.getPlatform() === "web" ? 25 : 15;
+// background bubbles fps
 const FPS: number = Capacitor.getPlatform() === "web" ? 30 : 20;
 
 export const App: React.FC = () => {
