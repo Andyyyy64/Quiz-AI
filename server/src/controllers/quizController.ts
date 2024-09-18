@@ -42,7 +42,7 @@ const cosineSimilarity = (vecA: number[], vecB: number[]) => {
 };
 
 // 新しい質問と過去の質問のリストを受け取り、新しい質問が過去の質問と類似しているかどうかをembedding apiで評価
-const isSimilarQuestion = async (newQuestion: string, pastQuestions: string[], threshold: number = 0.75) => {
+const isSimilarQuestion = async (newQuestion: string, pastQuestions: string[], threshold: number = 0.8) => {
     try {
         // 新しい質問と過去の質問の埋め込みを一度に取得
         const texts = [newQuestion, ...pastQuestions];
@@ -55,7 +55,8 @@ const isSimilarQuestion = async (newQuestion: string, pastQuestions: string[], t
             const similarity = cosineSimilarity(newEmbedding, pastEmbeddings[i]);
             console.log(`類似度: ${similarity}`);
             if (similarity >= threshold) {
-                console.log(`類似度: ${similarity} - 重複した質問が見つかりました。`);
+                console.log(`類似度が高い質問が見つかりました: ${similarity}`);
+                console.log(`過去の質問: ${pastQuestions[i]}`);
                 console.log(`新しい質問: ${newQuestion}`);
                 return true;
             }
@@ -192,19 +193,19 @@ export const generateQuiz = async (
         pastQuizzes = await db.all(
             `SELECT question 
          FROM user_quiz_history 
-         WHERE user_id = $1 AND category = $2
+         WHERE user_id = $1 AND category = $2 AND difficulty = $3
          ORDER BY quiz_id DESC
          LIMIT 100`,
-            [user_id, category]
+            [user_id, category, difficulty]
         );
     } else {
         pastQuizzes = await db.all(
             `SELECT question 
          FROM user_quiz_history 
-         WHERE user_id = $1 AND category = $2 AND subcategory = $3
+         WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND difficulty = $4
          ORDER BY quiz_id DESC
          LIMIT 100`,
-            [user_id, category, subcategory]
+            [user_id, category, subcategory, difficulty]
         );
     }
 
@@ -221,19 +222,19 @@ export const generateQuiz = async (
             opponentQuizzes = await db.all(
                 `SELECT question 
              FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2
+             WHERE user_id = $1 AND category = $2 AND difficulty = $3
              ORDER BY quiz_id DESC 
              LIMIT 100`,
-                [opponent_id, category]
+                [opponent_id, category, difficulty]
             );
         } else {
             opponentQuizzes = await db.all(
                 `SELECT question 
              FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND subcategory = $
+             WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND difficulty = $4
              ORDER BY quiz_id DESC 
              LIMIT 100`,
-                [opponent_id, category, subcategory]
+                [opponent_id, category, subcategory, difficulty]
             );
         }
 
