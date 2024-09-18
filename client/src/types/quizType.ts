@@ -76,6 +76,7 @@ export type MultiResultUIProps = {
     winner?: string;
     correctCount?: number;
     handleGoHistory: () => void;
+    isHistorySaved?: boolean;
 }
 
 export type JoinedQuizType = {
