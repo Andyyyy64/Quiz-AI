@@ -2,9 +2,11 @@ import React, { useContext } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { User, LogOut, History, Info, Trophy, Home } from "lucide-react";
 import { AuthContext } from "../../context/AuthContext";
+import { useSound } from "../../hooks/useSound";
 
 export const Header: React.FC = () => {
   const authContext = useContext(AuthContext);
+  const intaractSound = useSound("intaract");
   const navi = useNavigate();
   // get /{something} in the URL in string
   const location = useLocation();
@@ -13,11 +15,26 @@ export const Header: React.FC = () => {
   }
   const { user, setUser } = authContext;
 
-  const handleProfileClick = () => navi("/profile");
-  const handleHistoryClick = () => navi("/history");
-  const handleAboutClick = () => navi("/about");
-  const handleRankingClick = () => navi("/rankings");
-  const handleHomeClick = () => navi("/");
+  const handleProfileClick = () => {
+    navi("/profile");
+    intaractSound.play();
+  };
+  const handleHistoryClick = () => {
+    navi("/history");
+    intaractSound.play();
+  };
+  const handleAboutClick = () => {
+    navi("/about");
+    intaractSound.play();
+  };
+  const handleRankingClick = () => {
+    navi("/rankings");
+    intaractSound.play();
+  };
+  const handleHomeClick = () => {
+    navi("/");
+    intaractSound.play();
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -41,7 +58,7 @@ export const Header: React.FC = () => {
           </Link>
 
           {/* デスクトップ時のロゴ */}
-          <Link to="/" className="hidden md:block">
+          <Link to="/" className="hidden md:block" onClick={handleHomeClick}>
             <img
               className="w-44 h-22 object-fill"
               src="/favicon.png"
