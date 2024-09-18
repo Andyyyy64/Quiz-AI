@@ -4,9 +4,9 @@
 
 1. clone
 
-    `git clone git@github.com:MoRpH0gEN/AI-Quiz-Battle.git`
+    `git clone git@github.com:MoRpH0gEN/Quiz-AI.git`
 
-    `cd AI-Quiz-Battle/server`
+    `cd Quiz-AI/server`
 
 2. 環境変数を変更
 
@@ -33,7 +33,7 @@
     GCP_BUCKET_NAME=quiz_user_prof
 
     #openai
-    OPENAI_API_KEY=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
+    OPENAI_API_KEY=
     ```
 3. dockerを実行
 
@@ -68,5 +68,6 @@
 
 7. ログイン
 
-    alice@example.com
+    alice@example.com / bob@example.com
     diamondchair87
+    
