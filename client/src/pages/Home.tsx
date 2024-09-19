@@ -1,5 +1,5 @@
-import React, { useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
@@ -17,14 +17,40 @@ export const Home: React.FC = () => {
   }
   const { user } = authContext;
 
-  useEffect(() => {
-    if (!user) {
+  const handleSinglePlayClick = () => {
+    intaractSound.play();
+    if(user) {
+      navi("/singleplay");
+    } else {
       navi("/login");
     }
-  }, [user, navi]);
+  };
+  const handleMultiPlayClick = () => {
+    intaractSound.play();
+    if(user) {
+      navi("/multiplay");
+    } else {
+      navi("/login");
+    }
+  };
 
-  const handleSinglePlayClick = () => navi("/singleplay");
-  const handleMultiPlayClick = () => navi("/multiplay");
+  const handleHistroyClick = () => {
+    intaractSound.play();
+    if(user) {
+      navi("/history");
+    } else {
+      navi("/login");
+    }
+  };
+
+  const handleRankingClick = () => {
+    intaractSound.play();
+    if(user) {
+      navi("/rankings");
+    } else {
+      navi("/login");
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-inherit text-[#333333] relative overflow-hidden">
@@ -68,11 +94,10 @@ export const Home: React.FC = () => {
         </div>
 
         <div className="justify-center space-x-12 mt-8 md:flex hidden">
-          <Link
-            to="/history"
+          <button
             className="group flex flex-col items-center transform transition-all 
             duration-300 hover:scale-110"
-            onClick={() => intaractSound.play()}
+            onClick={handleHistroyClick}
           >
             <div
               className="bg-inherit p-4 rounded-full 
@@ -86,12 +111,11 @@ export const Home: React.FC = () => {
             >
               履歴
             </span>
-          </Link>
-          <Link
-            to="/rankings"
+          </button>
+          <button
             className="group flex flex-col items-center transform transition-all 
             duration-300 hover:scale-110"
-            onClick={() => intaractSound.play()}
+            onClick={handleRankingClick}
           >
             <div
               className="bg-inherit p-4 rounded-full 
@@ -105,7 +129,7 @@ export const Home: React.FC = () => {
             >
               ランキング
             </span>
-          </Link>
+          </button>
         </div>
       </main>
       <Footer />
