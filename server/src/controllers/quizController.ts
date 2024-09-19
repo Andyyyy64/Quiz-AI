@@ -107,15 +107,14 @@ export const generateQuiz = async (
   // 難易度の分布を調整
   if (!difficulty || difficulty === "ランダム") {
     const randomValue = Math.random();
-    if (randomValue < 0.4) {
+    if (randomValue < 0.2) {
+      difficulty = "簡単"; // 20%
+    } else if (randomValue < 0.6) {
       difficulty = "普通"; // 40%
-    } else if (randomValue < 0.8) {
-      difficulty = "簡単"; // 次の20%
+    } else if (randomValue < 0.9) {
+      difficulty = "難しい"; // 30%
     } else {
-      // 「難しい」または「超難しい」をランダムに選択
-      const hardDifficulties = ["難しい", "超難しい"];
-      difficulty =
-        hardDifficulties[Math.floor(Math.random() * hardDifficulties.length)];
+      difficulty = "超難しい"; // 10%
     }
   }
 
