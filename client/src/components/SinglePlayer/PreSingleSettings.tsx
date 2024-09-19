@@ -2,6 +2,7 @@ import { Button, Slider, InputLabel } from "@mui/material";
 import { Zap } from "lucide-react";
 import { PreSingleSettingsProps } from "../../types/playType";
 import { useEffect } from "react";
+import { useSound } from "../../hooks/useSound";
 
 const categories = [
   "ランダム",
@@ -32,6 +33,8 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
   useCustomCategory,
   setUseCustomCategory,
 }) => {
+  const intaractSound = useSound("intaract");
+
   // エンターキーでクイズ開始
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -48,7 +51,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
   }, [handleStartQuiz]);
 
   return (
-    <main className="md:w-1/2 w-full md:px-0 px-10 md:mb-16">
+    <main className="md:w-1/2 w-full md:px-0 px-3 md:mb-16">
       <div className=" bg-white rounded-xl shadow-xl md:px-8 md:py-6 p-5">
         <h1 className="font-bold md:text-2xl md:mb-10 mb-5 text-center text-sm">
           クイズをカスタマイズしよう！
@@ -60,12 +63,15 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                 type="checkbox"
                 id="customCategory"
                 checked={useCustomCategory}
-                onChange={(e) => setUseCustomCategory(e.target.checked)}
-                className="w-3 h-3 rounded border-gray-300 text-[#4ECDC4] focus:ring-[#4ECDC4]"
+                onChange={(e) => {
+                  intaractSound.play();
+                  setUseCustomCategory(e.target.checked);
+                }}
+                className="md:w-4 md:h-4 w-3 h-3 rounded border-gray-300 text-[#4ECDC4] focus:ring-[#4ECDC4]"
               />
               <label
                 htmlFor="customCategory"
-                className="text-sm font-medium text-gray-700"
+                className="md:text-base text-sm font-medium text-gray-700"
               >
                 自分でカテゴリを決める！
               </label>
@@ -89,6 +95,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
                     <button
                       key={cat}
                       onClick={() => {
+                        intaractSound.play();
                         setCategory(cat);
                         setUseCustomCategory(false);
                       }}
@@ -114,7 +121,10 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
               {difficulties.map((diff) => (
                 <button
                   key={diff}
-                  onClick={() => setDifficulty(diff)}
+                  onClick={() => {
+                    intaractSound.play();
+                    setDifficulty(diff);
+                  }}
                   className={`flex-1 px-2 py-1 md:px-3 md:py-2 rounded-md md:text-sm font-medium transition-colors text-[10px]
                                             ${
                                               difficulty === diff

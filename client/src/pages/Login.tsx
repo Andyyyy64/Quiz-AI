@@ -5,6 +5,8 @@ import { useLoading } from "../hooks/useLoading";
 import { AuthContext } from "../context/AuthContext";
 
 import CircularProgress from "@mui/material/CircularProgress";
+import { useSound } from "../hooks/useSound";
+import { ArrowLeft } from "lucide-react";
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState<string>(
@@ -12,6 +14,7 @@ export const Login: React.FC = () => {
   );
   const [pwd, setPwd] = useState<string>("");
   const { loading, startLoading, stopLoading } = useLoading();
+  const intaractSound = useSound("intaract");
 
   const navi = useNavigate();
 
@@ -22,6 +25,7 @@ export const Login: React.FC = () => {
   const { setUser } = authContext;
 
   const handleLogin = async (e: React.FormEvent) => {
+    intaractSound.play();
     e.preventDefault();
     startLoading();
     try {
@@ -42,10 +46,25 @@ export const Login: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    intaractSound.play();
+    navi("/");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center relative bg-inherit">
       <div className="bg-white p-8 rounded-lg shadow-lg md:w-96 w-[95%]">
-        <h2 className="text-2xl font-semibold text-center mb-6">ログイン</h2>
+        <div className="flex items-center justify-center mb-6">
+          <button
+            onClick={handleBack}
+            className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-200"
+            aria-label="戻る"
+          >
+            <ArrowLeft className="h-6 w-6 text-black" />
+          </button>
+          <h2 className="text-2xl font-semibold text-center">ログイン</h2>
+        </div>
+
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label
@@ -61,8 +80,8 @@ export const Login: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none 
-              focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none
+                  focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
             />
           </div>
           <div>
@@ -79,15 +98,15 @@ export const Login: React.FC = () => {
               value={pwd}
               onChange={(e) => setPwd(e.target.value)}
               required
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none 
-              focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none
+                  focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
             />
           </div>
           <div>
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
-              bg-[#FF6B6B] hover:bg-[#FF8787] focus:outline-none focus:ring-2 focus:ring-offset-2"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white
+                    bg-[#FF6B6B] hover:bg-[#FF8787] focus:outline-none focus:ring-2 focus:ring-offset-2"
               disabled={loading}
             >
               {loading ? (
@@ -101,10 +120,11 @@ export const Login: React.FC = () => {
 
         <div className="mt-6 text-center">
           <p className="md:text-sm text-xs text-gray-600">
-            アカウントを登録していないですか?{" "}<br />
+            アカウントを登録していないですか? <br />
             <Link
               to="/register"
               className="font-medium text-[#FF6B6B] focus:ring-[#FF8787] focus:border-[#FF8787]"
+              onClick={() => intaractSound.play()}
             >
               登録
             </Link>

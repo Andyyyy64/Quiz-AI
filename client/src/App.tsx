@@ -17,7 +17,6 @@ import { Ranking } from "./pages/Ranking";
 
 import { SingleHistoryDetail } from "./components/History/SingleHistoryDetail";
 import { MultiHistoryDetail } from "./components/History/MultiHistoryDetail";
-import { PrivateRoute } from "./components/PrivateRoute";
 
 import "./index.css";
 
@@ -158,14 +157,7 @@ export const App: React.FC = () => {
       <div className="background-container"></div>
       <Router>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Home />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
