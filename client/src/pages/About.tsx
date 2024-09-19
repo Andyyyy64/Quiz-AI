@@ -1,4 +1,4 @@
-import { Zap, Users, Trophy, ArrowLeft } from "lucide-react";
+import { Zap, Users, Trophy, ArrowLeft, AlertCircle } from "lucide-react";
 import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,12 @@ export const About = () => {
   const handleBack = () => {
     intaractSound.play();
     navi("/");
+  };
+
+  // report
+  const handleReport = () => {
+    intaractSound.play();
+    window.open("https://forms.gle/s1qgtkDhyk6PYMHw8", "_blank");
   };
 
   return (
@@ -103,6 +109,15 @@ export const About = () => {
                 クイズAI
                 のクイズはAIを使用して生成されています。私たちは正確さと品質を追求していますが、間違った回答や偏りのある質問が含まれる場合があります。ユーザーの皆様には、批判的な視点を持ってコンテンツに向き合い、不正確な点やバグなどがあれば報告して頂けると幸いです。
               </p>
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={handleReport}
+                  className="flex items-center bg-[#FF6B6B] text-white font-semibold px-4 py-2 rounded hover:bg-[#e55a5a] transition-colors duration-200"
+                >
+                  <AlertCircle className="h-5 w-5 mr-2" />
+                  報告する
+                </button>
+              </div>
             </div>
           </section>
 
