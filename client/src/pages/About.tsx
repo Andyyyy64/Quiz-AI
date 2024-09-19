@@ -13,10 +13,10 @@ export const About = () => {
     navi("/");
   };
 
-  // New function to handle the report button click
+  // report
   const handleReport = () => {
     intaractSound.play();
-    window.open("https://forms.gle/s1qgtkDhyk6PYMHw8", "_blank"); // Replace with your actual Google Form URL
+    window.open("https://forms.gle/s1qgtkDhyk6PYMHw8", "_blank");
   };
 
   return (
