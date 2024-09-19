@@ -54,17 +54,21 @@ export const QuizDisplay: React.FC<QuizProps> = ({
                     key={index}
                     disabled={!canAnswer || isOpponentWrong}
                     className={`md:text-lg text-base py-4 border-2 rounded-lg transition-all flex items-center justify-center
-                ${
-                  canAnswer
-                    ? "border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white hover:cursor-pointer bg-white"
-                    : "bg-[#FF6B6B] border-[#FF6B6B] text-white hover:cursor-not-allowed"
-                }
+                 ${
+                   isMultiplayer
+                     ? canAnswer
+                       ? "border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white hover:cursor-pointer bg-white"
+                       : "bg-[#FF6B6B] border-[#FF6B6B] text-white hover:cursor-not-allowed"
+                     : canAnswer
+                       ? "border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white hover:cursor-pointer bg-white"
+                       : "border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white bg-white cursor-not-allowed"
+                 }
                 ${
                   isOpponentWrong
                     ? "bg-[#FF6B6B] border-[#FF6B6B] hover:cursor-not-allowed hover:bg-[#FF6B6B]"
                     : ""
                 }
-                `}
+                    `}
                     onClick={() => handleAnswerSelect(item)}
                   >
                     {item}
