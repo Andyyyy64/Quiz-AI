@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { register } from "../api/user";
 import { Link, useNavigate } from "react-router-dom";
+import { useSound } from "../hooks/useSound";
+import { ArrowLeft } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export const Register: React.FC = () => {
@@ -10,6 +12,8 @@ export const Register: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const intaractSound = useSound("intaract");
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -32,10 +36,24 @@ export const Register: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    intaractSound.play();
+    navigate("/login");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center relative bg-inherit">
       <div className="bg-white p-8 rounded-lg shadow-lg md:w-96 w-[95%]">
-        <h2 className="text-2xl font-semibold text-center mb-6">登録</h2>
+        <div className="flex items-center justify-center mb-6">
+          <button
+            onClick={handleBack}
+            className="p-2 rounded-full hover:bg-gray-200 transition-colors duration-200"
+            aria-label="戻る"
+          >
+            <ArrowLeft className="h-6 w-6 text-black" />
+          </button>
+          <h2 className="text-2xl font-semibold text-center">登録</h2>
+        </div>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleRegister} className="space-y-6">
           <div>
@@ -53,7 +71,7 @@ export const Register: React.FC = () => {
               onChange={(e) => setName(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none 
-              focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
+                  focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
             />
           </div>
           <div>
@@ -71,7 +89,7 @@ export const Register: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none 
-              focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
+                  focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
             />
           </div>
           <div>
@@ -89,7 +107,7 @@ export const Register: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none 
-              focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
+                  focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
             />
           </div>
           <div>
@@ -107,7 +125,7 @@ export const Register: React.FC = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none 
-              focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
+                  focus:ring-[#FF8787] focus:border-[#FF8787] sm:text-sm"
             />
           </div>
 
@@ -116,9 +134,10 @@ export const Register: React.FC = () => {
               type="submit"
               className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
                 bg-[#FF6B6B] hover:bg-[#FF8787] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF8787]
-                ${password !== confirmPassword
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
+                ${
+                  password !== confirmPassword
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
                 }`}
               disabled={loading || password !== confirmPassword}
             >
@@ -133,10 +152,11 @@ export const Register: React.FC = () => {
 
         <div className="mt-6 text-center">
           <p className="md:text-sm text-xs text-gray-600">
-            すでにアカウントをもっていますか?{" "}<br />
+            すでにアカウントをもっていますか? <br />
             <Link
               to="/login"
               className="font-medium text-[#FF6B6B] hover:text-[#FF8787]"
+              onClick={() => intaractSound.play()}
             >
               ログイン
             </Link>
