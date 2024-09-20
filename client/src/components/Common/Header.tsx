@@ -49,7 +49,7 @@ export const Header: React.FC = () => {
   };
   const handleHomeClick = () => {
     intaractSound.play();
-    navi("/");
+    window.location.href = "/";
   };
 
   const handleLogout = () => {

@@ -14,9 +14,6 @@ export const Multiplayer: React.FC = () => {
     setShowMatchmaking(true); // ボタンがクリックされたときにマッチメイキングを表示
   };
 
-  const handleMatchReset = () => {
-    setShowMatchmaking(false); // マッチがリセットされたときに再度表示
-  };
   // エンターキーでmatch開始
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -63,7 +60,7 @@ export const Multiplayer: React.FC = () => {
               </Button>
             </div>
           )}
-          {showMatchmaking && <Matchmaking onMatchReset={handleMatchReset} />}
+          {showMatchmaking && <Matchmaking />}
         </div>
       </main>
       <Footer />
