@@ -10,6 +10,7 @@ import { VerifyEmail } from "./pages/Verify-Email";
 
 import { Multiplayer } from "./pages/MultiPlayer";
 import { SinglePlayer } from "./pages/SinglePlayer";
+import { MultiPlayerPage } from "./pages/MultiPlayerPage";
 import { Profile } from "./pages/Profile";
 import { About } from "./pages/About";
 import { History } from "./pages/History";
@@ -17,6 +18,9 @@ import { Ranking } from "./pages/Ranking";
 
 import { SingleHistoryDetail } from "./components/History/SingleHistoryDetail";
 import { MultiHistoryDetail } from "./components/History/MultiHistoryDetail";
+
+import { AuthContext } from "./context/AuthContext";
+import { WebSocketProvider } from "./context/webSocketContext";
 
 import "./index.css";
 
@@ -39,6 +43,12 @@ const bubbleNum: number = Capacitor.getPlatform() === "web" ? 25 : 15;
 const FPS: number = Capacitor.getPlatform() === "web" ? 30 : 20;
 
 export const App: React.FC = () => {
+  const authContext = React.useContext(AuthContext);
+  if (authContext == undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  const { user } = authContext;
+
   const bubblesRef = useRef<Bubble[]>([]);
   const animationRef = useRef<number>();
   const lastUpdateTimeRef = useRef<number>(0);
@@ -129,55 +139,58 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{ pointerEvents: "none" }}
-      >
-        {bubblesRef.current.map((bubble) => (
-          <div
-            key={bubble.id}
-            className="absolute rounded-full flex items-center justify-center text-white font-bold transition-all duration-300 ease-in-out"
-            style={{
-              left: `${bubble.x}px`,
-              top: `${bubble.y}px`,
-              width: `${bubble.size}px`,
-              height: `${bubble.size}px`,
-              backgroundColor: bubble.color,
-              opacity: 0.7,
-              fontSize: `${bubble.size / 2}px`,
-            }}
-          >
-            <div className="w-1/2 h-1/2 flex items-center justify-center">
-              {renderIcon(bubble.icon, bubble.size / 2)}
+    <WebSocketProvider url={import.meta.env.VITE_APP_WS_URL} user={user}>
+      <div className="relative min-h-screen overflow-hidden">
+        <div
+          className="absolute inset-0 z-0 pointer-events-none"
+          style={{ pointerEvents: "none" }}
+        >
+          {bubblesRef.current.map((bubble) => (
+            <div
+              key={bubble.id}
+              className="absolute rounded-full flex items-center justify-center text-white font-bold transition-all duration-300 ease-in-out"
+              style={{
+                left: `${bubble.x}px`,
+                top: `${bubble.y}px`,
+                width: `${bubble.size}px`,
+                height: `${bubble.size}px`,
+                backgroundColor: bubble.color,
+                opacity: 0.7,
+                fontSize: `${bubble.size / 2}px`,
+              }}
+            >
+              <div className="w-1/2 h-1/2 flex items-center justify-center">
+                {renderIcon(bubble.icon, bubble.size / 2)}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="background-container"></div>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/multiplay" element={<Multiplayer />} />
+            <Route path="/multiplay/:sessionId" element={<MultiPlayerPage />} />
+            <Route path="/singleplay" element={<SinglePlayer />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/rankings" element={<Ranking />} />
+            <Route
+              path="/history/singleplay/:id"
+              element={<SingleHistoryDetail />}
+            />
+            <Route
+              path="/history/multiplay/:id"
+              element={<MultiHistoryDetail />}
+            />
+            <Route path="*" element={<h2>404 - Page not found</h2>} />
+          </Routes>
+        </Router>
       </div>
-      <div className="background-container"></div>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/multiplay" element={<Multiplayer />} />
-          <Route path="/singleplay" element={<SinglePlayer />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/rankings" element={<Ranking />} />
-          <Route
-            path="/history/singleplay/:id"
-            element={<SingleHistoryDetail />}
-          />
-          <Route
-            path="/history/multiplay/:id"
-            element={<MultiHistoryDetail />}
-          />
-          <Route path="*" element={<h2>404 - Page not found</h2>} />
-        </Routes>
-      </Router>
-    </div>
+    </WebSocketProvider>
   );
 };
