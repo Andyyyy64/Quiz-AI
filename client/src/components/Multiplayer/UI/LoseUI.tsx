@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Frown, ArrowRight, RefreshCw } from "lucide-react";
 import React from "react";
 import { MultiResultUIProps } from "../../../types/quizType";
@@ -9,7 +8,6 @@ export const LoseUI: React.FC<MultiResultUIProps> = ({
   handleGoHistory,
   winner,
 }) => {
-  const navi = useNavigate();
   const loseSound = useSound("lose");
 
   useEffect(() => {
@@ -17,11 +15,11 @@ export const LoseUI: React.FC<MultiResultUIProps> = ({
   }, []);
 
   const handleTopClick = () => {
-    navi("/");
+    window.location.href = "/";
   };
 
   const handleSinglePlayClick = () => {
-    navi("/singleplay");
+    window.location.href = "/singleplay";
   };
 
   return (

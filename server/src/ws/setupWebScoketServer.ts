@@ -19,8 +19,6 @@ interface Session {
 
 // session_idをキーにしてセッションを格納するマップ
 const sessions: Map<number, Session> = new Map();
-// 待機中のプレイヤーを格納するキュー
-const waitingPlayers: Player[] = [];
 
 export const setupWebSocketServer = (server: any) => {
   const wss = new WebSocketServer({ server });
@@ -58,6 +56,14 @@ export const setupWebSocketServer = (server: any) => {
               );
             } catch (error) {
               console.error("クイズの取得に失敗しました:", error);
+              currentSession.players.forEach((player) => {
+                player.ws.send(
+                  JSON.stringify({
+                    success: false,
+                    message: "failed_quiz_gen",
+                  }),
+                );
+              });
               throw error;
             }
             // send matched noti to both players
@@ -123,6 +129,14 @@ export const setupWebSocketServer = (server: any) => {
                 console.log(currentSession.quiz);
               } catch (error) {
                 console.error("クイズの取得に失敗しました:", error);
+                currentSession.players.forEach((player) => {
+                  player.ws.send(
+                    JSON.stringify({
+                      success: false,
+                      message: "failed_quiz_gen",
+                    }),
+                  );
+                });
                 throw error;
               }
               // 両方のプレイヤーにマッチ成功を通知
@@ -216,14 +230,26 @@ export const setupWebSocketServer = (server: any) => {
           }
         } else if (action === "fetch_next_quiz") {
           console.log("fetching next quiz");
-          currentSession.quiz = await generateQuiz(
-            "ランダム",
-            "ランダム",
-            currentSession.players[0].id,
-            currentSession.players[1].id,
-          );
-          console.log(currentSession.quiz);
-
+          try {
+            currentSession.quiz = await generateQuiz(
+              "ランダム",
+              "ランダム",
+              currentSession.players[0].id,
+              currentSession.players[1].id,
+            );
+            console.log(currentSession.quiz);
+          } catch (error) {
+            console.error("クイズの取得に失敗しました:", error);
+            currentSession.players.forEach((player) => {
+              player.ws.send(
+                JSON.stringify({
+                  success: false,
+                  message: "failed_quiz_gen",
+                }),
+              );
+            });
+            throw error;
+          }
           currentSession.players.forEach((player) => {
             player.ws.send(
               JSON.stringify({

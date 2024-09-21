@@ -7,17 +7,25 @@ import { Header } from "../components/Common/Header";
 import { Footer } from "../components/Common/Footer";
 import { Rule } from "../components/Common/Rule";
 
+import { useIsOnline } from "../context/isOnlineContext"
+
 export const Multiplayer: React.FC = () => {
   const [showMatchmaking, setShowMatchmaking] = useState(false);
+  const isOnline = useIsOnline();
 
   const handleMatchmakeClick = () => {
+    console.log(isOnline)
+    if(!isOnline) {
+      alert("インターネット接続がありません。接続を確認してください。");
+      return;
+    }
     setShowMatchmaking(true); // ボタンがクリックされたときにマッチメイキングを表示
   };
 
   // エンターキーでmatch開始
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
+      if (event.key === "Enter" && isOnline) {
         handleMatchmakeClick();
       }
     };
@@ -27,7 +35,8 @@ export const Multiplayer: React.FC = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleMatchmakeClick]);
+  }, [isOnline]);
+
   return (
     <div className="min-h-screen flex flex-col bg-inherit">
       <Header />
