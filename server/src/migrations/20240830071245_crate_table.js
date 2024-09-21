@@ -23,14 +23,14 @@ exports.up = function (knex) {
       table.increments("quiz_id").primary();
       table.integer("user_id").unsigned().notNullable();
       table.foreign("user_id").references("users.user_id");
-      table.string("question").notNullable();
-      table.string("correct_answer").notNullable();
+      table.text("question").notNullable();
+      table.text("correct_answer").notNullable();
       table.json("choices").notNullable(); // 選択肢をJSONで格納
-      table.string("user_choices").notNullable();
+      table.text("user_choices").notNullable();
       table.string("category").notNullable().defaultTo("カテゴリなし");
       table.string("subcategory").defaultTo("サブカテゴリなし");
       table.string("difficulty").notNullable().defaultTo("簡単");
-      table.string("explanation").notNullable().defaultTo("説明なし");
+      table.text("explanation").notNullable().defaultTo("説明なし");
       table.string("search_word").notNullable().defaultTo("検索ワードなし");
       table.boolean("is_correct")
       table.timestamp("answered_at").notNullable().defaultTo(knex.fn.now());
