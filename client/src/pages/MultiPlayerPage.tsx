@@ -112,7 +112,9 @@ export const MultiPlayerPage: React.FC = () => {
           setTimeout(() => {
             setMatchedUI(false);
             setIsMatched(true);
-            startCountDown(data.timeLimit);
+            startCountDown(
+              data.timeLimit != undefined ? data.timeLimit : timeLimit,
+            );
             startCountUp();
           }, 10000); // 10秒後にマッチングUIを非表示
 
@@ -398,9 +400,7 @@ export const MultiPlayerPage: React.FC = () => {
               sessionId={isCustomMatch ? sessionId : null}
             />
           )}
-          {matchedUI && (
-            <MatchedUI opponent={opponent} user={user} />
-          )}
+          {matchedUI && <MatchedUI opponent={opponent} user={user} />}
           {!matchedUI && isMatched && !winner && (
             <MultiGame
               user={user}
