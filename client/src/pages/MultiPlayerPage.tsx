@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
 import { AuthContext } from "../context/AuthContext";
 
@@ -69,7 +68,6 @@ export const MultiPlayerPage: React.FC = () => {
   const incorrectSound = useSound("incorrect");
 
   const { notification, showNotification } = useNotification();
-  const navi = useNavigate();
 
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
