@@ -14,7 +14,6 @@ export const Multiplayer: React.FC = () => {
   const isOnline = useIsOnline();
 
   const handleMatchmakeClick = () => {
-    console.log(isOnline)
     if(!isOnline) {
       alert("インターネット接続がありません。接続を確認してください。");
       return;
