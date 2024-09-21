@@ -88,6 +88,15 @@ export const MultiPlayerPage: React.FC = () => {
           setOpponent(data.opponent);
           setMatchedUI(true);
           startCountDown();
+          if (data.quiz && data.quiz.choices.length > 4) {
+            showNotification(
+              "クイズの取得に失敗しました。トップに戻ります",
+              "error",
+            );
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 3000);
+          }
           setQuiz(data.quiz);
 
           setTimeout(() => {
@@ -131,7 +140,7 @@ export const MultiPlayerPage: React.FC = () => {
               "error",
             );
             setTimeout(() => {
-              navi("/");
+              window.location.href = "/";
             }, 3000);
           }
           // 次のクイズを受信した場合、
@@ -151,6 +160,14 @@ export const MultiPlayerPage: React.FC = () => {
           console.log("Waiting for opponent...");
         } else if (data.success === false) {
           showNotification(data.message, "error");
+        } else if (data.message === "failed_quiz_gen") {
+          showNotification(
+            "クイズの取得に失敗しました。トップに戻ります",
+            "error",
+          );
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 3000);
         }
       };
 
@@ -322,24 +339,31 @@ export const MultiPlayerPage: React.FC = () => {
     await updatePoints(user?.user_id, userPoints + points_awarded);
 
     // マッチング履歴を保存
-    const res = await saveMultiHistory(
-      user?.user_id,
-      opponentt,
-      winnerId,
-      points_awarded,
-      match_duration,
-      MATCH_QUESTION_NUM,
-    );
-    const multiSessionId = res.id;
-    setSesseionIdForHistory(multiSessionId);
-    // このマッチにおけるクイズ履歴を保存
-    await saveMultiQuizHistory(multiSessionId, answerdQuizIds);
-
+    try {
+      const res = await saveMultiHistory(
+        user?.user_id,
+        opponentt,
+        winnerId,
+        points_awarded,
+        match_duration,
+        MATCH_QUESTION_NUM,
+      );
+      const multiSessionId = res.id;
+      setSesseionIdForHistory(multiSessionId);
+      // このマッチにおけるクイズ履歴を保存
+      try {
+        await saveMultiQuizHistory(multiSessionId, answerdQuizIds);
+      } catch (error) {
+        showNotification("履歴の保存に失敗しました", "error");
+      }
+    } catch (error) {
+      showNotification("履歴の保存に失敗しました", "error");
+    }
     setAnsweredQuizIds([]);
   };
 
   const handleGoHistory = () => {
-    navi(`/history/multiplay/${sessionIdForHistory}`);
+    window.location.href = `/history/multiplay/${sessionIdForHistory}`;
   };
 
   return (

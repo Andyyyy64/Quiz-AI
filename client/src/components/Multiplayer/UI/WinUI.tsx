@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Trophy, Star, ArrowRight, Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { MultiResultUIProps } from "../../../types/quizType";
@@ -10,7 +9,6 @@ export const WinUI: React.FC<MultiResultUIProps> = ({
   correctCount,
   isHistorySaved,
 }) => {
-  const navi = useNavigate();
   const winSound = useSound("win");
 
   useEffect(() => {
@@ -51,7 +49,7 @@ export const WinUI: React.FC<MultiResultUIProps> = ({
   }, []);
 
   const handleTopClick = () => {
-    navi("/");
+    window.location.href = "/";
   };
   return (
     <div className="bg-inherit text-[#333333] relative overflow-hidden flex items-center justify-center md:mb-5">
