@@ -19,6 +19,9 @@ import { Ranking } from "./pages/Ranking";
 import { SingleHistoryDetail } from "./components/History/SingleHistoryDetail";
 import { MultiHistoryDetail } from "./components/History/MultiHistoryDetail";
 
+import { CreateMatch } from "./components/Multiplayer/CreateMatch";
+import { JoinMatch } from "./components/Multiplayer/JoinMatch";
+
 import { AuthContext } from "./context/AuthContext";
 import { WebSocketProvider } from "./context/webSocketContext";
 
@@ -173,7 +176,15 @@ export const App: React.FC = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/multiplay" element={<Multiplayer />} />
+
+            <Route path="/multiplay/create" element={<CreateMatch />} />
+            <Route path="/multiplay/join" element={<JoinMatch />} />
+
             <Route path="/multiplay/:sessionId" element={<MultiPlayerPage />} />
+            <Route
+              path="/multiplay/custom/:sessionId"
+              element={<MultiPlayerPage />}
+            />
             <Route path="/singleplay" element={<SinglePlayer />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/about" element={<About />} />

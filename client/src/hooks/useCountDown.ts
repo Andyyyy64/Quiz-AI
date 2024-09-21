@@ -1,28 +1,37 @@
 import { useState, useEffect } from "react";
 
-export const useCountDown = (startValue: number) => {
-    const [countdown, setCountdown] = useState<number>(startValue);
-    const [isCounting, setIsCounting] = useState<boolean>(false);
+export const useCountDown = () => {
+  const [countdown, setCountdown] = useState(0);
+  const [isCounting, setIsCounting] = useState(false);
 
-    // カウントダウン処理
-    useEffect(() => {
-        if (isCounting && countdown > 0) {
-            const timer = setTimeout(() => {
-                setCountdown((prevCountdown) => prevCountdown - 1);
-            }, 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [isCounting, countdown]);
+  const startCountDown = (newTimeLimit: number) => {
+    setCountdown(newTimeLimit);
+    setIsCounting(true);
+  };
 
-    const startCountDown = () => {
-        setCountdown(startValue);
-        setIsCounting(true);
-    };
+  const resetCountDown = (newTimeLimit: number) => {
+    setIsCounting(false);
+    setCountdown(newTimeLimit);
+  };
 
-    const resetCountDown = () => {
-        setIsCounting(false);
-        setCountdown(startValue);
-    };
+  useEffect(() => {
+    let interval: any = null;
+    if (isCounting) {
+      interval = setInterval(() => {
+        setCountdown((prevCountdown) => {
+          if (prevCountdown > 0) {
+            return prevCountdown - 1;
+          } else {
+            clearInterval(interval);
+            return 0;
+          }
+        });
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isCounting]);
 
-    return { countdown, isCounting, startCountDown, resetCountDown };
+  return { countdown, isCounting, startCountDown, resetCountDown };
 };

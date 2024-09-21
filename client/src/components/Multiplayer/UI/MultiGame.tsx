@@ -21,6 +21,7 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
   correctCount,
   isDraw,
   opponentAnswer,
+  questionCount,
 }) => {
   const [showAnimation, setShowAnimation] = useState(false);
 
@@ -40,7 +41,7 @@ export const MultiGame: React.FC<QuizDisplayProps> = ({
     >
       <div className="w-full flex justify-between items-center px-2 md:p-4">
         <PlayerUI user={user} />
-        <QuizProgressUI currentQuizIndex={currentQuizIndex ?? 0} />
+        <QuizProgressUI currentQuizIndex={currentQuizIndex ?? 0} questionCount={questionCount}/>
         <OpponentUI opponent={opponent} />
       </div>
       <QuizDisplay

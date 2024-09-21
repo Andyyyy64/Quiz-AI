@@ -4,6 +4,8 @@ import { PreSingleSettingsProps } from "../../types/playType";
 import { useEffect } from "react";
 import { useSound } from "../../hooks/useSound";
 
+import { useIsOnline } from "../../context/isOnlineContext"
+
 const categories = [
   "ランダム",
   "科学",
@@ -34,11 +36,12 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
   setUseCustomCategory,
 }) => {
   const intaractSound = useSound("intaract");
+  const isOnline = useIsOnline();
 
   // エンターキーでクイズ開始
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
+      if (event.key === "Enter" && isOnline) {
         handleStartQuiz();
       }
     };
@@ -48,7 +51,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleStartQuiz]);
+  }, [isOnline]);
 
   return (
     <main className="md:w-1/2 w-full md:px-0 px-3 md:mb-16">

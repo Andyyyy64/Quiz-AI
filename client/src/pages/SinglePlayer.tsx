@@ -8,8 +8,9 @@ import { saveAnsweredQuiz } from "../api/user";
 import { saveSingleHistory, saveSingleQuizHistory } from "../api/history";
 
 import { AuthContext } from "../context/AuthContext";
+import { useIsOnline } from "../context/isOnlineContext";
 
-import { useCountDown } from "../hooks/useCountDown";
+import { useCountDownSinglePlay } from "../hooks/useCountDonwSinglePlay";
 import { useNotification } from "../hooks/useNotification";
 import { useCalcDuration } from "../hooks/useCalcDuration";
 import { useSound } from "../hooks/useSound";
@@ -54,15 +55,20 @@ export const SinglePlayer: React.FC = () => {
 
   // hooks
   const { countdown, isCounting, startCountDown, resetCountDown } =
-    useCountDown(timeLimit);
+    useCountDownSinglePlay(timeLimit);
+
   const { notification, showNotification } = useNotification();
+
   const { duration, startCountUp, stopCountUp, resetCountUp } =
     useCalcDuration();
+
   const correctSound = useSound("correct");
   const incorrectSound = useSound("incorrect");
+
   const navi = useNavigate();
 
   // context
+  const isOnline = useIsOnline();
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
@@ -71,6 +77,10 @@ export const SinglePlayer: React.FC = () => {
 
   // ゲーム開始時に設定画面を非表示、ローディングを開始
   const handleStartQuiz = () => {
+    if (!isOnline) {
+      showNotification("オフラインではプレイできません。", "error");
+      return;
+    }
     setIsSettings(false);
     setIsLoading(true);
   };
@@ -79,13 +89,24 @@ export const SinglePlayer: React.FC = () => {
   useEffect(() => {
     const fetchQuiz = async () => {
       if (is_loading && !is_settings) {
-        const res: any = await generateQuiz(
-          useCustomCategory ? customCategory : category,
-          difficulty,
-          user?.user_id,
-        );
-        setQuiz(res);
-        setIsLoading(false);
+        try {
+          const res: any = await generateQuiz(
+            useCustomCategory ? customCategory : category,
+            difficulty,
+            user?.user_id,
+          );
+          setQuiz(res);
+          setIsLoading(false);
+        } catch (error) {
+          showNotification(
+            "クイズの取得に失敗しました。トップに戻ります",
+            "error",
+          );
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 3000);
+          setIsLoading(false);
+        }
       }
     };
     fetchQuiz();
@@ -106,13 +127,22 @@ export const SinglePlayer: React.FC = () => {
       // 次の問題を取得(ただし最後は除く)
       if (currentQuizIndex !== questionCount) {
         console.log("fetching next quiz");
-        const res: any = await generateQuiz(
-          useCustomCategory ? customCategory : category,
-          difficulty,
-          user?.user_id,
-        );
-        setNextQuiz(res);
-
+        try {
+          const res: any = await generateQuiz(
+            useCustomCategory ? customCategory : category,
+            difficulty,
+            user?.user_id,
+          );
+          setNextQuiz(res);
+        } catch (error) {
+          showNotification(
+            "クイズの取得に失敗しました。トップに戻ります",
+            "error",
+          );
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 3000);
+        }
         // 最後の問題の場合はquizをフェッチせずにhandleNextQuestionを呼ぶ
       } else {
         setTimeout(() => {
@@ -138,9 +168,13 @@ export const SinglePlayer: React.FC = () => {
   useEffect(() => {
     const handleTimeUp = async () => {
       resetCountDown();
-      const res = await saveAnsweredQuiz(user?.user_id, quiz, "", false);
-      const quiz_id = res.quizID;
-      setAnsweredQuizIds((prev) => [...prev, quiz_id]);
+      try {
+        const res = await saveAnsweredQuiz(user?.user_id, quiz, "", false);
+        const quiz_id = res.quizID;
+        setAnsweredQuizIds((prev) => [...prev, quiz_id]);
+      } catch (error) {
+        showNotification("クイズの履歴保存に失敗しました。", "error");
+      }
       setIsTimeUp(true);
     };
     if (isCounting && countdown === 0) {
@@ -153,17 +187,25 @@ export const SinglePlayer: React.FC = () => {
     const saveHistory = async () => {
       if (isEnded) {
         stopCountUp(); // ゲームの終了時にカウントアップを停止
-        const res = await saveSingleHistory(
-          user?.user_id,
-          useCustomCategory ? customCategory : category,
-          difficulty,
-          questionCount,
-          correctCount,
-          duration,
-        );
-        const singleplay_id = res.id;
-        setSingleId(singleplay_id);
-        await saveSingleQuizHistory(singleplay_id, answeredQuizIds);
+        try {
+          const res = await saveSingleHistory(
+            user?.user_id,
+            useCustomCategory ? customCategory : category,
+            difficulty,
+            questionCount,
+            correctCount,
+            duration,
+          );
+          const singleplay_id = res.id;
+          setSingleId(singleplay_id);
+          try {
+            await saveSingleQuizHistory(singleplay_id, answeredQuizIds);
+          } catch (error) {
+            showNotification("履歴の保存に失敗しました。", "error");
+          }
+        } catch (error) {
+          showNotification("履歴の保存に失敗しました。", "error");
+        }
         setAnsweredQuizIds([]);
       }
     };
@@ -180,14 +222,18 @@ export const SinglePlayer: React.FC = () => {
       correctSound.play();
 
       // クイズと回答/正答をユーザーの履歴に保存
-      const res = await saveAnsweredQuiz(
-        user?.user_id,
-        quiz,
-        selectAnswer,
-        true,
-      );
-      const quiz_id = res.quizID;
-      setAnsweredQuizIds((prev) => [...prev, quiz_id]);
+      try {
+        const res = await saveAnsweredQuiz(
+          user?.user_id,
+          quiz,
+          selectAnswer,
+          true,
+        );
+        const quiz_id = res.quizID;
+        setAnsweredQuizIds((prev) => [...prev, quiz_id]);
+      } catch (error) {
+        showNotification("クイズの履歴保存に失敗しました。", "error");
+      }
       // 正解フラグを立てる
       setIsAnswerCorrect(true);
       // 正解数を更新
@@ -199,14 +245,18 @@ export const SinglePlayer: React.FC = () => {
       incorrectSound.play();
 
       // クイズと回答/正答をユーザーの履歴に保存
-      const res = await saveAnsweredQuiz(
-        user?.user_id,
-        quiz,
-        selectAnswer,
-        false,
-      );
-      const quiz_id = res.quizID;
-      setAnsweredQuizIds((prev) => [...prev, quiz_id]);
+      try {
+        const res = await saveAnsweredQuiz(
+          user?.user_id,
+          quiz,
+          selectAnswer,
+          false,
+        );
+        const quiz_id = res.quizID;
+        setAnsweredQuizIds((prev) => [...prev, quiz_id]);
+      } catch (error) {
+        showNotification("クイズの履歴保存に失敗しました。", "error");
+      }
       // 不正解フラグを立てる
       setIsAnswerCorrect(false);
     }

@@ -3,16 +3,24 @@ import { PreMatchLoadingProps } from "../../../types/quizType";
 
 import { useDots } from "../../../hooks/useDots";
 
-export const PreMatchLoading: React.FC<PreMatchLoadingProps> = ({ status }) => {
+export const PreMatchLoading: React.FC<PreMatchLoadingProps> = ({
+  status,
+  sessionId,
+}) => {
   const dots = useDots();
   return (
     <div
       className="sm:w-auto w-[80%] bg-white text-[#333333] mb-12
-        overflow-hidden flex items-center justify-center shadow-xl"
+                 overflow-hidden flex items-center justify-center shadow-xl"
     >
       <div className="z-10 text-center">
         <div className="bg-white rounded-xl shadow-md p-8 max-w-md mx-auto">
           <Users className="md:h-20 md:w-20 w-16 h-16 text-[#4ECDC4] mx-auto mb-6 animate-pulse" />
+          {sessionId && (
+            <p className="text-[#666666] mb-6 md:text-xl text-base">
+              部屋ID: {sessionId}
+            </p>
+          )}
           <h2 className="md:text-2xl text-lg font-bold mb-4">
             {status}
             {dots}

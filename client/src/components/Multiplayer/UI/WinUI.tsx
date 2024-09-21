@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Trophy, Star, ArrowRight, Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { MultiResultUIProps } from "../../../types/quizType";
@@ -9,8 +8,8 @@ export const WinUI: React.FC<MultiResultUIProps> = ({
   handleGoHistory,
   correctCount,
   isHistorySaved,
+  isCustomMatch,
 }) => {
-  const navi = useNavigate();
   const winSound = useSound("win");
 
   useEffect(() => {
@@ -51,7 +50,7 @@ export const WinUI: React.FC<MultiResultUIProps> = ({
   }, []);
 
   const handleTopClick = () => {
-    navi("/");
+    window.location.href = "/";
   };
   return (
     <div className="bg-inherit text-[#333333] relative overflow-hidden flex items-center justify-center md:mb-5">
@@ -62,13 +61,19 @@ export const WinUI: React.FC<MultiResultUIProps> = ({
         </h2>
         <p className="text-xl mb-6 font-semibold">マッチに勝利しました!</p>
         <div className="text-center mb-5">
-          <span className="font-bold text-[#4ECDC4]">
-            {correctCount ? correctCount * 10 : 0}ポイント獲得！
-          </span>
+          {isCustomMatch ? (
+            <span className="font-bold text-[#4ECDC4]">
+              カスタムマッチなのでポイントは獲得できません
+            </span>
+          ) : (
+            <span className="font-bold text-[#4ECDC4]">
+              {correctCount ? correctCount * 10 : 0}ポイント獲得！
+            </span>
+          )}
         </div>
         <button
           className="mb-6 bg-[#4ECDC4] hover:bg-[#45b7a7] text-white
-                        p-2 pl-5 pr-5 rounded-lg"
+                     p-2 pl-5 pr-5 rounded-lg"
           onClick={handleGoHistory}
         >
           {isHistorySaved ? (
@@ -86,7 +91,7 @@ export const WinUI: React.FC<MultiResultUIProps> = ({
 
         <button
           className="w-full bg-[#FF6B6B] hover:bg-[#ff8c8c]
-                text-white p-2 rounded-lg relative font-semibold"
+                     text-white p-2 rounded-lg relative font-semibold"
           onClick={handleTopClick}
         >
           topに戻る

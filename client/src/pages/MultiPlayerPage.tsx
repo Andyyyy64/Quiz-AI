@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 import { AuthContext } from "../context/AuthContext";
 
@@ -30,9 +30,12 @@ export const MultiPlayerPage: React.FC = () => {
 
   // datas
   const { sessionId } = useParams<{ sessionId: any }>();
+  const [status, setStatus] = useState<string>("マッチング中");
   const [quiz, setQuiz] = useState<QuizType>(); // 現在のクイズ
   const [nextQuiz, setNextQuiz] = useState<QuizType>(); // 次のクイズ
   const [opponent, setOpponent] = useState<wsUserType | null>(null); // マッチした相手の情報
+  const [timeLimit, setTimeLimit] = useState<number>(30); // 制限時間
+  const [question_num, setQuestionNum] = useState<number>(MATCH_QUESTION_NUM); // 問題数
   const [userAnswer, setUserAnswer] = useState<string>(""); // ユーザーの回答
   const [opponentAnswer, setOpponentAnswer] = useState<string>(""); // 相手の回答
   const [currentQuizIndex, setCurrentQuizIndex] = useState(1); // 現在のクイズのインデックス
@@ -61,40 +64,55 @@ export const MultiPlayerPage: React.FC = () => {
   const [matchEnd, setMatchEnd] = useState(false); // マッチ終了フラグ
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
-    useCountDown(30); // 制限時間
+    useCountDown(); // 制限時間
   const { duration, startCountUp, stopCountUp, resetCountUp } =
     useCalcDuration();
+  const { notification, showNotification } = useNotification();
 
   const correctSound = useSound("correct");
   const incorrectSound = useSound("incorrect");
-
-  const { notification, showNotification } = useNotification();
-  const navi = useNavigate();
 
   const authContext = useContext(AuthContext);
   if (authContext === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   const { user } = authContext;
-
   const { ws, send } = useWebSocketContext();
+
+  const location = useLocation();
+  const isCustomMatch =
+    location.pathname === `/multiplay/custom/${sessionId}` ? true : false; // カスタムマッチかどうか
 
   useEffect(() => {
     if (ws) {
       ws.onmessage = (message) => {
         const data = JSON.parse(message.data);
         // メッセージに基づく処理
+        if (data.success && data.message === "prefetch") {
+          setStatus("処理中");
+          if (data.timeLimit && data.questionCount) {
+            setTimeLimit(data.timeLimit);
+            setQuestionNum(data.questionCount);
+          }
+        }
+
         if (data.success && data.message === "matched") {
           setOpponent(data.opponent);
           setMatchedUI(true);
-          startCountDown();
+          if (data.quiz && data.quiz.choices.length > 4) {
+            showNotification(
+              "クイズの取得に失敗しました。トップに戻ります",
+              "error",
+            );
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 3000);
+          }
           setQuiz(data.quiz);
-
           setTimeout(() => {
             setMatchedUI(false);
-            resetCountDown();
             setIsMatched(true);
-            startCountDown();
+            startCountDown(data.timeLimit);
             startCountUp();
           }, 10000); // 10秒後にマッチングUIを非表示
 
@@ -104,7 +122,7 @@ export const MultiPlayerPage: React.FC = () => {
           data.is_correct === true
         ) {
           // カウントダウンをリセット
-          resetCountDown();
+          resetCountDown(timeLimit);
           console.log("opponent_correct_answer");
           // 相手の正解数を更新
           setOpponentCorrectCount((prev) => prev + 1);
@@ -131,7 +149,7 @@ export const MultiPlayerPage: React.FC = () => {
               "error",
             );
             setTimeout(() => {
-              navi("/");
+              window.location.href = "/";
             }, 3000);
           }
           // 次のクイズを受信した場合、
@@ -151,15 +169,30 @@ export const MultiPlayerPage: React.FC = () => {
           console.log("Waiting for opponent...");
         } else if (data.success === false) {
           showNotification(data.message, "error");
+
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 3000);
+        } else if (data.message === "failed_quiz_gen") {
+          showNotification(
+            "クイズの取得に失敗しました。トップに戻ります",
+            "error",
+          );
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 3000);
         }
       };
-
-      if (ws.readyState === WebSocket.OPEN) {
+      if (ws.readyState === WebSocket.OPEN && !isCustomMatch) {
         send({ action: "join_session", sessionId: Number(sessionId) });
-      } else {
-        ws.onopen = () => {
-          send({ action: "join_session", sessionId: Number(sessionId) });
-        };
+      } else if (ws.readyState === WebSocket.OPEN && isCustomMatch) {
+        send({
+          action: "join_custom_session",
+          id: user?.user_id,
+          name: user?.name,
+          prof_image_url: user?.prof_image_url,
+          sessionId: Number(sessionId),
+        });
       }
     }
   }, [ws]);
@@ -168,12 +201,9 @@ export const MultiPlayerPage: React.FC = () => {
   // 最後の問題の時はfetchしない
   useEffect(() => {
     const fetchNextQuiz = async () => {
-      if (isAnswerCorrect && !(currentQuizIndex >= MATCH_QUESTION_NUM)) {
+      if (isAnswerCorrect && !(currentQuizIndex >= question_num)) {
         send({ action: "fetch_next_quiz" });
-      } else if (
-        currentQuizIndex >= MATCH_QUESTION_NUM &&
-        isAnswerCorrect != null
-      ) {
+      } else if (currentQuizIndex >= question_num && isAnswerCorrect != null) {
         handleNextQuestion();
       }
     };
@@ -195,15 +225,15 @@ export const MultiPlayerPage: React.FC = () => {
     if (isCounting && countdown === 0) {
       setIsTimeUp(true);
       setCanAnswer(false);
-      resetCountDown();
+      resetCountDown(timeLimit);
       // クイズをユーザーの履歴に保存
       handleAnswerSaved(false, quiz, userAnswer);
       // 一方のみに送信するようにidを比較
-      if (currentQuizIndex < MATCH_QUESTION_NUM) {
+      if (currentQuizIndex < question_num) {
         if ((user?.user_id ?? 0) > (opponent?.id ?? 1)) {
           send({ action: "fetch_next_quiz" });
         }
-      } else if (currentQuizIndex >= MATCH_QUESTION_NUM && countdown === 0) {
+      } else if (currentQuizIndex >= question_num && countdown === 0) {
         handleNextQuestion();
       }
     }
@@ -213,9 +243,9 @@ export const MultiPlayerPage: React.FC = () => {
   useEffect(() => {
     if (isDraw && !winner) {
       setCanAnswer(false);
-      resetCountDown();
+      resetCountDown(timeLimit);
       handleAnswerSaved(false, quiz, userAnswer);
-      if (currentQuizIndex < MATCH_QUESTION_NUM) {
+      if (currentQuizIndex < question_num) {
         // 一方のみに送信するようにidを比較
         if ((user?.user_id ?? 0) > (opponent?.id ?? 1)) {
           send({ action: "fetch_next_quiz" });
@@ -253,7 +283,7 @@ export const MultiPlayerPage: React.FC = () => {
     setUserAnswer(selectAnswer);
     if (selectAnswer === quiz?.correct_answer) {
       // 正解時の処理
-      resetCountDown(); // カウントダウンをリセット
+      resetCountDown(timeLimit); // カウントダウンをリセット
       correctSound.play(); // 正解音を再生
       setCorrectCount((prev) => prev + 1); // 正解数を更新
       handleAnswerSaved(true, quiz, selectAnswer); // クイズと回答/正答をユーザーの履歴に保存
@@ -270,7 +300,7 @@ export const MultiPlayerPage: React.FC = () => {
   // 次の問題に進む処理
   const handleNextQuestion = () => {
     // 10問終わって勝者が決まった場合
-    if (currentQuizIndex >= MATCH_QUESTION_NUM) {
+    if (currentQuizIndex >= question_num) {
       if (correctCount > opponentCorrectCount) {
         send({ action: "victory", winner: user?.name });
         return;
@@ -289,7 +319,7 @@ export const MultiPlayerPage: React.FC = () => {
       // fetchされた次の問題をセット
       setQuiz(nextQuiz);
       setCanAnswer(true);
-      startCountDown();
+      startCountDown(timeLimit);
     }
   };
 
@@ -319,27 +349,35 @@ export const MultiPlayerPage: React.FC = () => {
     const winnerId = winner === user?.name ? user.user_id : opponentt?.id;
 
     // ポイントを更新
-    await updatePoints(user?.user_id, userPoints + points_awarded);
-
+    if (!isCustomMatch) {
+      await updatePoints(user?.user_id, userPoints + points_awarded);
+    }
     // マッチング履歴を保存
-    const res = await saveMultiHistory(
-      user?.user_id,
-      opponentt,
-      winnerId,
-      points_awarded,
-      match_duration,
-      MATCH_QUESTION_NUM,
-    );
-    const multiSessionId = res.id;
-    setSesseionIdForHistory(multiSessionId);
-    // このマッチにおけるクイズ履歴を保存
-    await saveMultiQuizHistory(multiSessionId, answerdQuizIds);
-
+    try {
+      const res = await saveMultiHistory(
+        user?.user_id,
+        opponentt,
+        winnerId,
+        isCustomMatch ? 0 : points_awarded,
+        match_duration,
+        question_num,
+      );
+      const multiSessionId = res.id;
+      setSesseionIdForHistory(multiSessionId);
+      // このマッチにおけるクイズ履歴を保存
+      try {
+        await saveMultiQuizHistory(multiSessionId, answerdQuizIds);
+      } catch (error) {
+        showNotification("履歴の保存に失敗しました", "error");
+      }
+    } catch (error) {
+      showNotification("履歴の保存に失敗しました", "error");
+    }
     setAnsweredQuizIds([]);
   };
 
   const handleGoHistory = () => {
-    navi(`/history/multiplay/${sessionIdForHistory}`);
+    window.location.href = `/history/multiplay/${sessionIdForHistory}`;
   };
 
   return (
@@ -355,10 +393,13 @@ export const MultiPlayerPage: React.FC = () => {
             />
           )}
           {!isMatched && !matchedUI && (
-            <PreMatchLoading status="マッチング中" />
+            <PreMatchLoading
+              status={status}
+              sessionId={isCustomMatch ? sessionId : null}
+            />
           )}
-          {matchedUI && isCounting && (
-            <MatchedUI opponent={opponent} user={user} countdown={countdown} />
+          {matchedUI && (
+            <MatchedUI opponent={opponent} user={user} />
           )}
           {!matchedUI && isMatched && !winner && (
             <MultiGame
@@ -375,6 +416,7 @@ export const MultiPlayerPage: React.FC = () => {
               correctCount={correctCount}
               isDraw={isDraw}
               opponentAnswer={opponentAnswer}
+              questionCount={question_num}
             />
           )}
           {/* 勝者が決まったら表示　*/}
@@ -385,6 +427,7 @@ export const MultiPlayerPage: React.FC = () => {
                   handleGoHistory={handleGoHistory}
                   correctCount={correctCount}
                   isHistorySaved={isHistorySaved}
+                  isCustomMatch={isCustomMatch}
                 />
               ) : (
                 <LoseUI winner={winner} handleGoHistory={handleGoHistory} />

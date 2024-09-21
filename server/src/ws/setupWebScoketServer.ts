@@ -15,12 +15,14 @@ interface Session {
   quiz: QuizType | undefined;
   correctCount: { [playerId: number]: number };
   matchEnded: boolean;
+  category?: string;
+  difficulty?: string;
+  timeLimit?: number;
+  questionCount?: number;
 }
-
 // session_idをキーにしてセッションを格納するマップ
 const sessions: Map<number, Session> = new Map();
-// 待機中のプレイヤーを格納するキュー
-const waitingPlayers: Player[] = [];
+const customSessions: Map<number, Session> = new Map();
 
 export const setupWebSocketServer = (server: any) => {
   const wss = new WebSocketServer({ server });
@@ -39,7 +41,12 @@ export const setupWebSocketServer = (server: any) => {
         winner,
         selectedAnswer,
         sessionId,
+        category,
+        difficulty,
+        timeLimit,
+        questionCount,
       } = data;
+      console.log(data);
       // プレイヤーの接続・マッチメイキング処理
       if (!currentPlayer) {
         currentPlayer = { id, name, prof_image_url, ws };
@@ -49,15 +56,31 @@ export const setupWebSocketServer = (server: any) => {
           console.log(currentSession);
           if (currentSession && currentSession.players.length < 2) {
             currentSession.players.push(currentPlayer);
+            currentSession.players.forEach((player) => {
+              player.ws.send(
+                JSON.stringify({
+                  success: true,
+                  message: "prefetch",
+                }),
+              );
+            });
             try {
               currentSession.quiz = await generateQuiz(
-                "ランダム",
-                "ランダム",
+                currentSession.category || "ランダム",
+                currentSession.difficulty || "ランダム",
                 currentSession.players[0].id,
                 currentSession.players[1].id,
               );
             } catch (error) {
               console.error("クイズの取得に失敗しました:", error);
+              currentSession.players.forEach((player) => {
+                player.ws.send(
+                  JSON.stringify({
+                    success: false,
+                    message: "failed_quiz_gen",
+                  }),
+                );
+              });
               throw error;
             }
             // send matched noti to both players
@@ -115,14 +138,22 @@ export const setupWebSocketServer = (server: any) => {
               );
               try {
                 currentSession.quiz = await generateQuiz(
-                  "ランダム",
-                  "ランダム",
+                  currentSession.category || "ランダム",
+                  currentSession.difficulty || "ランダム",
                   currentSession.players[0].id,
                   currentSession.players[1].id,
                 );
                 console.log(currentSession.quiz);
               } catch (error) {
                 console.error("クイズの取得に失敗しました:", error);
+                currentSession.players.forEach((player) => {
+                  player.ws.send(
+                    JSON.stringify({
+                      success: false,
+                      message: "failed_quiz_gen",
+                    }),
+                  );
+                });
                 throw error;
               }
               // 両方のプレイヤーにマッチ成功を通知
@@ -173,21 +204,118 @@ export const setupWebSocketServer = (server: any) => {
                 success: true,
                 message: "create_new_session",
                 sessionId: newSessionId,
+                category: category,
+                difficulty: difficulty,
               }),
             );
             console.log("Creating new session with id:", newSessionId);
             currentSession = {
               sessionId: newSessionId,
               players: [currentPlayer],
+              category: category,
+              difficulty: difficulty,
               quiz: undefined,
               correctCount: {},
               matchEnded: false,
             };
             sessions.set(newSessionId, currentSession);
           }
+        } else if (action === "create_custom_session") {
+          const newSessionId = Math.floor(Math.random() * 1000000);
+          ws.send(
+            JSON.stringify({
+              success: true,
+              message: "create_new_custom_session",
+              sessionId: newSessionId,
+              timeLimit: timeLimit,
+              questionCount: questionCount,
+              category: category,
+              difficulty: difficulty,
+            }),
+          );
+          console.log("Creating new session with id:", newSessionId);
+          currentSession = {
+            sessionId: newSessionId,
+            players: [currentPlayer],
+            category: category,
+            difficulty: difficulty,
+            timeLimit: timeLimit,
+            questionCount: questionCount,
+            quiz: undefined,
+            correctCount: {},
+            matchEnded: false,
+          };
+          customSessions.set(newSessionId, currentSession);
+        } else if (action === "join_custom_session" && sessionId != undefined) {
+          currentSession = customSessions.get(sessionId) || null;
+          if (currentSession && currentSession.players.length < 2) {
+            currentSession.players.push(currentPlayer);
+            console.log(currentSession);
+            currentSession.players.forEach((player) => {
+              player.ws.send(
+                JSON.stringify({
+                  success: true,
+                  message: "prefetch",
+                  timeLimit: currentSession?.timeLimit,
+                  questionCount: currentSession?.questionCount,
+                }),
+              );
+            });
+            try {
+              currentSession.quiz = await generateQuiz(
+                currentSession.category || "ランダム",
+                currentSession.difficulty || "ランダム",
+                currentSession.players[0].id,
+                currentSession.players[1].id,
+              );
+            } catch (error) {
+              console.error("クイズの取得に失敗しました:", error);
+              currentSession.players.forEach((player) => {
+                player.ws.send(
+                  JSON.stringify({
+                    message: "failed_quiz_gen",
+                  }),
+                );
+              });
+              throw error;
+            }
+            // send matched noti to both players
+            currentSession.players.forEach((player) => {
+              player.ws.send(
+                JSON.stringify({
+                  success: true,
+                  message: "matched",
+                  quiz: currentSession?.quiz,
+                  timeLimit: currentSession?.timeLimit,
+                  questionCount: currentSession?.questionCount,
+                  session_id: currentSession?.sessionId,
+                  opponent: {
+                    id: currentSession?.players.find((p) => p.id !== player.id)
+                      ?.id,
+                    name: currentSession?.players.find(
+                      (p) => p.id !== player.id,
+                    )?.name,
+                    prof_image_url: currentSession?.players.find(
+                      (p) => p.id !== player.id,
+                    )?.prof_image_url,
+                  },
+                }),
+              );
+            });
+          } else {
+            // if session is full or not exist
+            ws.send(
+              JSON.stringify({
+                success: false,
+                message:
+                  "セッションが存在しないか、既に満員です。トップに戻ります",
+              }),
+            );
+          }
         }
       }
-      // if currentSession exists
+
+      // if currentSession exists, execute the action
       if (currentSession) {
         if (action == "answerd") {
           const opponent = currentSession.players.find(
@@ -216,14 +344,26 @@ export const setupWebSocketServer = (server: any) => {
           }
         } else if (action === "fetch_next_quiz") {
           console.log("fetching next quiz");
-          currentSession.quiz = await generateQuiz(
-            "ランダム",
-            "ランダム",
-            currentSession.players[0].id,
-            currentSession.players[1].id,
-          );
-          console.log(currentSession.quiz);
-
+          try {
+            currentSession.quiz = await generateQuiz(
+              currentSession.category || "ランダム",
+              currentSession.difficulty || "ランダム",
+              currentSession.players[0].id,
+              currentSession.players[1].id,
+            );
+            console.log(currentSession.quiz);
+          } catch (error) {
+            console.error("クイズの取得に失敗しました:", error);
+            currentSession.players.forEach((player) => {
+              player.ws.send(
+                JSON.stringify({
+                  success: false,
+                  message: "failed_quiz_gen",
+                }),
+              );
+            });
+            throw error;
+          }
           currentSession.players.forEach((player) => {
             player.ws.send(
               JSON.stringify({

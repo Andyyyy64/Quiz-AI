@@ -3,9 +3,12 @@ import { App } from "./App.tsx";
 import "./index.css";
 
 import { AuthProvider } from "./context/AuthContext.tsx";
+import { IsOnlineProvider } from "./context/isOnlineContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  <AuthProvider>
-    <App />
-  </AuthProvider>,
+  <IsOnlineProvider>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </IsOnlineProvider>,
 );
