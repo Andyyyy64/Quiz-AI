@@ -51,7 +51,7 @@ export const PreSingleSettings: React.FC<PreSingleSettingsProps> = ({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [handleStartQuiz]);
+  }, [isOnline]);
 
   return (
     <main className="md:w-1/2 w-full md:px-0 px-3 md:mb-16">
