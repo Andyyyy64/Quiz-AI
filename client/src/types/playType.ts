@@ -46,6 +46,7 @@ export type AfterSingleResultProps = {
     difficulty: string;
     handleRestart: () => void;
     handleGoHistory: () => void;
+    isCustomMatch?: boolean;
 }
 
 export type SingleGameProps = {
