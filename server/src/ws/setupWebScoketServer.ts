@@ -286,6 +286,8 @@ export const setupWebSocketServer = (server: any) => {
                   success: true,
                   message: "matched",
                   quiz: currentSession?.quiz,
+                  timeLimit: currentSession?.timeLimit,
+                  questionCount: currentSession?.questionCount,
                   session_id: currentSession?.sessionId,
                   opponent: {
                     id: currentSession?.players.find((p) => p.id !== player.id)

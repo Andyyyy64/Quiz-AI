@@ -57,7 +57,6 @@ export type PreMatchLoadingProps = {
 export type MatchedUIProps = {
   opponent: wsUserType | null;
   user: UserType | null;
-  countdown: number;
 };
 
 export type QuizProgressUIProps = {

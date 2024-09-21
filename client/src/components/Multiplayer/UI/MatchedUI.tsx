@@ -1,16 +1,16 @@
 import { Zap } from "lucide-react";
 import { MatchedUIProps } from "../../../types/quizType";
 import { useEffect, useState } from "react";
+import { useCountDown } from "../../../hooks/useCountDown";
 
-export const MatchedUI: React.FC<MatchedUIProps> = ({
-  opponent,
-  user,
-  countdown,
-}) => {
+export const MatchedUI: React.FC<MatchedUIProps> = ({ opponent, user }) => {
   const [showVs, setShowVs] = useState(false);
   const [showPlayers, setShowPlayers] = useState(false);
+  const { countdown, isCounting, startCountDown, resetCountDown } =
+    useCountDown(); // 制限時間
 
   useEffect(() => {
+    startCountDown(10);
     const playersTimer = setTimeout(() => {
       setShowPlayers(true);
     }, 300);
@@ -24,6 +24,12 @@ export const MatchedUI: React.FC<MatchedUIProps> = ({
       clearTimeout(playersTimer);
     };
   }, []);
+
+  useEffect(() => {
+    if (isCounting && countdown === 0) {
+      resetCountDown(10);
+    }
+  }, [countdown]);
 
   return (
     <div className="w-full z-10 text-center">
@@ -73,7 +79,7 @@ export const MatchedUI: React.FC<MatchedUIProps> = ({
         <p className="md:text-xl text-base mt-8 animate-pulse mb-5">
           壮大な知識のバトルに備えよ！
         </p>
-        <h1 className="text-lg font-bold">開始まで{countdown - 20}秒</h1>
+        <h1 className="text-lg font-bold">開始まで{countdown}秒</h1>
       </div>
     </div>
   );

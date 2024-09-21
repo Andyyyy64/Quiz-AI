@@ -46,10 +46,10 @@ export const CreateMatch: React.FC = () => {
   const { ws, send } = useWebSocketContext();
 
   const handleCreateMatch = () => {
+    intaractSound.play();
     if (ws) {
       ws.onmessage = (message) => {
         const data = JSON.parse(message.data);
-        console.log(data);
         if (data.message === "create_new_custom_session" && data.sessionId) {
           navi(`/multiplay/custom/${data.sessionId}`);
         }

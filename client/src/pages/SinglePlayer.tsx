@@ -10,7 +10,7 @@ import { saveSingleHistory, saveSingleQuizHistory } from "../api/history";
 import { AuthContext } from "../context/AuthContext";
 import { useIsOnline } from "../context/isOnlineContext";
 
-import { useCountDown } from "../hooks/useCountDown";
+import { useCountDownSinglePlay } from "../hooks/useCountDonwSinglePlay";
 import { useNotification } from "../hooks/useNotification";
 import { useCalcDuration } from "../hooks/useCalcDuration";
 import { useSound } from "../hooks/useSound";
@@ -55,7 +55,7 @@ export const SinglePlayer: React.FC = () => {
 
   // hooks
   const { countdown, isCounting, startCountDown, resetCountDown } =
-    useCountDown(timeLimit);
+    useCountDownSinglePlay(timeLimit);
 
   const { notification, showNotification } = useNotification();
 

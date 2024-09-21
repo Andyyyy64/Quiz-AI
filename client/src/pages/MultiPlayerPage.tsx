@@ -64,7 +64,7 @@ export const MultiPlayerPage: React.FC = () => {
   const [matchEnd, setMatchEnd] = useState(false); // マッチ終了フラグ
 
   const { countdown, isCounting, startCountDown, resetCountDown } =
-    useCountDown(timeLimit); // 制限時間
+    useCountDown(); // 制限時間
   const { duration, startCountUp, stopCountUp, resetCountUp } =
     useCalcDuration();
   const { notification, showNotification } = useNotification();
@@ -99,7 +99,6 @@ export const MultiPlayerPage: React.FC = () => {
         if (data.success && data.message === "matched") {
           setOpponent(data.opponent);
           setMatchedUI(true);
-          startCountDown();
           if (data.quiz && data.quiz.choices.length > 4) {
             showNotification(
               "クイズの取得に失敗しました。トップに戻ります",
@@ -110,12 +109,10 @@ export const MultiPlayerPage: React.FC = () => {
             }, 3000);
           }
           setQuiz(data.quiz);
-
           setTimeout(() => {
             setMatchedUI(false);
-            resetCountDown();
             setIsMatched(true);
-            startCountDown();
+            startCountDown(data.timeLimit);
             startCountUp();
           }, 10000); // 10秒後にマッチングUIを非表示
 
@@ -125,7 +122,7 @@ export const MultiPlayerPage: React.FC = () => {
           data.is_correct === true
         ) {
           // カウントダウンをリセット
-          resetCountDown();
+          resetCountDown(timeLimit);
           console.log("opponent_correct_answer");
           // 相手の正解数を更新
           setOpponentCorrectCount((prev) => prev + 1);
@@ -228,7 +225,7 @@ export const MultiPlayerPage: React.FC = () => {
     if (isCounting && countdown === 0) {
       setIsTimeUp(true);
       setCanAnswer(false);
-      resetCountDown();
+      resetCountDown(timeLimit);
       // クイズをユーザーの履歴に保存
       handleAnswerSaved(false, quiz, userAnswer);
       // 一方のみに送信するようにidを比較
@@ -246,7 +243,7 @@ export const MultiPlayerPage: React.FC = () => {
   useEffect(() => {
     if (isDraw && !winner) {
       setCanAnswer(false);
-      resetCountDown();
+      resetCountDown(timeLimit);
       handleAnswerSaved(false, quiz, userAnswer);
       if (currentQuizIndex < question_num) {
         // 一方のみに送信するようにidを比較
@@ -286,7 +283,7 @@ export const MultiPlayerPage: React.FC = () => {
     setUserAnswer(selectAnswer);
     if (selectAnswer === quiz?.correct_answer) {
       // 正解時の処理
-      resetCountDown(); // カウントダウンをリセット
+      resetCountDown(timeLimit); // カウントダウンをリセット
       correctSound.play(); // 正解音を再生
       setCorrectCount((prev) => prev + 1); // 正解数を更新
       handleAnswerSaved(true, quiz, selectAnswer); // クイズと回答/正答をユーザーの履歴に保存
@@ -322,7 +319,7 @@ export const MultiPlayerPage: React.FC = () => {
       // fetchされた次の問題をセット
       setQuiz(nextQuiz);
       setCanAnswer(true);
-      startCountDown();
+      startCountDown(timeLimit);
     }
   };
 
@@ -401,8 +398,8 @@ export const MultiPlayerPage: React.FC = () => {
               sessionId={isCustomMatch ? sessionId : null}
             />
           )}
-          {matchedUI && isCounting && (
-            <MatchedUI opponent={opponent} user={user} countdown={countdown} />
+          {matchedUI && (
+            <MatchedUI opponent={opponent} user={user} />
           )}
           {!matchedUI && isMatched && !winner && (
             <MultiGame
