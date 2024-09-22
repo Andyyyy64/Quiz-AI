@@ -59,12 +59,9 @@ export const Home: React.FC = () => {
         className="container mx-auto  px-4 flex flex-col items-center
       absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
-        <div className="text-center space-y-8 mb-16 w-full max-w-screen-md">
+        <div className="text-center space-y-8 mb-16 w-full max-w-md">
           {/* スマホ時の favicon */}
           <img className="md:hidden w-128 h-64 object-contain" src="/favicon.png" alt="Logo" />
-
-          {/* デスクトップ時のロゴ */}
-          <img className="hidden md:block w-[800px] h-[400px] object-fill" src="/favicon.png" alt="Logo" /> 
 
           <Button
             className="w-full h-16 text-xl py-6 px-12 hover:bg-[#66e4db]

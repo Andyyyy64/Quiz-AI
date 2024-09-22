@@ -69,9 +69,11 @@ export const Header: React.FC = () => {
       {/* 上部バー */}
       <div className="flex justify-between items-center md:px-4 md:pt-1">
         {/* 左側 */}
-        {location.pathname !== "/" ? (
-          <div className="flex items-center">
-            {/* スマホ時の favicon */}
+        <div className="flex items-center">
+          {/* スマホ時の ロゴ */}
+          {location.pathname === "/" ? (
+            <p className="md:hidden p-10"></p>
+          ):(
             <Link to="/" className="md:hidden p-2">
               <img
                 className="w-32 h-16 object-contain"
@@ -79,25 +81,17 @@ export const Header: React.FC = () => {
                 alt="Logo"
               />
             </Link>
+          )}
 
-            {/* デスクトップ時のロゴ */}
-            <Link to="/" className="hidden md:block" onClick={handleHomeClick}>
-              <img
-                className="w-44 h-22 object-fill"
-                src="/favicon.png"
-                alt="Logo"
-              />
-            </Link>
-          </div>
-          ) : (
-            <div className="flex items-center">
-            {/* スマホ時の 空白 */}
-            <p className="md:hidden w-32 h-16 p-2"></p>
-            {/* デスクトップ時の空白 */}
-            <p className="hidden md:block w-44 h-22"></p>
-          </div>
-          )
-        }
+          {/* デスクトップ時のロゴ */}
+          <Link to="/" className="hidden md:block" onClick={handleHomeClick}>
+            <img
+              className="w-44 h-22 object-fill"
+              src="/favicon.png"
+              alt="Logo"
+            />
+          </Link>
+        </div>
 
         {/* 右側 */}
         <div className="flex items-center">

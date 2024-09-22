@@ -32,6 +32,9 @@ export const About = () => {
             >
               <ArrowLeft className="h-7 w-7 text-black hidden md:block" />
             </button>
+            <h1 className="hidden md:block md:text-2xl text-xl font-bold text-center text-black">
+                クイズ！AIが作った問題 について
+            </h1>
           </div>
 
           <section className="mb-8">
@@ -66,23 +69,25 @@ export const About = () => {
                 実際、まだAIを使ったことがない方も多くいます。
               </span>
               <span className="block mb-3">
-                私たちの目的は、クイズを通じてAIをより身近に感じてもらい、
-              </span>
-              <span className="block">
-                AIを使うことであなたの学びが何倍にも豊かになることを知ってもらうことです。
+                私たちの目的は、一人でも多くの人にクイズを楽しみながら、AIの可能性を知ってもらうことです。
               </span>
             </p>
+            <ul className="list-disc list-inside text-gray-700 space-y-2 md:text-base text-xs">
+              <li>クイズを通じてAIをより身近に感じてもらう</li>
+              <li>AIの価値と使い方を知ってもらう</li>
+              <li>クイズを一人で、皆で楽しんでもらう</li>
+            </ul>
           </section>
 
           <section className="mb-8">
             <h2 className="md:text-2xl text-xl font-semibold mb-4 text-[#4ECDC4]">
-              遊び方
+              主な特徴
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex flex-col items-center text-center">
                 <Zap className="md:h-12 md:w-12 w-10 h-10 text-[#FF6B6B] mb-2" />
                 <h3 className="font-semibold mb-1 md:text-base text-sm">
-                  シングルプレイ
+                  シングルプレイヤー
                 </h3>
                 <p className="md:text-sm text-xs text-gray-600">
                   AIが生成したクイズに挑戦しよう！
@@ -91,7 +96,7 @@ export const About = () => {
               <div className="flex flex-col items-center text-center ">
                 <Users className="md:h-12 md:w-12 w-10 h-10 text-[#FF6B6B] mb-2" />
                 <h3 className="font-semibold mb-1 md:text-base text-sm">
-                  マルチプレイ
+                  マルチプレイヤー
                 </h3>
                 <p className="md:text-sm text-xs text-gray-600">
                   一対一の真剣クイズ勝負！
@@ -119,10 +124,10 @@ export const About = () => {
                   このアプリではAIを使用してクイズを生成しています。
                 </span>
                 <span className="block mb-2">
-                  そのため、誤った回答や偏りのある質問が含まれる場合があります。
+                  私たちは正確さと品質を追求していますが、間違った回答や偏りのある質問が含まれる場合があります。
                 </span>
                 <span className="block">
-                  誤りや不具合に気づかれた場合は、ご報告ください。
+                ユーザーの皆様には、批判的な視点を持ってコンテンツに向き合い、不正確な点やバグなどがあれば報告して頂けると幸いです。
                 </span>
                 </p>
               <div className="flex justify-center mt-8">
@@ -141,8 +146,18 @@ export const About = () => {
             <h2 className="md:text-2xl font-semibold mb-4 text-[#4ECDC4]">
               さあ始めよう！
             </h2>
+            <p className="text-gray-700 leading-relaxed md:text-base text-xs">
+              <span className="block  mb-2">
+                あなただけのクイズの冒険に出発する準備はできましたか？
+              </span>
+              <span className="block mb-2">
+                今すぐ飛び込んで、自分自身に挑戦するか、インターネットの誰かと競い合いましょう。
+              </span>
+              <span className="block">
+                成功の鍵は勝つことだけでなく、学びと発見の喜びを楽しむことにあります。
+              </span>
+            </p>
           </section>
-          
         </div>
       </main>
       <Footer />
