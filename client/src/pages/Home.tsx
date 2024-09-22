@@ -59,7 +59,13 @@ export const Home: React.FC = () => {
         className="container mx-auto  px-4 flex flex-col items-center
       absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
-        <div className="text-center space-y-8 mb-16 w-full max-w-md">
+        <div className="text-center space-y-8 mb-16 w-full max-w-screen-md">
+          {/* スマホ時の favicon */}
+          <img className="md:hidden w-128 h-64 object-contain" src="/favicon.png" alt="Logo" />
+
+          {/* デスクトップ時のロゴ */}
+          <img className="hidden md:block w-[800px] h-[400px] object-fill" src="/favicon.png" alt="Logo" /> 
+
           <Button
             className="w-full h-16 text-xl py-6 px-12 hover:bg-[#66e4db]
             hover:scale-105 rounded-full"
@@ -70,6 +76,7 @@ export const Home: React.FC = () => {
               fontWeight: "bold",
               fontSize: "1.2rem",
               transition: "all 0.3s",
+              boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.3)",
             }}
             onClick={handleSinglePlayClick}
           >
@@ -77,7 +84,7 @@ export const Home: React.FC = () => {
             シングルプレイ
           </Button>
           <Button
-            className=" w-60 h-12 text-black shadow-lg
+            className=" w-72 h-14 text-black
             hover:scale-105 hover:cursor-pointer hover:bg-[#FF8787] transition-all"
             sx={{
               backgroundColor: "#FF6B6B",
@@ -85,6 +92,7 @@ export const Home: React.FC = () => {
               borderRadius: "9999px",
               fontWeight: "bold",
               transition: "all 0.3s",
+              boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.3)",
             }}
             onClick={handleMultiPlayClick}
           >

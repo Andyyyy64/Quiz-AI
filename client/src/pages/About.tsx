@@ -32,18 +32,25 @@ export const About = () => {
             >
               <ArrowLeft className="h-7 w-7 text-black hidden md:block" />
             </button>
-            <h1 className="md:text-2xl text-xl font-bold text-center text-black">
-              クイズ！AIが作った問題 について
-            </h1>
           </div>
 
           <section className="mb-8">
             <h2 className="md:text-2xl text-xl font-semibold mb-4 text-[#4ECDC4]">
-              クイズ！AIが作った問題 ってなに？
+              クイズ！AIが作った問題って何？
             </h2>
             <p className="text-gray-700 leading-relaxed md:text-base text-xs">
-              クイズAI
-              は幅広いトピックにわたってあなたの知識を試すために設計された革新的なオンラインクイズプラットフォームです。シングルプレイヤーとマルチプレイヤーの両方のモードを提供しており、AIが生成したクイズに挑戦したり、インターネットの誰かとリアルタイムで競い合うことができます。
+              <span className="block mb-3">
+                AIがリアルタイムで作成したクイズに、その場でチャレンジできる新感覚のクイズアプリです！
+              </span>
+              <span className="block mb-3">
+                クイズのカテゴリや難易度は自由に設定可能です。
+              </span>
+              <span className="block mb-3">
+                プレイするたびに新しい発見と挑戦が待っています。
+              </span>
+              <span className="block">
+                あなただけのクイズを体験してみませんか？
+              </span>
             </p>
           </section>
 
@@ -52,28 +59,30 @@ export const About = () => {
               私たちの目的
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4 md:text-base text-xs">
-              クイズAI
-              では生成AIを通じて学びを楽しく、魅力的で、誰にでもアクセスできるものにすることを目指しています。私たちは次のことを目標としています
+              <span className="block mb-3">
+                AIが進化する中で、どれだけの人がその可能性を知っているでしょうか？
+              </span>
+              <span className="block mb-3">
+                実際、まだAIを使ったことがない方も多くいます。
+              </span>
+              <span className="block mb-3">
+                私たちの目的は、クイズを通じてAIをより身近に感じてもらい、
+              </span>
+              <span className="block">
+                AIを使うことであなたの学びが何倍にも豊かになることを知ってもらうことです。
+              </span>
             </p>
-            <ul className="list-disc list-inside text-gray-700 space-y-2 md:text-base text-xs">
-              <li>好奇心を刺激し、生涯学習を促進すること</li>
-              <li>フレンドリーな競争と知識共有の場を提供すること</li>
-              <li>多様な興味に応えるため、幅広いトピックを提供すること</li>
-              <li>
-                あらゆるレベルのクイズ愛好者に対して、包括的な環境を作り出すこと
-              </li>
-            </ul>
           </section>
 
           <section className="mb-8">
             <h2 className="md:text-2xl text-xl font-semibold mb-4 text-[#4ECDC4]">
-              主な特徴
+              遊び方
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex flex-col items-center text-center">
                 <Zap className="md:h-12 md:w-12 w-10 h-10 text-[#FF6B6B] mb-2" />
                 <h3 className="font-semibold mb-1 md:text-base text-sm">
-                  シングルプレイヤー
+                  シングルプレイ
                 </h3>
                 <p className="md:text-sm text-xs text-gray-600">
                   AIが生成したクイズに挑戦しよう！
@@ -82,7 +91,7 @@ export const About = () => {
               <div className="flex flex-col items-center text-center ">
                 <Users className="md:h-12 md:w-12 w-10 h-10 text-[#FF6B6B] mb-2" />
                 <h3 className="font-semibold mb-1 md:text-base text-sm">
-                  マルチプレイヤー
+                  マルチプレイ
                 </h3>
                 <p className="md:text-sm text-xs text-gray-600">
                   一対一の真剣クイズ勝負！
@@ -106,9 +115,16 @@ export const About = () => {
             </h2>
             <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
               <p className="text-yellow-700 md:text-base text-sm">
-                クイズAI
-                のクイズはAIを使用して生成されています。私たちは正確さと品質を追求していますが、間違った回答や偏りのある質問が含まれる場合があります。ユーザーの皆様には、批判的な視点を持ってコンテンツに向き合い、不正確な点やバグなどがあれば報告して頂けると幸いです。
-              </p>
+                <span className="block  mb-2">
+                  このアプリではAIを使用してクイズを生成しています。
+                </span>
+                <span className="block mb-2">
+                  そのため、誤った回答や偏りのある質問が含まれる場合があります。
+                </span>
+                <span className="block">
+                  誤りや不具合に気づかれた場合は、ご報告ください。
+                </span>
+                </p>
               <div className="flex justify-center mt-8">
                 <button
                   onClick={handleReport}
@@ -125,10 +141,8 @@ export const About = () => {
             <h2 className="md:text-2xl font-semibold mb-4 text-[#4ECDC4]">
               さあ始めよう！
             </h2>
-            <p className="text-gray-700 leading-relaxed md:text-base text-xs">
-              あなたのクイズの冒険に出発する準備はできましたか？今すぐ飛び込んで、自分自身に挑戦するか、インターネットの誰かと競い合いましょう。成功の鍵は勝つことだけでなく、学びと発見の喜びを楽しむことにあります。
-            </p>
           </section>
+          
         </div>
       </main>
       <Footer />
