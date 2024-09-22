@@ -167,7 +167,7 @@ export const generateQuiz = async (
   console.log(
     "Category: " +
       category +
-      "subCategory: " +
+      ", subCategory: " +
       subcategory +
       ", Difficulty: " +
       difficulty,
@@ -183,19 +183,19 @@ export const generateQuiz = async (
     pastQuizzes = await db.all(
       `SELECT question
          FROM user_quiz_history 
-         WHERE user_id = $1 AND category = $2 AND difficulty = $3
+         WHERE user_id = $1 AND category = $2 AND is_correct = false
          ORDER BY quiz_id DESC
          LIMIT 100`,
-      [user_id, category, difficulty],
+      [user_id, category],
     );
   } else {
     pastQuizzes = await db.all(
       `SELECT question
          FROM user_quiz_history 
-         WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND difficulty = $4
+         WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND is_correct = false
          ORDER BY quiz_id DESC
          LIMIT 100`,
-      [user_id, category, subcategory, difficulty],
+      [user_id, category, subcategory],
     );
   }
 
@@ -212,19 +212,19 @@ export const generateQuiz = async (
       opponentQuizzes = await db.all(
         `SELECT question
              FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND difficulty = $3
+             WHERE user_id = $1 AND category = $2 AND is_correct = false
              ORDER BY quiz_id DESC 
              LIMIT 100`,
-        [opponent_id, category, difficulty],
+        [opponent_id, category],
       );
     } else {
       opponentQuizzes = await db.all(
         `SELECT question
              FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND difficulty = $4
+             WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND is_correct = false
              ORDER BY quiz_id DESC 
              LIMIT 100`,
-        [opponent_id, category, subcategory, difficulty],
+        [opponent_id, category, subcategory],
       );
     }
 
@@ -234,7 +234,7 @@ export const generateQuiz = async (
     }
   }
 
-  console.log([...pastQuestionsSet].join(",")); // セットを配列に変換してログに出力
+  console.log("past question num: " + pastQuestionsSet.size);
 
   let parsedQuiz: QuizType | undefined;
 
@@ -279,7 +279,7 @@ export const generateQuiz = async (
             }」、難易度「${difficulty}」のクイズ問題を作成してください。`,
           },
         ],
-        max_tokens: 4096,
+        max_tokens: 16384,
         response_format: { type: "json_object" },
       });
       console.log("totalToken: " + response.usage.total_tokens);
@@ -321,7 +321,7 @@ export const GenerateQuiz = async (req: Request, res: Response) => {
   const { category, difficulty, user_id } = req.body;
   try {
     const quiz = await generateQuiz(category, difficulty, user_id);
-    console.log(quiz);
+    console.log("問題: " + quiz.question + " " + "解答: " + quiz.correct_answer);
     return res.status(200).json(quiz);
   } catch (err) {
     console.error(err);
@@ -376,7 +376,9 @@ const isSimilarQuestion = async (
 
     for (let i = 0; i < pastEmbeddings.length; i++) {
       const similarity = cosineSimilarity(newEmbedding, pastEmbeddings[i]);
-      console.log(`類似度: ${similarity}`);
+      if(similarity >= 6.5) {
+        console.log(`類似度が高い: ${similarity} ${newQuestion} ${pastQuestions[i]}`);
+      }
       if (similarity >= threshold) {
         console.log(`類似度が高い質問が見つかりました: ${similarity}`);
         console.log(`過去の質問: ${pastQuestions[i]}`);
