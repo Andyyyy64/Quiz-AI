@@ -18,7 +18,15 @@ export const Header: React.FC = () => {
   const handleProfileClick = () => {
     intaractSound.play();
     if (user) {
-      navi("/profile");
+      if (
+        location.pathname.startsWith("/multiplay/") &&
+        location.pathname !== "/multiplay/create" &&
+        location.pathname !== "/multiplay/join"
+      ) {
+        window.location.href = "/profile";
+      } else {
+        navi("/profile");
+      }
     } else {
       navi("/login");
     }
@@ -26,7 +34,15 @@ export const Header: React.FC = () => {
   const handleHistoryClick = () => {
     intaractSound.play();
     if (user) {
-      navi("/history");
+      if (
+        location.pathname.startsWith("/multiplay/") &&
+        location.pathname !== "/multiplay/create" &&
+        location.pathname !== "/multiplay/join"
+      ) {
+        window.location.href = "/history";
+      } else {
+        navi("/history");
+      }
     } else {
       navi("/login");
     }
@@ -34,7 +50,15 @@ export const Header: React.FC = () => {
   const handleAboutClick = () => {
     intaractSound.play();
     if (user) {
-      navi("/about");
+      if (
+        location.pathname.startsWith("/multiplay/") &&
+        location.pathname !== "/multiplay/create" &&
+        location.pathname !== "/multiplay/join"
+      ) {
+        window.location.href = "/about";
+      } else {
+        navi("/about");
+      }
     } else {
       navi("/login");
     }
@@ -42,14 +66,30 @@ export const Header: React.FC = () => {
   const handleRankingClick = () => {
     intaractSound.play();
     if (user) {
-      navi("/rankings");
+      if (
+        location.pathname.startsWith("/multiplay/") &&
+        location.pathname !== "/multiplay/create" &&
+        location.pathname !== "/multiplay/join"
+      ) {
+        window.location.href = "/rankings";
+      } else {
+        navi("/rankings");
+      }
     } else {
       navi("/login");
     }
   };
   const handleHomeClick = () => {
     intaractSound.play();
-    window.location.href = "/";
+    if (
+      location.pathname.startsWith("/multiplay/") &&
+      location.pathname !== "/multiplay/create" &&
+      location.pathname !== "/multiplay/join"
+    ) {
+      window.location.href = "/";
+    } else {
+      navi("/");
+    }
   };
 
   const handleLogout = () => {

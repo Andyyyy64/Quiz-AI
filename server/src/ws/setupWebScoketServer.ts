@@ -265,8 +265,8 @@ export const setupWebSocketServer = (server: any) => {
               currentSession.quiz = await generateQuiz(
                 currentSession.category || "ランダム",
                 currentSession.difficulty || "ランダム",
-                currentSession.players[0].id,
-                currentSession.players[1].id,
+                currentSession.players[0]?.id,
+                currentSession.players[1]?.id,
               );
             } catch (error) {
               console.error("クイズの取得に失敗しました:", error);
