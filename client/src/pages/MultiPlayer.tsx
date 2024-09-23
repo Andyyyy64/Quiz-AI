@@ -49,7 +49,7 @@ export const Multiplayer: React.FC = () => {
           {!showMatchmaking && (
             <div className="md:px-0 px-4 pb-10 w-full max-w-4xl">
               <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl md:px-8 md:py-4 p-4">
-                <div className="grid md:grid-cols-2 justify-center gap-8 md:mb-8 mb-4">
+                <div className="grid md:grid-cols-2 justify-center md:gap-8 gap-4 md:mb-8 mb-4">
                   <div>
                     <h2 className="md:text-2xl text-lg font-bold mb-4 flex items-center">
                       <Users className="h-6 w-6 mr-2 text-[#4ECDC4]" />
@@ -80,7 +80,7 @@ export const Multiplayer: React.FC = () => {
                 <button
                   onClick={handleMatchmakeClick}
                   className="w-full max-h-[60px] text-center flex items-center justify-center text-white bg-[#FF6B6B] rounded-full font-bold
-                          md:text-xl text-base md:mt-0 mt-3 mb-5 py-4 hover:bg-[#FF8787] hover:shadow-xl hover:scale-105 hover:text-white transition-all duration-300"
+                          md:text-xl text-base md:mt-0 mt-3 mb-2 py-4 hover:bg-[#FF8787] hover:shadow-xl hover:scale-105 hover:text-white transition-all duration-300"
                 >
                   マッチメイキング開始
                 </button>

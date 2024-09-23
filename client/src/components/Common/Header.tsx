@@ -110,14 +110,18 @@ export const Header: React.FC = () => {
       <div className="flex justify-between items-center md:px-4 md:pt-1">
         {/* 左側 */}
         <div className="flex items-center">
-          {/* スマホ時の favicon */}
-          <Link to="/" className="md:hidden p-2">
-            <img
-              className="w-32 h-16 object-contain"
-              src="/favicon.png"
-              alt="Logo"
-            />
-          </Link>
+          {/* スマホ時の ロゴ */}
+          {location.pathname === "/" ? (
+            <p className="md:hidden p-10"></p>
+          ) : (
+            <Link to="/" className="md:hidden p-2">
+              <img
+                className="w-32 h-16 object-contain"
+                src="/favicon.png"
+                alt="Logo"
+              />
+            </Link>
+          )}
 
           {/* デスクトップ時のロゴ */}
           <Link to="/" className="hidden md:block" onClick={handleHomeClick}>
@@ -199,7 +203,7 @@ export const Header: React.FC = () => {
       {/* スマホ時のボトムナビゲーション */}
       <div
         className="md:hidden fixed bottom-0 left-0 right-0 bg-white
-        flex justify-around items-center p-4 z-10"
+                   flex justify-around items-center p-4 z-10"
       >
         <button
           className="text-[#333333] hover:text-[#4ECDC4]"
