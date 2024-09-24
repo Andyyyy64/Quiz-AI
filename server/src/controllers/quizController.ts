@@ -183,7 +183,7 @@ export const generateQuiz = async (
     pastQuizzes = await db.all(
       `SELECT question
          FROM user_quiz_history 
-         WHERE user_id = $1 AND category = $2 AND is_correct = false
+         WHERE user_id = $1 AND category = $2 AND is_correct = true
          ORDER BY quiz_id DESC
          LIMIT 100`,
       [user_id, category],
@@ -192,7 +192,7 @@ export const generateQuiz = async (
     pastQuizzes = await db.all(
       `SELECT question
          FROM user_quiz_history 
-         WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND is_correct = false
+         WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND is_correct = true
          ORDER BY quiz_id DESC
          LIMIT 100`,
       [user_id, category, subcategory],
@@ -212,7 +212,7 @@ export const generateQuiz = async (
       opponentQuizzes = await db.all(
         `SELECT question
              FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND is_correct = false
+             WHERE user_id = $1 AND category = $2 AND is_correct = true
              ORDER BY quiz_id DESC 
              LIMIT 100`,
         [opponent_id, category],
@@ -221,7 +221,7 @@ export const generateQuiz = async (
       opponentQuizzes = await db.all(
         `SELECT question
              FROM user_quiz_history 
-             WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND is_correct = false
+             WHERE user_id = $1 AND category = $2 AND subcategory = $3 AND is_correct = true
              ORDER BY quiz_id DESC 
              LIMIT 100`,
         [opponent_id, category, subcategory],
