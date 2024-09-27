@@ -86,8 +86,8 @@ export const MultiPlayerPage: React.FC = () => {
   useEffect(() => {
     if (ws) {
       ws.onmessage = (message) => {
-        const data = JSON.parse(message.data);
-        // メッセージに基づく処理
+        const data = JSON.parse(message.data);        
+        // メッセージに基づく処理        
         if (data.success && data.message === "prefetch") {
           setStatus("処理中");
           if (data.timeLimit && data.questionCount) {
