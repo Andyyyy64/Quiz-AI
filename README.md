@@ -74,13 +74,15 @@
 
 ### ios build
 
-1. `npx cap add ios`
+1. `cd client/`
+
+2. `npx cap add ios`
     
-2. `npm run build`
+3. `npm run build`
     
-3. `npx cap sync`
+4. `npx cap sync`
     
-4. `npx cap open ios` this will open up Xcode
+5. `npx cap open ios` this will open up Xcode
     
-5. `npx cap run ios`
+6. `npx cap run ios`
     
