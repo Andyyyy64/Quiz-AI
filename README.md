@@ -1,5 +1,4 @@
 # AI-Quiz-Battle
-[hackmd](https://hackmd.io/N2i3zSxpRruENr3rBgRNDA)
 ## 環境構築
 
 1. clone
