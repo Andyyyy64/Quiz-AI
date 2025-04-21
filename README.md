@@ -69,19 +69,3 @@
 
     alice@example.com / bob@example.com
     diamondchair87
-
-
-### ios build
-
-1. `cd client/`
-
-2. `npx cap add ios`
-    
-3. `npm run build`
-    
-4. `npx cap sync`
-    
-5. `npx cap open ios` this will open up Xcode
-    
-6. `npx cap run ios`
-    
